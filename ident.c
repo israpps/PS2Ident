@@ -77,7 +77,7 @@ int GetEEInformation(struct SystemInformation *SystemInformation)
 static u16 CalculateCRCOfROM(void *buffer1, void *buffer2, void *start, unsigned int length)
 {
     u16 crc;
-    unsigned int i, size, prevSize;
+    unsigned int i, size = 0, prevSize;
     void *pDestBuffer, *pSrcBuffer;
 
     for (i = 0, prevSize = size, crc = CRC16_INITIAL_CHECKSUM, pDestBuffer = buffer1, pSrcBuffer = start; i < length; i += size, pSrcBuffer += size)
@@ -163,10 +163,10 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
     free(buffer1);
     free(buffer2);
 
-    //Initialize model name
+    // Initialize model name
     if (ModelNameInit() == 0)
     {
-        //Get model name
+        // Get model name
         strncpy(SystemInformation->mainboard.ModelName, ModelNameGet(), sizeof(SystemInformation->mainboard.ModelName) - 1);
         SystemInformation->mainboard.ModelName[sizeof(SystemInformation->mainboard.ModelName) - 1] = '\0';
     }
@@ -176,19 +176,19 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
         SystemInformation->mainboard.ModelName[0] = '\0';
     }
 
-    //Get DVD Player version
+    // Get DVD Player version
     strncpy(SystemInformation->DVDPlayerVer, DVDPlayerGetVersion(), sizeof(SystemInformation->DVDPlayerVer) - 1);
     SystemInformation->DVDPlayerVer[sizeof(SystemInformation->DVDPlayerVer) - 1] = '\0';
     if ((pNewline = strrchr(SystemInformation->DVDPlayerVer, '\n')) != NULL)
-        *pNewline = '\0'; //The DVD player version may have a newline in it.
+        *pNewline = '\0'; // The DVD player version may have a newline in it.
 
-    //Get OSD Player version
+    // Get OSD Player version
     strncpy(SystemInformation->OSDVer, OSDGetVersion(), sizeof(SystemInformation->OSDVer) - 1);
     SystemInformation->OSDVer[sizeof(SystemInformation->OSDVer) - 1] = '\0';
     if ((pNewline = strrchr(SystemInformation->OSDVer, '\n')) != NULL)
-        *pNewline = '\0'; //The OSDVer may have a newline in it.
+        *pNewline = '\0'; // The OSDVer may have a newline in it.
 
-    //Get PS1DRV version
+    // Get PS1DRV version
     strncpy(SystemInformation->PS1DRVVer, PS1DRVGetVersion(), sizeof(SystemInformation->PS1DRVVer) - 1);
     SystemInformation->PS1DRVVer[sizeof(SystemInformation->PS1DRVVer) - 1] = '\0';
 
@@ -223,7 +223,7 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
         SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_ILINKID;
     }
     if (SystemInformation->mainboard.MECHACONVersion[1] >= 5)
-    { //v5.x MECHACON (SCPH-50000 and later) supports Mechacon Renewal Date.
+    { // v5.x MECHACON (SCPH-50000 and later) supports Mechacon Renewal Date.
         if (sceCdAltReadRenewalDate(SystemInformation->mainboard.MRenewalDate, &result) == 0 || (result & 0x80))
         {
             printf("Failed to read M Renewal Date. Stat: %x\n", result);
@@ -241,7 +241,7 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
         SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_ADD010;
     }
 
-    //Get the mainboard and chassis names, MODEL ID, console MODEL ID and EMCS ID.
+    // Get the mainboard and chassis names, MODEL ID, console MODEL ID and EMCS ID.
     SystemInformation->mainboard.ModelID[0]    = SystemInformation->iLinkID[1];
     SystemInformation->mainboard.ModelID[1]    = SystemInformation->iLinkID[2];
     SystemInformation->mainboard.ModelID[2]    = SystemInformation->iLinkID[3];
@@ -579,9 +579,197 @@ const char *GetMECHACONChipDesc(unsigned short int revision)
 {
     const char *description;
 
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_MECHACON, revision)) == NULL)
+    if (revision >= 0x050000)
+        revision = revision & 0xfffeff; // Retail and debug chips are identical
+    if (revision != 0x050607)
+        revision = revision & 0xffff00; // Mexico unit is unique
+
+    switch (revision)
     {
-        description = "Missing";
+        case 0x010200:
+            description = "CXP101064-605R";
+            break;
+        case 0x010300:
+            description = "CXP101064-602R"; // DTL-T10000 and retail models, Japan region locked
+            break;
+        case 0x010900:
+            description = "CXP102064-751R"; // only DTL-T10000
+            break;
+        case 0x020501:
+        case 0x020502:
+        case 0x020503:
+            description = "CXP102064-702R"; // DTL-H3000x
+            break;
+        case 0x020701:
+        case 0x020702:
+        case 0x020703:
+            description = "CXP102064-703R"; // DTL-H3000x, DTL-H3010x
+            break;
+        case 0x020900:
+        case 0x020901:
+        case 0x020902:
+        case 0x020903:
+        case 0x020904:
+            description = "CXP102064-704R"; // DTL-H3000x, DTL-H3010x
+            break;
+        case 0x020D00:
+        case 0x020D01:
+        case 0x020D02:
+        case 0x020D04:
+        case 0x020D05:
+            description = "CXP102064-705R/-752R"; // DTL-H3000x, DTL-H3010x, DTL-T10000
+            break;
+        // Japanese region only v1-v2
+        case 0x010600:
+            description = "CXP102064-001R (Not confirmed)";
+            break;
+        case 0x010700:
+            description = "CXP102064-003R";
+            break;
+        case 0x010800:
+            description = "CXP102064-002R";
+            break;
+        case 0x020000:
+            description = "CXP102064-004R (Not confirmed)";
+            break;
+        case 0x020200:
+            description = "CXP102064-005R";
+            break;
+        case 0x020800:
+            description = "CXP102064-006R";
+            break;
+        case 0x020C00:
+            description = "CXP102064-007R";
+            break;
+        // US region only
+        case 0x020401:
+            description = "CXP102064-101R";
+            break;
+        case 0x020601:
+            description = "CXP102064-102R";
+            break;
+        case 0x020C01:
+            description = "CXP102064-103R";
+            break;
+        // EU region only
+        case 0x020602:
+            description = "CXP102064-202R";
+            break;
+        case 0x020C02:
+            description = "CXP102064-203R";
+            break;
+        // Australia region only
+        case 0x020603:
+            description = "CXP102064-302R";
+            break;
+        case 0x020C03:
+            description = "CXP102064-303R";
+            break;
+        // US region only
+        case 0x030001:
+            description = "CXP103049-101GG";
+            break;
+        case 0x030201:
+            description = "CXP103049-102GG";
+            break;
+        case 0x030601:
+            description = "CXP103049-103GG";
+            break;
+        // EU region only
+        case 0x030002:
+            description = "CXP103049-201GG";
+            break;
+        case 0x030202:
+            description = "CXP103049-202GG";
+            break;
+        case 0x030602:
+            description = "CXP103049-203GG";
+            break;
+        // Australia region only
+        case 0x030003:
+            description = "CXP103049-301GG";
+            break;
+        case 0x030203:
+            description = "CXP103049-302GG";
+            break;
+        case 0x030603:
+            description = "CXP103049-303GG";
+            break;
+        // Japan region only
+        case 0x030200:
+            description = "CXP103049-001GG";
+            break;
+        case 0x030600:
+            description = "CXP103049-002GG";
+            break;
+        case 0x030800:
+            description = "CXP103049-003GG";
+            break;
+        // Asia region only
+        case 0x030404:
+            description = "CXP103049-401GG";
+            break;
+        case 0x030604:
+            description = "CXP103049-402GG";
+            break;
+        case 0x030804:
+            description = "CXP103049-403GG";
+            break;
+        // Russia region only
+        case 0x030605:
+            description = "CXP103049-501GG";
+            break;
+        // Dragon
+        case 0x050000:
+            description = "CXR706080-101GG";
+            break;
+        case 0x050200:
+            description = "CXR706080-102GG";
+            break;
+        case 0x050400:
+            description = "CXR706080-103GG";
+            break;
+        case 0x050600:
+            description = "CXR706080-104GG";
+            break;
+        case 0x050C00:
+            description = "CXR706080-105GG/CXR706F080-1GG";
+            break;
+        case 0x050607:
+            description = "CXR706080-106GG";
+            break;
+        /* case 0x050800:
+            description = "CXR706080-701GG (Not confirmed)";
+            break; */
+        case 0x050A00:
+            description = "CXR706080-702GG";
+            break;
+        case 0x050E00:
+            description = "CXR706080-703GG";
+            break;
+        case 0x060000:
+            description = "CXR716080-101GG";
+            break;
+        case 0x060200:
+            description = "CXR716080-102GG";
+            break;
+        case 0x060400:
+            description = "CXR716080-103GG";
+            break;
+        case 0x060600:
+            description = "CXR716080-104GG";
+            break;
+        /* case 0x060800:
+            description = "CXR716080-105GG (Not confirmed)";
+            break; */
+        case 0x060A00:
+            description = "CXR716080-106GG";
+            break;
+        case 0x060C00:
+            description = "CXR726080-301GB";
+            break;
+        default:
+            description = "Unknown";
     }
 
     return description;
@@ -619,7 +807,7 @@ const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *SystemInfor
     if ((ModelData = PS2IDBMS_LookupMainboardModel(SystemInformation)) != NULL)
         description = ModelData->MainboardName;
     else if (!strncmp(SystemInformation->romver, "0170", 4) || !strncmp(SystemInformation->romver, "0190", 4))
-        description = "Sticker"; //SCPH-5xxxx can be retrieved from sticker
+        description = "Sticker"; // SCPH-5xxxx can be retrieved from sticker
     else
         description = "Missing";
 
@@ -644,45 +832,45 @@ const char *GetChassisDesc(const struct PS2IDBMainboardEntry *SystemInformation)
     const char *description;
 
     if (!strcmp(SystemInformation->MainboardName, "GH-001") || !strcmp(SystemInformation->MainboardName, "GH-003"))
-        description = "A-chassis"; //SCPH-10000 and SCPH-15000
+        description = "A-chassis"; // SCPH-10000 and SCPH-15000
     else if (!strcmp(SystemInformation->MainboardName, "GH-003") && strncmp("0101", SystemInformation->romver, 4))
-        description = "A-chassis+"; //SCPH-18000 with GH-003
+        description = "A-chassis+"; // SCPH-18000 with GH-003
     else if (!strcmp(SystemInformation->MainboardName, "GH-008"))
-        description = "AB-chassis"; //SCPH-18000
+        description = "AB-chassis"; // SCPH-18000
     else if (!strcmp(SystemInformation->MainboardName, "GH-004") || !strcmp(SystemInformation->MainboardName, "GH-005"))
-        description = "B-chassis"; //SCPH-30000
+        description = "B-chassis"; // SCPH-30000
     else if (!strcmp(SystemInformation->MainboardName, "GH-006") || !strcmp(SystemInformation->MainboardName, "GH-007"))
-        description = "C-chassis"; //SCPH-30000
+        description = "C-chassis"; // SCPH-30000
     else if (!strcmp(SystemInformation->MainboardName, "GH-010") || !strcmp(SystemInformation->MainboardName, "GH-011") || !strcmp(SystemInformation->MainboardName, "GH-012") || !strcmp(SystemInformation->MainboardName, "GH-013") || !strcmp(SystemInformation->MainboardName, "GH-014") || !strcmp(SystemInformation->MainboardName, "GH-016"))
-        description = "D-chassis"; //SCPH-30000, SCPH-30000R and SCPH-35000
+        description = "D-chassis"; // SCPH-30000, SCPH-30000R and SCPH-35000
     else if (!strcmp(SystemInformation->MainboardName, "GH-015"))
-        description = "F-chassis"; //SCPH-30000 and SCPH-30000R
+        description = "F-chassis"; // SCPH-30000 and SCPH-30000R
     else if (!strcmp(SystemInformation->MainboardName, "GH-016"))
-        description = "DR-chassis"; //SCPH-30000
+        description = "DR-chassis"; // SCPH-30000
     else if (!strcmp(SystemInformation->MainboardName, "GH-017") || !strcmp(SystemInformation->MainboardName, "GH-019") || !strcmp(SystemInformation->MainboardName, "GH-022"))
-        description = "G-chassis"; //SCPH-37000 and SCPH-39000
+        description = "G-chassis"; // SCPH-37000 and SCPH-39000
     else if (!strcmp(SystemInformation->MainboardName, "GH-023"))
-        description = "H-chassis"; //SCPH-50000
+        description = "H-chassis"; // SCPH-50000
     else if (!strcmp(SystemInformation->MainboardName, "GH-026"))
-        description = "I-chassis"; //SCPH-50000a
+        description = "I-chassis"; // SCPH-50000a
     else if (!strcmp(SystemInformation->MainboardName, "GH-029"))
-        description = "J-chassis"; //SCPH-50000b
+        description = "J-chassis"; // SCPH-50000b
     else if (!strncmp(SystemInformation->MainboardName, "GH-032", 6) || !strncmp(SystemInformation->MainboardName, "GH-035", 6))
-        description = "K-chassis"; //SCPH-70000
+        description = "K-chassis"; // SCPH-70000
     else if (!strncmp(SystemInformation->MainboardName, "GH-037", 6) || !strncmp(SystemInformation->MainboardName, "GH-040", 6) || !strncmp(SystemInformation->MainboardName, "GH-041", 6))
-        description = "L-chassis"; //SCPH-75000
+        description = "L-chassis"; // SCPH-75000
     else if (!strncmp(SystemInformation->MainboardName, "GH-051", 6) || !strncmp(SystemInformation->MainboardName, "GH-052", 6))
-        description = "M-chassis"; //SCPH-77000
+        description = "M-chassis"; // SCPH-77000
     else if (!strncmp(SystemInformation->MainboardName, "GH-061", 6) || !strncmp(SystemInformation->MainboardName, "GH-062", 6))
-        description = "N-chassis"; //SCPH-79000
+        description = "N-chassis"; // SCPH-79000
     else if (!strncmp(SystemInformation->MainboardName, "GH-070", 6) || !strncmp(SystemInformation->MainboardName, "GH-071", 6))
-        description = "P-chassis"; //SCPH-90000, TVcombo
+        description = "P-chassis"; // SCPH-90000, TVcombo
     else if (!strncmp(SystemInformation->MainboardName, "GH-072", 6))
-        description = "R-chassis"; //SCPH-90000
+        description = "R-chassis"; // SCPH-90000
     else if (!strncmp(SystemInformation->MainboardName, "XPD-", 4))
-        description = "X-chassis"; //PSX
+        description = "X-chassis"; // PSX
     else if (!strncmp(SystemInformation->romver, "0170", 4) || !strncmp(SystemInformation->romver, "0190", 4))
-        description = "Sticker"; //SCPH-5xxxx can be retrieved from sticker
+        description = "Sticker"; // SCPH-5xxxx can be retrieved from sticker
     else
         description = "Unknown";
 
@@ -741,7 +929,7 @@ const char *GetDSPDesc(unsigned char revision)
 }
 
 unsigned int CalculateCPUCacheSize(unsigned char value)
-{ //2^(12+value)
+{ // 2^(12+value)
     return (1U << (12 + value));
 }
 
@@ -756,14 +944,14 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
 
     MayBeModded = CheckROM(&SystemInformation->mainboard);
 
-    //Header
+    // Header
     fputs("Log file generated by Playstation 2 Ident v" PS2IDENT_VERSION ", built on "__DATE__
           " "__TIME__
           "\r\n\r\n",
           stream);
     fprintf(stream, "ROMVER:            %s\r\n", SystemInformation->mainboard.romver);
 
-    //ROM region sizes
+    // ROM region sizes
     fprintf(stream, "ROM region sizes:\r\n");
     for (i = 0; i <= 2; i++)
     {
@@ -779,7 +967,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     else
         fprintf(stream, "<Not detected>\r\n");
 
-    //Physical ROM chip sizes
+    // Physical ROM chip sizes
     fputs("ROM chip sizes:\r\n"
           "    Boot ROM:      ",
           stream);
@@ -802,15 +990,15 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     else
         fputs("<Not detected>\r\n", stream);
 
-    //Version numbers
+    // Version numbers
     dvdplVer = SystemInformation->DVDPlayerVer[0] == '\0' ? "-" : SystemInformation->DVDPlayerVer;
-    OSDVer = SystemInformation->OSDVer[0] == '\0' ? "-" : SystemInformation->OSDVer;
+    OSDVer   = SystemInformation->OSDVer[0] == '\0' ? "-" : SystemInformation->OSDVer;
     fprintf(stream, "    DVD Player:    %s\r\n"
                     "    OSDVer:        %s\r\n"
                     "    PS1DRV:        %s\r\n",
             dvdplVer, OSDVer, SystemInformation->PS1DRVVer);
 
-    //Chip revisions
+    // Chip revisions
     fprintf(stream, "EE/GS:\r\n"
                     "    Implementation:      0x%02x\r\n"
                     "    Revision:            %u.%u (%s)\r\n"
@@ -858,10 +1046,10 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
                         "    MagicGate region:    0x%02x (%s)\r\n"
                         "    System type:         0x%02x (%s)\r\n"
                         "    DSP revision:        %u (%s)\r\n",
-                SystemInformation->mainboard.MECHACONVersion[1], SystemInformation->mainboard.MECHACONVersion[2], GetMECHACONChipDesc((unsigned int)(SystemInformation->mainboard.MECHACONVersion[1]) << 8 | (unsigned int)(SystemInformation->mainboard.MECHACONVersion[2])),
-                SystemInformation->mainboard.MECHACONVersion[0], GetRegionDesc(SystemInformation->mainboard.MECHACONVersion[0]),
+                SystemInformation->mainboard.MECHACONVersion[1], SystemInformation->mainboard.MECHACONVersion[2],
+                GetMECHACONChipDesc((unsigned int)(SystemInformation->mainboard.MECHACONVersion[1]) << 16 | (unsigned int)(SystemInformation->mainboard.MECHACONVersion[2]) << 8 | SystemInformation->mainboard.MECHACONVersion[0]), SystemInformation->mainboard.MECHACONVersion[0], GetRegionDesc(SystemInformation->mainboard.MECHACONVersion[0]),
                 SystemInformation->mainboard.MECHACONVersion[3], GetSystemTypeDesc(SystemInformation->mainboard.MECHACONVersion[3]),
-                SystemInformation->DSPVersion[1],GetDSPDesc(SystemInformation->DSPVersion[1]));
+                SystemInformation->DSPVersion[1], GetDSPDesc(SystemInformation->DSPVersion[1]));
     }
     else
     {
@@ -910,7 +1098,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
         fputs("-\r\n", stream);
     }
 
-    //i.Link Model ID
+    // i.Link Model ID
     fputs("    i.Link Model ID:     ", stream);
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_ILINKID))
     {
@@ -922,7 +1110,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
         fputs("-\r\n", stream);
     }
 
-    //SDMI Model ID (only 1 last byte, but we will keep 2 bytes)
+    // SDMI Model ID (only 1 last byte, but we will keep 2 bytes)
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_CONSOLEID))
     {
         // conModelID = SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8;
@@ -930,13 +1118,12 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
         fprintf(stream, "    Console Model ID:    0x%02x\r\n"
                         "    SDMI Company ID:     %02x-%02x-%02x\r\n"
                         "    EMCS ID:             0x%02x (%s)\r\n"
-                        "    Serial range:        %03dxxxx\r\n"
-                        ,
+                        "    Serial range:        %03dxxxx\r\n",
                 // conModelID,
                 SystemInformation->mainboard.ConModelID[0],
-                SystemInformation->mainboard.ConModelID[3], SystemInformation->mainboard.ConModelID[2], SystemInformation->mainboard.ConModelID[1],
+                SystemInformation->ConsoleID[3], SystemInformation->ConsoleID[2], SystemInformation->ConsoleID[1],
                 SystemInformation->mainboard.EMCSID, GetEMCSIDDesc(SystemInformation->mainboard.EMCSID),
-                Serial/10000);
+                Serial / 10000);
     }
     else
     {
@@ -956,7 +1143,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
                         "    MAC vendor:          %02x:%02x:%02x\r\n"
                         "    SPEED revision:      0x%04x (%s)\r\n"
                         "    SPEED capabilities:  %04x.%04x (%s)\r\n",
-                SystemInformation->SMAP_MAC_address[0],SystemInformation->SMAP_MAC_address[1],SystemInformation->SMAP_MAC_address[2],
+                SystemInformation->SMAP_MAC_address[0], SystemInformation->SMAP_MAC_address[1], SystemInformation->SMAP_MAC_address[2],
                 SystemInformation->mainboard.ssbus.SPEED.rev1, GetSPEEDDesc(SystemInformation->mainboard.ssbus.SPEED.rev1), SystemInformation->mainboard.ssbus.SPEED.rev3, SystemInformation->mainboard.ssbus.SPEED.rev8, GetSPEEDCapsDesc(SystemInformation->mainboard.ssbus.SPEED.rev3));
         fprintf(stream, "    PHY OUI:             0x%06x (%s)\r\n"
                         "    PHY model:           0x%02x (%s)\r\n"

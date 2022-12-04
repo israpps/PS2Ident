@@ -40,7 +40,7 @@ static void InitOSDDefaultLanguage(int region, const char *language);
 static int ReadOSDConfigPS2(OSDConfig2_t *config, const OSDConfigStore_t *OSDConfigBuffer);
 static void ReadOSDConfigPS1(OSDConfig1_t *config, const OSDConfigStore_t *OSDConfigBuffer);
 static void WriteOSDConfigPS1(OSDConfigStore_t *OSDConfigBuffer, const OSDConfig1_t *config);
-static int WriteOSDConfigPS2(OSDConfigStore_t *OSDConfigBuffer, const OSDConfig2_t *config, u8 invalid);
+static void WriteOSDConfigPS2(OSDConfigStore_t *OSDConfigBuffer, const OSDConfig2_t *config, u8 invalid);
 static void ReadConfigFromNVM(u8 *buffer);
 static void WriteConfigToNVM(const u8 *buffer);
 
@@ -453,7 +453,7 @@ static void WriteOSDConfigPS1(OSDConfigStore_t *OSDConfigBuffer, const OSDConfig
         OSDConfigBuffer->PS1.bytes[i] = config->data[i];
 }
 
-static int WriteOSDConfigPS2(OSDConfigStore_t *OSDConfigBuffer, const OSDConfig2_t *config, u8 invalid)
+static void WriteOSDConfigPS2(OSDConfigStore_t *OSDConfigBuffer, const OSDConfig2_t *config, u8 invalid)
 {
     int japLanguage, version, osdInitValue;
 

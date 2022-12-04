@@ -339,9 +339,9 @@ int WriteSystemInformation(FILE *stream, const struct PS2IDBMainboardEntry *Syst
 
     fprintf(stream, "EE:\r\n"
                     "\tImplementation:\t\t0x%02x\r\n"
-                    "\tRevision:\t\t%u.%u (%s)\r\n"
+                    "\tRevision:\t\t%d.%d (%s)\r\n"
                     "\tFPU implementation:\t0x%02x\r\n"
-                    "\tFPU revision:\t\t%u.%u\r\n"
+                    "\tFPU revision:\t\t%d.%d\r\n"
                     "\tICache size:\t\t0x%02x (%u KB)\r\n"
                     "\tDCache size:\t\t0x%02x (%u KB)\r\n"
                     "\tRAM size:\t\t%u bytes\r\n",
@@ -386,7 +386,7 @@ int WriteSystemInformation(FILE *stream, const struct PS2IDBMainboardEntry *Syst
         fprintf(stream, "20%02x/%02x/%02x %02x:%02x", SystemInformation->MRenewalDate[0], SystemInformation->MRenewalDate[1], SystemInformation->MRenewalDate[2], SystemInformation->MRenewalDate[3], SystemInformation->MRenewalDate[4]);
     fprintf(stream, "\r\n");
 
-    fprintf(stream, "\tUSB HCI revision:\t%u.%u\r\n"
+    fprintf(stream, "\tUSB HCI revision:\t%d.%d\r\n"
                     "\tGS revision:\t\t0x%02x (%s)\r\n"
                     "\tGS ID:\t\t\t0x%02x\r\n",
             SystemInformation->usb.HcRevision >> 4, SystemInformation->usb.HcRevision & 0xF, SystemInformation->gs.revision, GetGSChipDesc((unsigned short int)(SystemInformation->gs.id) << 8 | SystemInformation->gs.revision), SystemInformation->gs.id);
