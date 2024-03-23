@@ -237,16 +237,10 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
     if (sceGetDspVersion(SystemInformation->DSPVersion, &stat) == 0 || (stat & 0x80) != 0)
     {
         printf("Failed to read DSP version. Stat: %x\n", stat);
-        SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_MVER;
     }
-    if (sceCdAltMV(SystemInformation->mainboard.MECHACONVersion, &stat) == 0 || (stat & 0x80) != 0)
-    {
-        // ignore stat. DTL-H3010x set errored stat & 0x80, which is not true.
-        if ((stat & 0x80) != 0)
-        {
-            SystemInformation->mainboard.MECHACONVersion[0] = SystemInformation->mainboard.MECHACONVersion[0] - 0x80;
-        }
-    }
+    sceCdAltMV(SystemInformation->mainboard.MECHACONVersion, &stat);
+    printf("MECHACON version: %u %u %u %u\n", SystemInformation->mainboard.MECHACONVersion[0], SystemInformation->mainboard.MECHACONVersion[1], SystemInformation->mainboard.MECHACONVersion[2], SystemInformation->mainboard.MECHACONVersion[3]);
+
     if (sceCdReadConsoleID(SystemInformation->ConsoleID, &result) == 0 || (result & 0x80))
     {
         printf("Failed to read console ID. Stat: %x\n", result);
@@ -629,9 +623,11 @@ const char *GetSPU2ChipDesc(unsigned short int revision)
     return description;
 }
 
-const char *GetMECHACONChipDesc(unsigned short int revision)
+const char *GetMECHACONChipDesc(unsigned int revision)
 {
     const char *description;
+
+    printf("MECHACON revision: 0x%04x\n", revision);
 
     if (revision >= 0x050000)
         revision = revision & 0xfffeff; // Retail and debug chips are identical
