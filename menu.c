@@ -53,6 +53,7 @@ enum SUMMARY_ID
 
     SUM_ROM_ID_DVDPLVER,
 
+    SUM_BOARD2_ID_BOOTROMNAME_NAME,
     SUM_BOARD2_ID_MECHA_REV_MAJOR,
     SUM_BOARD2_ID_MECHA_REV_MINOR,
     SUM_BOARD2_ID_MECHA_NAME,
@@ -151,7 +152,8 @@ enum ROM_ID
     ROM_ID_ROMGEN_MMDD,
     ROM_ID_ROMGEN_YYYY,
     ROM_ID_DVDPLVER,
-    ROM_ID_PS1DRVVER
+    ROM_ID_PS1DRVVER,
+    ROM_ID_BOOTROMNAME_NAME,
 };
 
 enum EEGS_ID
@@ -290,6 +292,8 @@ static struct UIMenuItem SummaryMenuItems[] = {
     {MITEM_TAB},
     {MITEM_TAB},
     {MITEM_STRING, SUM_ROM_ID_EXTINFO, MITEM_FLAG_READONLY},
+    {MITEM_TAB},
+    {MITEM_STRING, SUM_BOARD2_ID_BOOTROMNAME_NAME, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
     {MITEM_BREAK},
 
@@ -636,6 +640,8 @@ static struct UIMenuItem ROMMenuItems[] = {
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_EXTINFO},
     {MITEM_TAB},
     {MITEM_STRING, ROM_ID_EXTINFO, MITEM_FLAG_READONLY},
+    {MITEM_TAB},
+    {MITEM_STRING, ROM_ID_BOOTROMNAME_NAME, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_ROMGEN},
     {MITEM_TAB},
@@ -1301,6 +1307,8 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
         UISetValue(&SummaryMenu, SUM_BOARD2_ID_MECHA_REV_MINOR, SystemInformation->mainboard.MECHACONVersion[2]);
         UISetType(&SummaryMenu, SUM_BOARD2_ID_MECHA_NAME, MITEM_STRING);
         UISetString(&SummaryMenu, SUM_BOARD2_ID_MECHA_NAME, GetMECHACONChipDesc((u32)(SystemInformation->mainboard.MECHACONVersion[1]) << 16 | (u32)(SystemInformation->mainboard.MECHACONVersion[2]) << 8 | (u32)(SystemInformation->mainboard.MECHACONVersion[0])));
+        UISetType(&SummaryMenu, SUM_BOARD2_ID_BOOTROMNAME_NAME, MITEM_STRING);
+        UISetString(&SummaryMenu, SUM_BOARD2_ID_BOOTROMNAME_NAME, GetBOOTROMDesc(SystemInformation->mainboard.extinfo));
 
         UISetType(&Board2ReportMenu, BOARD2_ID_MECHA_REGION, MITEM_VALUE);
         UISetValue(&Board2ReportMenu, BOARD2_ID_MECHA_REGION, SystemInformation->mainboard.MECHACONVersion[0]);
@@ -1582,6 +1590,8 @@ static void LoadROMInformation(const struct SystemInformation *SystemInformation
     UISetString(&ROMReportMenu, ROM_ID_EXTINFO, SystemInformation->mainboard.extinfo);
     UISetString(&SummaryMenu, SUM_ROM_ID_ROMVER, SystemInformation->mainboard.romver);
     UISetString(&SummaryMenu, SUM_ROM_ID_EXTINFO, SystemInformation->mainboard.extinfo);
+    UISetType(&SummaryMenu, ROM_ID_BOOTROMNAME_NAME, MITEM_STRING);
+    UISetString(&SummaryMenu, ROM_ID_BOOTROMNAME_NAME, GetBOOTROMDesc(SystemInformation->mainboard.extinfo));
     UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_MMDD, SystemInformation->mainboard.ROMGEN_MonthDate);
     UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_YYYY, SystemInformation->mainboard.ROMGEN_Year);
     if (SystemInformation->DVDPlayerVer[0] != '\0')

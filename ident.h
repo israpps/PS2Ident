@@ -44,6 +44,7 @@ const char *GetEEChipDesc(unsigned short int revision);
 const char *GetIOPChipDesc(unsigned short int revision);
 const char *GetSPU2ChipDesc(unsigned short int revision);
 const char *GetMECHACONChipDesc(unsigned int revision);
+const char *GetBOOTROMDesc(const char *extinfo);
 const char *GetSystemTypeDesc(unsigned char type);
 const char *GetRegionDesc(unsigned char region);
 const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *SystemInformation);
