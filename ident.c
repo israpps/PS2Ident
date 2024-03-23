@@ -39,6 +39,41 @@
 extern struct UIDrawGlobal UIDrawGlobal;
 
 #define GS_REG_CSR (volatile u64 *)0x12001000 // System Status
+#define readDevMemEEIOP_src 1                          // 0=IOP / 1=EE
+
+int readDevMemEEIOP(const void *MemoryStart, void *buffer, unsigned int NumBytes, int mode)
+{
+    int ret = 0;
+
+    if (readDevMemEEIOP_src == 0)
+    {
+        ret = SysmanReadMemory(MemoryStart, buffer, NumBytes, mode);
+    }
+    else
+    {
+        if ((u32)MemoryStart & 0x80000000)
+        {
+            DI();
+            ee_kmode_enter();
+        }
+
+        unsigned int i;
+        u8 *mpt = MemoryStart;
+        u8 *bpt = buffer;
+        for (i = 0; i < NumBytes; i++, mpt++, bpt++)
+        {
+            *bpt = *mpt;
+        }
+        FlushCache(0);  //should be enough to fix it
+
+        if ((u32)MemoryStart & 0x80000000)
+        {
+            ee_kmode_exit();
+            EI();
+        }
+    }
+    return ret;
+}
 
 int GetEEInformation(struct SystemInformation *SystemInformation)
 {
@@ -85,7 +120,7 @@ static u16 CalculateCRCOfROM(void *buffer1, void *buffer2, void *start, unsigned
         size = length - i > MEM_IO_BLOCK_SIZE ? MEM_IO_BLOCK_SIZE : length - i;
 
         SysmanSync(0);
-        while (SysmanReadMemory(pSrcBuffer, pDestBuffer, size, 1) != 0)
+        while (readDevMemEEIOP(pSrcBuffer, pDestBuffer, size, 1) != 0)
             nopdelay();
 
         pDestBuffer = (pDestBuffer == buffer1) ? buffer2 : buffer1;
@@ -289,7 +324,7 @@ int DumpRom(const char *filename, const struct SystemInformation *SystemInformat
             BytesToRead = BytesRemaining > MEM_IO_BLOCK_SIZE ? MEM_IO_BLOCK_SIZE : BytesRemaining;
 
             SysmanSync(0);
-            while (SysmanReadMemory(MemDumpStart, pBuffer, BytesToRead, 1) != 0)
+            while (readDevMemEEIOP(MemDumpStart, pBuffer, BytesToRead, 1) != 0)
                 nopdelay();
 
             RedrawDumpingScreen(SystemInformation, DumpingStatus);

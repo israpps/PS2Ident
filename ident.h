@@ -64,6 +64,7 @@ int DumpMECHACON_EEPROM(const char *filename);
 int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemInformation);
 
 int CheckROM(const struct PS2IDBMainboardEntry *entry);
+int readDevMemEEIOP(const void *MemoryStart, void *buffer, unsigned int NumBytes, int mode);
 
 enum DUMP_REGIONS
 {
