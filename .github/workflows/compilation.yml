@@ -105,29 +105,29 @@ jobs:
           name: PS2IDBMS
           path: PS2IDBMS/Release/PS2IDBMS.exe
 
-  build-romimg:
-    name: ROMIMG compilation
-    runs-on: windows-latest
+  # build-romimg:
+  #   name: ROMIMG compilation
+  #   runs-on: windows-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v3
 
-      - name: Setup msbuild
-        uses: microsoft/setup-msbuild@v1.1
+  #     - name: Setup msbuild
+  #       uses: microsoft/setup-msbuild@v1.1
 
-      - name: Build
-        run: |
-          cd ROMIMG
-          msbuild /p:PlatformToolset=v142 /p:Configuration=Release
+  #     - name: Build
+  #       run: |
+  #         cd ROMIMG
+  #         msbuild /p:PlatformToolset=v142 /p:Configuration=Release
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ROMIMG
-          path: ROMIMG/Release/ROMIMG.exe
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ROMIMG
+  #         path: ROMIMG/Release/ROMIMG.exe
 
   release:
-    needs: [build, build-ps2idbms,build-romimg]
+    needs: [build, build-ps2idbms]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master'
     steps:
