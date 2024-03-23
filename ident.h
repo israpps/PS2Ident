@@ -61,6 +61,7 @@ unsigned int CalculateCPUCacheSize(unsigned char value);
 int DumpRom(const char *filename, const struct SystemInformation *SystemInformation, struct DumpingStatus *DumpingStatus, unsigned int DumpingRegion);
 int WriteNewMainboardDBRecord(const char *path, const struct PS2IDBMainboardEntry *SystemInformation);
 int DumpMECHACON_EEPROM(const char *filename);
+int DumpMECHACON_VERSION(const char *filename, const struct SystemInformation *SystemInformation);
 int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemInformation);
 
 int CheckROM(const struct PS2IDBMainboardEntry *entry);

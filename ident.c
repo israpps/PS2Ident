@@ -408,6 +408,25 @@ int DumpMECHACON_EEPROM(const char *filename)
     return result;
 }
 
+int DumpMECHACON_VERSION(const char *filename, const struct SystemInformation *SystemInformation)
+{
+    FILE *file;
+    int result = 0;
+
+    if ((file = fopen(filename, "wb")) != NULL)
+    {
+
+        if (fwrite(SystemInformation->mainboard.MECHACONVersion, 1, 4, file) != 4)
+            result = EIO;
+
+        fclose(file);
+    }
+    else
+        result = -ENOENT;
+
+    return result;
+}
+
 int WriteNewMainboardDBRecord(const char *path, const struct PS2IDBMainboardEntry *SystemInformation)
 {
     FILE *file;
