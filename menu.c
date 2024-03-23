@@ -49,6 +49,7 @@ enum SUMMARY_ID
     SUM_BOARD2_ID_EMCS_ID,
     SUM_BOARD2_ID_EMCS_ID_DESC,
     SUM_ROM_ID_ROMVER,
+    SUM_ROM_ID_EXTINFO,
 
     SUM_ROM_ID_DVDPLVER,
 
@@ -146,6 +147,7 @@ enum ROM_ID
     ROM_ID_DVD_ROM_MBIT_LBL,
     ROM_ID_ROM_UNCLEAN,
     ROM_ID_ROMVER,
+    ROM_ID_EXTINFO,
     ROM_ID_ROMGEN_MMDD,
     ROM_ID_ROMGEN_YYYY,
     ROM_ID_DVDPLVER,
@@ -282,6 +284,12 @@ static struct UIMenuItem SummaryMenuItems[] = {
     {MITEM_TAB},
     {MITEM_TAB},
     {MITEM_STRING, SUM_ROM_ID_ROMVER, MITEM_FLAG_READONLY},
+    {MITEM_BREAK},
+
+    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_EXTINFO},
+    {MITEM_TAB},
+    {MITEM_TAB},
+    {MITEM_STRING, SUM_ROM_ID_EXTINFO, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
     {MITEM_BREAK},
 
@@ -624,6 +632,10 @@ static struct UIMenuItem ROMMenuItems[] = {
     {MITEM_TAB},
     {MITEM_TAB},
     {MITEM_STRING, ROM_ID_ROMVER, MITEM_FLAG_READONLY},
+    {MITEM_BREAK},
+    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_EXTINFO},
+    {MITEM_TAB},
+    {MITEM_STRING, ROM_ID_EXTINFO, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_ROMGEN},
     {MITEM_TAB},
@@ -1274,7 +1286,6 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
 {
     u32 modelID;
     // u16 conModelID;
-    printf("region ui %02x\n", SystemInformation->mainboard.MECHACONVersion[0]);
 
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_MVER))
     {
@@ -1568,7 +1579,9 @@ static void LoadROMInformation(const struct SystemInformation *SystemInformation
 
     // Version information
     UISetString(&ROMReportMenu, ROM_ID_ROMVER, SystemInformation->mainboard.romver);
+    UISetString(&ROMReportMenu, ROM_ID_EXTINFO, SystemInformation->mainboard.extinfo);
     UISetString(&SummaryMenu, SUM_ROM_ID_ROMVER, SystemInformation->mainboard.romver);
+    UISetString(&SummaryMenu, SUM_ROM_ID_EXTINFO, SystemInformation->mainboard.extinfo);
     UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_MMDD, SystemInformation->mainboard.ROMGEN_MonthDate);
     UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_YYYY, SystemInformation->mainboard.ROMGEN_Year);
     if (SystemInformation->DVDPlayerVer[0] != '\0')
@@ -1888,7 +1901,7 @@ void RedrawLoadingScreen(unsigned int frame)
 static int DumpSystemROM(const char *path, const struct SystemInformation *SystemInformation)
 {
     char *filename;
-    unsigned int PathLength, ModelNameLen, ROMVerLen;
+    unsigned int PathLength, ModelNameLen;
     int result, PadStatus;
     FILE *logfile;
     struct DumpingStatus DumpingStatus[DUMP_REGION_COUNT];
@@ -1899,7 +1912,6 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
     // Calculate the lengths of various parts of the filenames used below.
     PathLength   = strlen(path);
     ModelNameLen = strlen(SystemInformation->mainboard.ModelName);
-    ROMVerLen    = strlen(SystemInformation->mainboard.romver);
 
     filename     = malloc(PathLength + ModelNameLen + 32);
 

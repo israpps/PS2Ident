@@ -64,6 +64,7 @@ static const char *DefaultLanguageLabelStringTable[SYS_UI_LBL_COUNT] = {
     "Mainboard model",
     "Chassis",
     "ROMVER",
+    "EXTINFO",
     "ROMGEN",
     "Console ID",
     "i.Link ID",

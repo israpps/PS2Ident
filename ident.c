@@ -1000,6 +1000,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
           "\r\n\r\n",
           stream);
     fprintf(stream, "ROMVER:            %s\r\n", SystemInformation->mainboard.romver);
+    fprintf(stream, "EXTINFO:           %s\r\n", SystemInformation->mainboard.extinfo);
 
     // ROM region sizes
     fprintf(stream, "ROM region sizes:\r\n");
