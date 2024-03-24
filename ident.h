@@ -13,7 +13,7 @@ struct SystemInformation
     unsigned char iLinkID[8];
     unsigned char SMAP_MAC_address[6];
     char chassis[14];
-    char DVDPlayerVer[32];
+    char DVDPlayerVer[16];
     char OSDVer[16];
     char PS1DRVVer[32];
     u8 DSPVersion[2];
@@ -44,7 +44,8 @@ const char *GetEEChipDesc(unsigned short int revision);
 const char *GetIOPChipDesc(unsigned short int revision);
 const char *GetSPU2ChipDesc(unsigned short int revision);
 const char *GetMECHACONChipDesc(unsigned int revision);
-const char *GetBOOTROMDesc(const char *extinfo);
+const char *GetBOOTROMDesc(const char *extinfo, const char *romver, const char *dvdplVer);
+const char *GetDVDROMDesc(const char *dvdplVer);
 const char *GetSystemTypeDesc(unsigned char type);
 const char *GetRegionDesc(unsigned char region);
 const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *SystemInformation);
