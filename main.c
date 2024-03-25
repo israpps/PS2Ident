@@ -72,13 +72,14 @@ static unsigned char ConsoleRegionData[13];
 static int LoadEROMDRV(void)
 {
     char eromdrv[] = "rom1:EROMDRV?";
-    int result;
+    int result, fd;
 
     // Handle region-specific DVD Player of newer consoles.
-    if (OSDGetDVDPlayerRegion(&eromdrv[12]) == 0 || eromdrv[12] != '\0')
-    {
+    if (OSDGetDVDPlayerRegion(&eromdrv[12]) == 0 || (fd = _ps2sdk_open(eromdrv, O_RDONLY)) < 0)
         eromdrv[12] = '\0'; // Replace '?' with a NULL.
-    }
+
+    _ps2sdk_close(fd);
+    printf("EROMDRV: %s\n", eromdrv);
 
     return SifLoadModuleEncrypted(eromdrv, 0, NULL);
 }

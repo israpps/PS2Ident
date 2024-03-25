@@ -62,7 +62,7 @@ static struct RomImg *romGetImageStat(const void *start, const void *end, struct
 int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
 {
     int result;
-    unsigned int i, size;
+    unsigned int i, size = 0;
     struct RomImg ImgStat;
     const struct RomImg *pImgStat;
 
@@ -175,17 +175,11 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     {
         size = SysmanCalcROMChipSize(hwinfo->erom.StartAddress - hwinfo->ROMs[1].StartAddress + hwinfo->erom.size);
     }
-    else
-    {
-        // On slim consoles erom not detected in latest version, so I limited DVD rom size to 4Mb
-        // FIXME: EROM is not detected on slims properly, seems smod_get_mod_by_name("erom_file_driver") returns NULL
-        size = 0x400000;
-    }
-
-    printf("DVD ROM real size: %u (DEV1: %lu)\n", size, hwinfo->DVD_ROM.size);
 
     if (size < hwinfo->DVD_ROM.size)
         hwinfo->DVD_ROM.size = size;
+
+    printf("DVD ROM real size: %u (DEV1: %lu)\n", size, hwinfo->DVD_ROM.size);
 
     return 0;
 }
@@ -233,7 +227,6 @@ static ModuleInfo_t *smod_get_mod_by_name(const char *name)
     modptr  = smod_get_next_mod(NULL);
     while (modptr != NULL)
     {
-        printf("modptr->name: %s\n", modptr->name);
         if (!memcmp(modptr->name, name, len))
             return modptr;
 
