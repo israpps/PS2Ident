@@ -13,6 +13,7 @@ struct SystemInformation
     unsigned char iLinkID[8];
     unsigned char SMAP_MAC_address[6];
     char chassis[14];
+    char DVDextinfo[16];
     char DVDPlayerVer[16];
     char OSDVer[16];
     char PS1DRVVer[32];

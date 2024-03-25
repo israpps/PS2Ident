@@ -49,12 +49,13 @@ enum SUMMARY_ID
     SUM_BOARD2_ID_EMCS_ID,
     SUM_BOARD2_ID_EMCS_ID_DESC,
     SUM_ROM_ID_ROMVER,
-    SUM_ROM_ID_EXTINFO,
 
     SUM_ROM_ID_DVDPLVER,
 
-    SUM_BOARD2_ID_BOOTROMNAME_NAME,
-    SUM_BOARD2_ID_DVDROMNAME_NAME,
+    SUM_ROM_ID_BOOTROM_NAME,
+    SUM_ROM_ID_B_EXTINFO,
+    SUM_ROM_ID_DVDROM_NAME,
+    SUM_ROM_ID_D_EXTINFO,
     SUM_BOARD2_ID_MECHA_REV_MAJOR,
     SUM_BOARD2_ID_MECHA_REV_MINOR,
     SUM_BOARD2_ID_MECHA_NAME,
@@ -66,7 +67,7 @@ enum SUMMARY_ID
     SUM_EEGS_ID_GS_NAME,
     SUM_IOPSPU2_ID_IOP_REV_MAJOR,
     SUM_IOPSPU2_ID_IOP_REV_MINOR,
-    SUM_IOPSPU2_ID_IOP_NAME
+    SUM_IOPSPU2_ID_IOP_NAME,
 };
 
 enum BOARD_ID
@@ -81,7 +82,7 @@ enum BOARD_ID
     BOARD_ID_SSBUSIF_REV_MINOR,
     BOARD_ID_SSBUSIF_REV_MAJOR,
     BOARD_ID_SSBUSIF_NAME,
-    BOARD_ID_AIF_REV
+    BOARD_ID_AIF_REV,
 };
 
 enum BOARD2_ID
@@ -124,7 +125,7 @@ enum BOARD2_ID
     BOARD2_ID_CONSOLE_ID_04,
     BOARD2_ID_CONSOLE_ID_05,
     BOARD2_ID_CONSOLE_ID_06,
-    BOARD2_ID_CONSOLE_ID_07
+    BOARD2_ID_CONSOLE_ID_07,
 };
 
 enum ROM_ID
@@ -149,13 +150,14 @@ enum ROM_ID
     ROM_ID_DVD_ROM_MBIT_LBL,
     ROM_ID_ROM_UNCLEAN,
     ROM_ID_ROMVER,
-    ROM_ID_EXTINFO,
     ROM_ID_ROMGEN_MMDD,
     ROM_ID_ROMGEN_YYYY,
     ROM_ID_DVDPLVER,
     ROM_ID_PS1DRVVER,
-    ROM_ID_BOOTROMNAME_NAME,
-    ROM_ID_DVDROMNAME_NAME,
+    ROM_ID_BOOTROM_NAME,
+    ROM_ID_B_EXTINFO,
+    ROM_ID_DVDROM_NAME,
+    ROM_ID_D_EXTINFO,
 };
 
 enum EEGS_ID
@@ -174,7 +176,7 @@ enum EEGS_ID
     EEGS_ID_GS_REV_MAJOR,
     EEGS_ID_GS_REV_MINOR,
     EEGS_ID_GS_NAME,
-    EEGS_ID_GS_ID
+    EEGS_ID_GS_ID,
 };
 
 enum IOPSPU2_ID
@@ -185,7 +187,7 @@ enum IOPSPU2_ID
     IOPSPU2_ID_IOP_RAM_SIZE,
 
     IOPSPU2_ID_SPU2_REV,
-    IOPSPU2_ID_SPU2_NAME
+    IOPSPU2_ID_SPU2_NAME,
 };
 
 enum DEV9_ID
@@ -233,7 +235,7 @@ enum EXTBUS_ID
     EXTBUS_ID_ILINK_COMPLIANCE_DESC,
     EXTBUS_ID_ILINK_VENDOR_ID,
     EXTBUS_ID_ILINK_VENDOR_DESC,
-    EXTBUS_ID_ILINK_PRODUCT_ID
+    EXTBUS_ID_ILINK_PRODUCT_ID,
 };
 
 static struct UIMenuItem SummaryMenuItems[] = {
@@ -299,15 +301,15 @@ static struct UIMenuItem SummaryMenuItems[] = {
     {MITEM_STRING, SUM_ROM_ID_DVDPLVER, MITEM_FLAG_READONLY},
     {MITEM_TAB},
     {MITEM_TAB},
-    {MITEM_STRING, SUM_BOARD2_ID_DVDROMNAME_NAME, MITEM_FLAG_READONLY},
+    {MITEM_STRING, SUM_ROM_ID_DVDROM_NAME, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
 
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_EXTINFO},
     {MITEM_TAB},
     {MITEM_TAB},
-    {MITEM_STRING, SUM_ROM_ID_EXTINFO, MITEM_FLAG_READONLY},
+    {MITEM_STRING, SUM_ROM_ID_B_EXTINFO, MITEM_FLAG_READONLY},
     {MITEM_TAB},
-    {MITEM_STRING, SUM_BOARD2_ID_BOOTROMNAME_NAME, MITEM_FLAG_READONLY},
+    {MITEM_STRING, SUM_ROM_ID_BOOTROM_NAME, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
 
 
@@ -584,23 +586,27 @@ static struct UIMenuItem ROMMenuItems[] = {
     {MITEM_TAB},
     {MITEM_VALUE, ROM_ID_ROM0_ADDR, MITEM_FLAG_READONLY, MITEM_FORMAT_POINTER},
     {MITEM_TAB},
-    {MITEM_VALUE, ROM_ID_ROM0_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC},
+    {MITEM_VALUE, ROM_ID_ROM0_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC, 7},
     {MITEM_SPACE},
     {MITEM_LABEL, ROM_ID_ROM0_BYTES_LBL, 0, 0, 0, 0, 0, SYS_UI_LBL_UNIT_BYTES},
+    {MITEM_TAB},
+    {MITEM_STRING, ROM_ID_B_EXTINFO, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_ROM1},
     {MITEM_TAB},
     {MITEM_VALUE, ROM_ID_ROM1_ADDR, MITEM_FLAG_READONLY, MITEM_FORMAT_POINTER},
     {MITEM_TAB},
-    {MITEM_VALUE, ROM_ID_ROM1_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC},
+    {MITEM_VALUE, ROM_ID_ROM1_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC, 7},
     {MITEM_SPACE},
     {MITEM_LABEL, ROM_ID_ROM1_BYTES_LBL, 0, 0, 0, 0, 0, SYS_UI_LBL_UNIT_BYTES},
+    {MITEM_TAB},
+    {MITEM_STRING, ROM_ID_D_EXTINFO, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_ROM2},
     {MITEM_TAB},
     {MITEM_VALUE, ROM_ID_ROM2_ADDR, MITEM_FLAG_READONLY, MITEM_FORMAT_POINTER},
     {MITEM_TAB},
-    {MITEM_VALUE, ROM_ID_ROM2_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC},
+    {MITEM_VALUE, ROM_ID_ROM2_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC, 7},
     {MITEM_SPACE},
     {MITEM_LABEL, ROM_ID_ROM2_BYTES_LBL, 0, 0, 0, 0, 0, SYS_UI_LBL_UNIT_BYTES},
     {MITEM_BREAK},
@@ -608,13 +614,17 @@ static struct UIMenuItem ROMMenuItems[] = {
     {MITEM_TAB},
     {MITEM_VALUE, ROM_ID_EROM_ADDR, MITEM_FLAG_READONLY, MITEM_FORMAT_POINTER},
     {MITEM_TAB},
-    {MITEM_VALUE, ROM_ID_EROM_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC},
+    {MITEM_VALUE, ROM_ID_EROM_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC, 7},
     {MITEM_SPACE},
     {MITEM_LABEL, ROM_ID_EROM_BYTES_LBL, 0, 0, 0, 0, 0, SYS_UI_LBL_UNIT_BYTES},
     {MITEM_BREAK},
 
     {MITEM_BREAK},
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_ROM_CHIPS},
+    {MITEM_TAB},
+    {MITEM_TAB},
+    {MITEM_TAB},
+    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_DATABASE},
     {MITEM_SEPARATOR},
 
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_BOOT_ROM},
@@ -624,6 +634,9 @@ static struct UIMenuItem ROMMenuItems[] = {
     {MITEM_VALUE, ROM_ID_BOOT_ROM_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC},
     {MITEM_SPACE},
     {MITEM_LABEL, ROM_ID_BOOT_ROM_MBIT_LBL, 0, 0, 0, 0, 0, SYS_UI_LBL_UNIT_MBIT},
+    {MITEM_TAB},
+    {MITEM_TAB},
+    {MITEM_STRING, ROM_ID_BOOTROM_NAME, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_DVD_ROM},
     {MITEM_TAB},
@@ -632,23 +645,21 @@ static struct UIMenuItem ROMMenuItems[] = {
     {MITEM_VALUE, ROM_ID_DVD_ROM_SIZE, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC},
     {MITEM_SPACE},
     {MITEM_LABEL, ROM_ID_DVD_ROM_MBIT_LBL, 0, 0, 0, 0, 0, SYS_UI_LBL_UNIT_MBIT},
+    {MITEM_TAB},
+    {MITEM_TAB},
+    {MITEM_STRING, ROM_ID_DVDROM_NAME, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
     {MITEM_LABEL, ROM_ID_ROM_UNCLEAN, 0, 0, 0, 0, 0, SYS_UI_LBL_ROM_UNCLEAN},
     {MITEM_BREAK},
 
     // Version information
-    {MITEM_BREAK},
-
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_ROMVER},
-    {MITEM_TAB},
     {MITEM_TAB},
     {MITEM_STRING, ROM_ID_ROMVER, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
-    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_EXTINFO},
+    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_DVDPL},
     {MITEM_TAB},
-    {MITEM_STRING, ROM_ID_EXTINFO, MITEM_FLAG_READONLY},
-    {MITEM_TAB},
-    {MITEM_STRING, ROM_ID_BOOTROMNAME_NAME, MITEM_FLAG_READONLY},
+    {MITEM_STRING, ROM_ID_DVDPLVER, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
     // {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_ROMGEN},
     // {MITEM_TAB},
@@ -657,14 +668,8 @@ static struct UIMenuItem ROMMenuItems[] = {
     // {MITEM_DASH},
     // {MITEM_VALUE, ROM_ID_ROMGEN_YYYY, MITEM_FLAG_READONLY, MITEM_FORMAT_HEX, 4},
     // {MITEM_TAB},
-    {MITEM_BREAK},
-    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_DVDPL},
-    {MITEM_TAB},
-    {MITEM_TAB},
-    {MITEM_STRING, ROM_ID_DVDPLVER, MITEM_FLAG_READONLY},
-    {MITEM_BREAK},
+    // {MITEM_BREAK},
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_PS1DRV},
-    {MITEM_TAB},
     {MITEM_TAB},
     {MITEM_STRING, ROM_ID_PS1DRVVER, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
@@ -1314,9 +1319,6 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
         UISetValue(&SummaryMenu, SUM_BOARD2_ID_MECHA_REV_MINOR, SystemInformation->mainboard.MECHACONVersion[2]);
         UISetType(&SummaryMenu, SUM_BOARD2_ID_MECHA_NAME, MITEM_STRING);
         UISetString(&SummaryMenu, SUM_BOARD2_ID_MECHA_NAME, GetMECHACONChipDesc((u32)(SystemInformation->mainboard.MECHACONVersion[1]) << 16 | (u32)(SystemInformation->mainboard.MECHACONVersion[2]) << 8 | (u32)(SystemInformation->mainboard.MECHACONVersion[0])));
-        UISetType(&SummaryMenu, SUM_BOARD2_ID_BOOTROMNAME_NAME, MITEM_STRING);
-        UISetString(&SummaryMenu, SUM_BOARD2_ID_BOOTROMNAME_NAME, GetBOOTROMDesc(SystemInformation->mainboard.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
-        UISetString(&SummaryMenu, SUM_BOARD2_ID_DVDROMNAME_NAME, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
 
         UISetType(&Board2ReportMenu, BOARD2_ID_MECHA_REGION, MITEM_VALUE);
         UISetValue(&Board2ReportMenu, BOARD2_ID_MECHA_REGION, SystemInformation->mainboard.MECHACONVersion[0]);
@@ -1595,24 +1597,33 @@ static void LoadROMInformation(const struct SystemInformation *SystemInformation
 
     // Version information
     UISetString(&ROMReportMenu, ROM_ID_ROMVER, SystemInformation->mainboard.romver);
-    UISetString(&ROMReportMenu, ROM_ID_EXTINFO, SystemInformation->mainboard.extinfo);
+    UISetString(&ROMReportMenu, ROM_ID_B_EXTINFO, SystemInformation->mainboard.extinfo);
+    UISetType(&ROMReportMenu, ROM_ID_BOOTROM_NAME, MITEM_STRING);
+    UISetString(&ROMReportMenu, ROM_ID_BOOTROM_NAME, GetBOOTROMDesc(SystemInformation->mainboard.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
     UISetString(&SummaryMenu, SUM_ROM_ID_ROMVER, SystemInformation->mainboard.romver);
-    UISetString(&SummaryMenu, SUM_ROM_ID_EXTINFO, SystemInformation->mainboard.extinfo);
-    UISetType(&SummaryMenu, ROM_ID_BOOTROMNAME_NAME, MITEM_STRING);
-    UISetString(&SummaryMenu, ROM_ID_BOOTROMNAME_NAME, GetBOOTROMDesc(SystemInformation->mainboard.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
-    UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_MMDD, SystemInformation->mainboard.ROMGEN_MonthDate);
-    UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_YYYY, SystemInformation->mainboard.ROMGEN_Year);
+    UISetString(&SummaryMenu, SUM_ROM_ID_B_EXTINFO, SystemInformation->mainboard.extinfo);
+    UISetType(&SummaryMenu, SUM_ROM_ID_BOOTROM_NAME, MITEM_STRING);
+    UISetString(&SummaryMenu, SUM_ROM_ID_BOOTROM_NAME, GetBOOTROMDesc(SystemInformation->mainboard.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
+    // UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_MMDD, SystemInformation->mainboard.ROMGEN_MonthDate);
+    // UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_YYYY, SystemInformation->mainboard.ROMGEN_Year);
     if (SystemInformation->DVDPlayerVer[0] != '\0')
     {
         UISetVisible(&ROMReportMenu, ROM_ID_DVDPLVER, 1);
         UISetString(&ROMReportMenu, ROM_ID_DVDPLVER, SystemInformation->DVDPlayerVer);
+        UISetType(&ROMReportMenu, ROM_ID_DVDROM_NAME, MITEM_STRING);
+        UISetString(&ROMReportMenu, ROM_ID_DVDROM_NAME, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
+        UISetString(&ROMReportMenu, ROM_ID_D_EXTINFO, SystemInformation->DVDextinfo);
         UISetVisible(&SummaryMenu, SUM_ROM_ID_DVDPLVER, 1);
         UISetString(&SummaryMenu, SUM_ROM_ID_DVDPLVER, SystemInformation->DVDPlayerVer);
+        UISetType(&SummaryMenu, SUM_ROM_ID_DVDROM_NAME, MITEM_STRING);
+        UISetString(&SummaryMenu, SUM_ROM_ID_DVDROM_NAME, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
     }
     else
     {
         UISetVisible(&ROMReportMenu, ROM_ID_DVDPLVER, 0);
+        UISetVisible(&ROMReportMenu, ROM_ID_DVDROM_NAME, 0);
         UISetVisible(&SummaryMenu, SUM_ROM_ID_DVDPLVER, 0);
+        UISetVisible(&SummaryMenu, SUM_ROM_ID_DVDROM_NAME, 0);
     }
     UISetString(&ROMReportMenu, ROM_ID_PS1DRVVER, SystemInformation->PS1DRVVer);
 }
