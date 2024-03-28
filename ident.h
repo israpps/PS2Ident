@@ -52,7 +52,7 @@ const char *GetRegionDesc(unsigned char region);
 const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *SystemInformation);
 const char *GetMRPDesc(unsigned short int id);
 const char *GetChassisDesc(const struct PS2IDBMainboardEntry *SystemInformation);
-const char *GetModelIDDesc(unsigned int id);
+const char *GetModelIDDesc(unsigned short int ModelId);
 const char *GetEMCSIDDesc(unsigned char id);
 const char *GetADD010Desc(unsigned short int id);
 const char *GetDSPDesc(unsigned char revision);

@@ -1152,14 +1152,238 @@ const char *GetChassisDesc(const struct PS2IDBMainboardEntry *SystemInformation)
     return description;
 }
 
-const char *GetModelIDDesc(unsigned int id)
+const char *GetModelIDDesc(unsigned short int ModelId)
 {
     const char *description;
 
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_MODEL_ID, id)) == NULL)
-    {
-        description = "Sticker";
-    }
+    // clang-format off
+         if (ModelId == 0xd200) description = "DTL-H10000";
+    else if (ModelId == 0xd201) description = "SCPH-10000";
+    else if (ModelId == 0xd202) description = "SCPH-15000/18000";
+    else if (ModelId == 0xd203) description = "SCPH-30001";
+    else if (ModelId == 0xd204) description = "SCPH-30002/R";
+    else if (ModelId == 0xd205) description = "SCPH-30003/R";
+    else if (ModelId == 0xd206) description = "SCPH-30004/R";
+    else if (ModelId == 0xd207) description = "DTL-H30001";
+    else if (ModelId == 0xd208) description = "DTL-H30002";
+    else if (ModelId == 0xd209) description = "COH-H30000";
+    else if (ModelId == 0xd20a) description = "SCPH-18000";
+    else if (ModelId == 0xd20b) description = "COH-H31000";
+    else if (ModelId == 0xd20c) description = "SCPH-30000";
+    else if (ModelId == 0xd20d) description = "DTL-H30000";
+    else if (ModelId == 0xd20e) description = "COH-H31100";
+    else if (ModelId == 0xd20f) description = "SCPH-35001 GT";
+    else if (ModelId == 0xd210) description = "SCPH-35002 GT";
+    else if (ModelId == 0xd211) description = "SCPH-35003 GT";
+    else if (ModelId == 0xd212) description = "SCPH-35004 GT";
+    else if (ModelId == 0xd213) description = "SCPH-35000 GT";
+    else if (ModelId == 0xd214) description = "SCPH-30001/R";
+    else if (ModelId == 0xd215) description = "SCPH-30005 R";
+    else if (ModelId == 0xd216) description = "SCPH-30006 R";
+    else if (ModelId == 0xd217) description = "SCPH-39000";
+    else if (ModelId == 0xd218) description = "SCPH-39001";
+    else if (ModelId == 0xd219) description = "SCPH-39002";
+    else if (ModelId == 0xd21a) description = "SCPH-39003";
+    else if (ModelId == 0xd21b) description = "SCPH-39004";
+ /* else if (ModelId == 0xd21c) description = "SCPH-30007 R"; */
+    else if (ModelId == 0xd21d) description = "SCPH-37000 L";
+    else if (ModelId == 0xd21e) description = "SCPH-37000 B";
+    else if (ModelId == 0xd21f) description = "SCPH-39008";
+    else if (ModelId == 0xd220) description = "SCPH-39000 TB";
+    else if (ModelId == 0xd221) description = "SCPH-39000 RC";
+    else if (ModelId == 0xd222) description = "SCPH-39006";
+ /* else if (ModelId == 0xd223) description = "SCPH-39005";
+    else if (ModelId == 0xd224) description = "SCPH-39007"; */
+    else if (ModelId == 0xd225) description = "DTL-H10100";
+    else if (ModelId == 0xd226) description = "DTL-H30100";
+    else if (ModelId == 0xd227) description = "DTL-H30101";
+    else if (ModelId == 0xd228) description = "DTL-H30102";
+    else if (ModelId == 0xd229) description = "DTL-H30105";
+    else if (ModelId == 0xd22a) description = "SCPH-39000 S";
+    else if (ModelId == 0xd22b) description = "SCPH-39000 AQ";
+    else if (ModelId == 0xd22c) description = "SCPH-39000 SA";
+    else if (ModelId == 0xd22d) description = "SCPH-39010/N";
+    // Deckard
+    else if (ModelId == 0xd301) description = "DTL-H50000";
+    else if (ModelId == 0xd302) description = "DTL-H50001";
+    else if (ModelId == 0xd303) description = "DTL-H50002";
+    else if (ModelId == 0xd304) description = "DTL-H50009";
+    // d305 - d31d ??
+    else if (ModelId == 0xd31e) description = "DTL-H70002";
+ /* else if (ModelId == 0xd31f) description = "DTL-H70011S ???";
+    else if (ModelId == 0xd320) description = "???";
+    else if (ModelId == 0xd321) description = "???"; */
+    else if (ModelId == 0xd322) description = "DTL-H75000";
+ /* else if (ModelId == 0xd323) description = "DTL-H77000 ???";
+    else if (ModelId == 0xd324) description = "DTL-H79000 ???";
+    else if (ModelId == 0xd325) description = "DTL-H90000 R-chassis ???"; */
+    else if (ModelId == 0xd326) description = "DTL-H90000"; // P-chassis
+    // d327-d37f
+    // X-chassis
+    else if (ModelId == 0xd380) description = "DESR-7000";
+    else if (ModelId == 0xd381) description = "DESR-5000";
+    else if (ModelId == 0xd382) description = "DESR-7100";
+    else if (ModelId == 0xd383) description = "DESR-5100";
+    else if (ModelId == 0xd384) description = "DESR-5100/S";
+    else if (ModelId == 0xd385) description = "DESR-7500";
+    else if (ModelId == 0xd386) description = "DESR-5500";
+    else if (ModelId == 0xd387) description = "DESR-7700";
+    else if (ModelId == 0xd388) description = "DESR-5700";
+    // d389 - d400 ??
+    // H, I, J -chassis
+    else if (ModelId == 0xd401) description = "SCPH-50001/N";
+    else if (ModelId == 0xd402) description = "SCPH-50010/N";
+    else if (ModelId == 0xd403) description = "SCPH-50000";
+    else if (ModelId == 0xd404) description = "SCPH-50000 MB/NH";
+    else if (ModelId == 0xd405) description = "SCPH-50002";
+    else if (ModelId == 0xd406) description = "SCPH-50003";
+    else if (ModelId == 0xd407) description = "SCPH-50004";
+    else if (ModelId == 0xd408) description = "SCPH-50002 SS";
+    else if (ModelId == 0xd409) description = "SCPH-50003 SS";
+    else if (ModelId == 0xd40a) description = "SCPH-50004 SS";
+    else if (ModelId == 0xd40b) description = "SCPH-50001";
+    else if (ModelId == 0xd40c) description = "SCPH-50005/N";
+    else if (ModelId == 0xd40d) description = "SCPH-50006";
+    else if (ModelId == 0xd40e) description = "SCPH-50007";
+    else if (ModelId == 0xd40f) description = "SCPH-50008";
+ /* else if (ModelId == 0xd410) description = "???"; */
+    else if (ModelId == 0xd411) description = "SCPH-50000 NB";
+    else if (ModelId == 0xd412) description = "SCPH-50000 TSS";
+    else if (ModelId == 0xd413) description = "SCPH-55000 GU";
+    else if (ModelId == 0xd414) description = "SCPH-55000 GT";
+    else if (ModelId == 0xd415) description = "SCPH-50009 SS";
+    else if (ModelId == 0xd416) description = "SCPH-50003 AQ";
+ /* else if (ModelId == 0xd417) description = "SCPH-55005 GT/N ???"; */
+    else if (ModelId == 0xd418) description = "SCPH-55006 GT";
+ /* else if (ModelId == 0xd419) description = "SCPH-55007 GT ???"; */
+    else if (ModelId == 0xd41a) description = "SCPH-50008 SS";
+    else if (ModelId == 0xd41b) description = "SCPH-50004 AQ";
+    else if (ModelId == 0xd41c) description = "SCPH-50005 SS/N";
+    else if (ModelId == 0xd41d) description = "SCPH-50005 AQ/N";
+    else if (ModelId == 0xd41e) description = "SCPH-50000 CW";
+    else if (ModelId == 0xd41f) description = "SCPH-50000 SA";
+    else if (ModelId == 0xd420) description = "SCPH-50004 SS";
+ /* else if (ModelId == 0xd421) description = "???"; */
+    else if (ModelId == 0xd422) description = "SCPH-50002 SS";
+    else if (ModelId == 0xd423) description = "SCPH-50003 SS";
+    else if (ModelId == 0xd424) description = "SCPH-50000 PW";
+    else if (ModelId == 0xd425) description = "SCPH-50011";
+    // K-chassis
+    else if (ModelId == 0xd426) description = "SCPH-70004";
+    else if (ModelId == 0xd427) description = "SCPH-70003";
+    else if (ModelId == 0xd428) description = "SCPH-70002";
+    else if (ModelId == 0xd429) description = "SCPH-70011";
+    else if (ModelId == 0xd42a) description = "SCPH-70012";
+    else if (ModelId == 0xd42b) description = "SCPH-70000";
+    else if (ModelId == 0xd42c) description = "SCPH-70005";
+    else if (ModelId == 0xd42d) description = "SCPH-70006";
+    else if (ModelId == 0xd42e) description = "SCPH-70007";
+    else if (ModelId == 0xd42f) description = "SCPH-70000 GT";
+    else if (ModelId == 0xd430) description = "SCPH-70008";
+    else if (ModelId == 0xd431) description = "SCPH-70002 SS";
+    else if (ModelId == 0xd432) description = "SCPH-70003 SS";
+    else if (ModelId == 0xd433) description = "SCPH-70004 SS";
+    else if (ModelId == 0xd434) description = "SCPH-70008 SS";
+    else if (ModelId == 0xd435) description = "SCPH-70001";
+    else if (ModelId == 0xd436) description = "SCPH-70010";
+    else if (ModelId == 0xd437) description = "SCPH-70000 CW";
+    else if (ModelId == 0xd438) description = "SCPH-70003 SS";
+ /* else if (ModelId == 0xd439) description = "SCPH-70000 SS ???"; */
+    else if (ModelId == 0xd43a) description = "SCPH-70008 SS";
+    // L-chassis
+    else if (ModelId == 0xd43b) description = "SCPH-75001";
+    else if (ModelId == 0xd43c) description = "SCPH-75002";
+    else if (ModelId == 0xd43d) description = "SCPH-75003";
+    else if (ModelId == 0xd43e) description = "SCPH-75004";
+    else if (ModelId == 0xd43f) description = "SCPH-75000 SSS";
+    else if (ModelId == 0xd440) description = "SCPH-75002 SS";
+    else if (ModelId == 0xd441) description = "SCPH-75003 SS";
+    else if (ModelId == 0xd442) description = "SCPH-75004 SS";
+    else if (ModelId == 0xd443) description = "SCPH-75000";
+    else if (ModelId == 0xd444) description = "SCPH-75000 CW";
+    else if (ModelId == 0xd445) description = "SCPH-75006";
+    else if (ModelId == 0xd446) description = "SCPH-75007";
+    else if (ModelId == 0xd447) description = "SCPH-75005";
+    else if (ModelId == 0xd448) description = "SCPH-75010";
+    else if (ModelId == 0xd449) description = "SCPH-75000 FF";
+ /* else if (ModelId == 0xd44a) description = "???";
+    else if (ModelId == 0xd44b) description = "???"; */
+    else if (ModelId == 0xd44c) description = "SCPH-75008";
+    else if (ModelId == 0xd44d) description = "SCPH-75008 SS";
+    // M-chassis
+    else if (ModelId == 0xd44e) description = "SCPH-77001";
+    else if (ModelId == 0xd44f) description = "SCPH-77002";
+    else if (ModelId == 0xd450) description = "SCPH-77003";
+    else if (ModelId == 0xd451) description = "SCPH-77004";
+    else if (ModelId == 0xd452) description = "SCPH-77002 SS";
+    else if (ModelId == 0xd453) description = "SCPH-77003 SS";
+    else if (ModelId == 0xd454) description = "SCPH-77004 SS";
+    else if (ModelId == 0xd455) description = "SCPH-77000";
+    else if (ModelId == 0xd456) description = "SCPH-77000 CW";
+    else if (ModelId == 0xd457) description = "SCPH-77005";
+    else if (ModelId == 0xd458) description = "SCPH-77006";
+    else if (ModelId == 0xd459) description = "SCPH-77007";
+    else if (ModelId == 0xd45a) description = "SCPH-77008";
+ /* else if (ModelId == 0xd45b) description = "SCPH-77010 ???";
+    else if (ModelId == 0xd45c) description = "SCPH-77008 SS ???"; */
+    else if (ModelId == 0xd45d) description = "SCPH-77001 SS";
+    else if (ModelId == 0xd45e) description = "SCPH-77003 PK";
+    else if (ModelId == 0xd45f) description = "SCPH-77004 PK";
+ /* else if (ModelId == 0xd460) description = "SCPH-77008 PK ???"; */
+    else if (ModelId == 0xd461) description = "SCPH-77000 SS";
+    else if (ModelId == 0xd462) description = "SCPH-77000 PK";
+ /* else if (ModelId == 0xd463) description = "???"; */
+    else if (ModelId == 0xd464) description = "SCPH-77002 PK";
+    // N-chassis
+    else if (ModelId == 0xd465) description = "SCPH-79001";
+ /* else if (ModelId == 0xd466) description = "SCPH-79000 ???"; */
+    else if (ModelId == 0xd467) description = "SCPH-79000 CW";
+    else if (ModelId == 0xd468) description = "SCPH-79002";
+    else if (ModelId == 0xd469) description = "SCPH-79001 SS";
+ /* else if (ModelId == 0xd46a) description = "SCPH-79005 ???"; */
+    else if (ModelId == 0xd46b) description = "SCPH-79006";
+ /* else if (ModelId == 0xd46c) description = "SCPH-79007 ???"; */
+    else if (ModelId == 0xd46d) description = "SCPH-79000 SS";
+    else if (ModelId == 0xd46e) description = "SCPH-79003";
+    else if (ModelId == 0xd46f) description = "SCPH-79004";
+    else if (ModelId == 0xd470) description = "SCPH-79010";
+    else if (ModelId == 0xd471) description = "SCPH-79003 SS";
+ /* else if (ModelId == 0xd472) description = "SCPH-79004 SS ???"; */
+    else if (ModelId == 0xd473) description = "SCPH-79008";
+    else if (ModelId == 0xd474) description = "SCPH-79001 CW";
+    // P/R-chassis
+    else if (ModelId == 0xd475) description = "SCPH-90000";
+    else if (ModelId == 0xd476) description = "SCPH-90000 CW";
+    else if (ModelId == 0xd477) description = "SCPH-90000 SS";
+    else if (ModelId == 0xd478) description = "SCPH-90006";
+    else if (ModelId == 0xd479) description = "SCPH-90006 CW";
+    else if (ModelId == 0xd47a) description = "SCPH-90006 SS"; // Needs confirmation
+    else if (ModelId == 0xd47b) description = "SCPH-90005";
+ /* else if (ModelId == 0xd47c) description = "SCPH-90005 CW ???";
+    else if (ModelId == 0xd47d) description = "SCPH-90005 SS ???"; */
+    else if (ModelId == 0xd47e) description = "SCPH-90007";
+    else if (ModelId == 0xd47f) description = "SCPH-90007 CW";
+ /* else if (ModelId == 0xd480) description = "SCPH-90007 SS ???"; */
+    else if (ModelId == 0xd481) description = "SCPH-90001";
+    else if (ModelId == 0xd482) description = "SCPH-90001 SS";
+    else if (ModelId == 0xd483) description = "SCPH-90004";
+    else if (ModelId == 0xd484) description = "SCPH-90004 SS";
+    else if (ModelId == 0xd485) description = "SCPH-90002";
+    else if (ModelId == 0xd486) description = "SCPH-90003";
+ /* else if (ModelId == 0xd487) description = "SCPH-90005 CR ???"; */
+    else if (ModelId == 0xd488) description = "SCPH-90006 CR";
+    else if (ModelId == 0xd489) description = "SCPH-90007 CR";
+    else if (ModelId == 0xd48a) description = "SCPH-90010";
+    else if (ModelId == 0xd48b) description = "SCPH-90000 CR";
+    else if (ModelId == 0xd48c) description = "SCPH-90008";
+    else if (ModelId == 0xd48d) description = "SCPH-90008 SS";
+ /* else if (ModelId == 0xd48e) description = "SCPH-90008 CR ???"; */
+    else if (ModelId == 0xd48f) description = "PX300-1";
+    else if (ModelId == 0xd490) description = "PX300-2";
+    else if (ModelId == 0xd491) description = "SCPH-90010 CR";
+    // clang-format on
+    else
+        description = "Missing sticker and nvram";
 
     return description;
 }
@@ -1382,7 +1606,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_ILINKID))
     {
         modelID = SystemInformation->mainboard.ModelID[0] | SystemInformation->mainboard.ModelID[1] << 8 | SystemInformation->mainboard.ModelID[2] << 16;
-        fprintf(stream, "0x%06x (%s)\r\n", modelID, GetModelIDDesc(modelID));
+        fprintf(stream, "0x%06x (%s)\r\n", modelID, GetModelIDDesc(SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8));
     }
     else
     {

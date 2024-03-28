@@ -1390,11 +1390,11 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
         UISetType(&Board2ReportMenu, BOARD2_ID_MODEL_ID, MITEM_VALUE);
         UISetValue(&Board2ReportMenu, BOARD2_ID_MODEL_ID, modelID);
         UISetType(&Board2ReportMenu, BOARD2_ID_MODEL_ID_DESC, MITEM_STRING);
-        UISetString(&Board2ReportMenu, BOARD2_ID_MODEL_ID_DESC, GetModelIDDesc(modelID));
+        UISetString(&Board2ReportMenu, BOARD2_ID_MODEL_ID_DESC, GetModelIDDesc(SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8));
         UISetType(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID, MITEM_VALUE);
         UISetValue(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID, modelID);
         UISetType(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID_DESC, MITEM_STRING);
-        UISetString(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID_DESC, GetModelIDDesc(modelID));
+        UISetString(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID_DESC, GetModelIDDesc(SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8));
 
         UISetType(&Board2ReportMenu, BOARD2_ID_ILINK_ID_00, MITEM_VALUE);
         UISetValue(&Board2ReportMenu, BOARD2_ID_ILINK_ID_00, SystemInformation->iLinkID[0]);
