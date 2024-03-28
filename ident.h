@@ -43,7 +43,7 @@ const char *GetPHYModelDesc(unsigned int oui, unsigned char model);
 const char *GetGSChipDesc(unsigned short int revision);
 const char *GetEEChipDesc(unsigned short int revision);
 const char *GetIOPChipDesc(unsigned short int revision);
-const char *GetSPU2ChipDesc(unsigned short int revision);
+const char *GetSPU2ChipDesc(unsigned short int revision, unsigned short int EE_revision);
 const char *GetMECHACONChipDesc(unsigned int revision);
 const char *GetBOOTROMDesc(const char *extinfo, const char *romver, const char *dvdplVer);
 const char *GetDVDROMDesc(const char *dvdplVer);

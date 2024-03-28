@@ -1,11 +1,9 @@
 - research new EE value from @wisi (data collection)
-- add ROM database (BOOT and DVD), mostly for redump database
-- add ability to store ROMDIR EXTINFO (for BOOt and DVD roms) field into text log file
-- recognize roms by extinof, not by CRC
+- add ROM CRC database (BOOT and DVD), mostly for redump database
 - CRC values can be used for detecting modchips
 - add ability to dump keys (all serials + HDD key) into separate file
-- fix DVD EROM detection on slim consoles
 - add additional field for network adapters for FAT models (including non-official)
 - split network adapter, so al possible official adapters will be shown
 - or at least add gamestar detection
 - add first 3 bytes of MAC address into database
+- fix some SPU2 chips

@@ -611,13 +611,32 @@ const char *GetIOPChipDesc(unsigned short int revision)
     return description;
 }
 
-const char *GetSPU2ChipDesc(unsigned short int revision)
+const char *GetSPU2ChipDesc(unsigned short int revision, unsigned short int EE_revision)
 {
     const char *description;
 
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_SPU2, revision)) == NULL)
+    printf("SPU2 revision: 0x%02x\n", revision);
+
+    switch (revision)
     {
-        description = "Missing";
+        case 0x06:
+            description = "CXD2942R";
+            break;
+        case 0x07:
+            description = "CXD2942AR/CXD2942BR/CXD2950R"; // TODO: seems CXD2950R exclusive for GH-013, GH-015, GH-016
+            break;
+        case 0x08:
+            if (EE_revision == 0x43)
+                description = "combined with EE";
+            else
+                description = "CXD2947R";
+            break;
+        case 0x10:
+            description = "CXD2955R";
+            break;
+        default:
+            description = "Missing";
+            break;
     }
 
     return description;
@@ -691,6 +710,9 @@ const char *GetMECHACONChipDesc(unsigned int revision)
         case 0x020C00:
             description = "CXP102064-007R";
             break;
+        case 0x020E00:
+            description = "CXP102064-008R";
+            break;
         // US region only
         case 0x020401:
             description = "CXP102064-101R";
@@ -701,7 +723,13 @@ const char *GetMECHACONChipDesc(unsigned int revision)
         case 0x020C01:
             description = "CXP102064-103R";
             break;
+        case 0x020E01:
+            description = "CXP102064-104R";
+            break;
         // EU region only
+        case 0x020402:
+            description = "CXP102064-201R";
+            break;
         case 0x020602:
             description = "CXP102064-202R";
             break;
@@ -714,6 +742,19 @@ const char *GetMECHACONChipDesc(unsigned int revision)
             break;
         case 0x020C03:
             description = "CXP102064-303R";
+            break;
+        case 0x020E03:
+            description = "CXP102064-304R";
+            break;
+        // Japan region only
+        case 0x030200:
+            description = "CXP103049-001GG";
+            break;
+        case 0x030600:
+            description = "CXP103049-002GG";
+            break;
+        case 0x030800:
+            description = "CXP103049-003GG";
             break;
         // US region only
         case 0x030001:
@@ -744,16 +785,6 @@ const char *GetMECHACONChipDesc(unsigned int revision)
             break;
         case 0x030603:
             description = "CXP103049-303GG";
-            break;
-        // Japan region only
-        case 0x030200:
-            description = "CXP103049-001GG";
-            break;
-        case 0x030600:
-            description = "CXP103049-002GG";
-            break;
-        case 0x030800:
-            description = "CXP103049-003GG";
             break;
         // Asia region only
         case 0x030404:
@@ -1285,7 +1316,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
             SystemInformation->mainboard.MainboardName, SystemInformation->chassis,
             SystemInformation->mainboard.ROMGEN_MonthDate, SystemInformation->mainboard.ROMGEN_Year, SystemInformation->mainboard.MachineType,
             SystemInformation->mainboard.BoardInf, GetMRPDesc(SystemInformation->mainboard.BoardInf), SystemInformation->mainboard.MPUBoardID,
-            SystemInformation->mainboard.spu2.revision, GetSPU2ChipDesc(SystemInformation->mainboard.spu2.revision));
+            SystemInformation->mainboard.spu2.revision, GetSPU2ChipDesc(SystemInformation->mainboard.spu2.revision, SystemInformation->mainboard.ee.revision));
 
     fputs("    ADD0x010:            ", stream);
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_ADD010))

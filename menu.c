@@ -1671,7 +1671,7 @@ static void LoadIOPSPU2Information(const struct SystemInformation *SystemInforma
 
     // SPU2
     UISetValue(&IOPSPU2ReportMenu, IOPSPU2_ID_SPU2_REV, SystemInformation->mainboard.spu2.revision);
-    UISetString(&IOPSPU2ReportMenu, IOPSPU2_ID_SPU2_NAME, GetSPU2ChipDesc(SystemInformation->mainboard.spu2.revision));
+    UISetString(&IOPSPU2ReportMenu, IOPSPU2_ID_SPU2_NAME, GetSPU2ChipDesc(SystemInformation->mainboard.spu2.revision, SystemInformation->mainboard.ee.revision));
 }
 
 static void DEV9MenuDisplay(int DeviceConnected)
