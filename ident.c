@@ -563,42 +563,6 @@ const char *GetPHYModelDesc(unsigned int oui, unsigned char model)
     return description;
 }
 
-const char *GetGSChipDesc(unsigned short int revision)
-{
-    const char *description;
-
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_GS, revision)) == NULL)
-    {
-        description = "Missing";
-    }
-
-    return description;
-}
-
-const char *GetEEChipDesc(unsigned short int revision)
-{
-    const char *description;
-
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_EE, revision)) == NULL)
-    {
-        description = "Missing";
-    }
-
-    return description;
-}
-
-const char *GetIOPChipDesc(unsigned short int revision)
-{
-    const char *description;
-
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_IOP, revision)) == NULL)
-    {
-        description = "Missing";
-    }
-
-    return description;
-}
-
 const char *GetSSBUSIFDesc(unsigned short int revision, unsigned short int EE_revision)
 {
     const char *description;
@@ -656,6 +620,70 @@ const char *GetSPU2ChipDesc(unsigned short int revision, unsigned short int EE_r
             break;
         default:
             description = "Missing";
+            break;
+    }
+
+    return description;
+}
+
+const char *GetGSChipDesc(unsigned short int revision)
+{
+    const char *description;
+
+    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_GS, revision)) == NULL)
+    {
+        description = "Missing";
+    }
+
+    return description;
+}
+
+const char *GetEEChipDesc(unsigned short int revision)
+{
+    const char *description;
+
+    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_EE, revision)) == NULL)
+    {
+        description = "Missing";
+    }
+
+    return description;
+}
+
+const char *GetIOPChipDesc(unsigned short int revision, unsigned short int EE_revision)
+{
+    const char *description;
+
+    printf("IOP revision: 0x%02x\n", revision);
+
+    switch (revision)
+    {
+        case 0x15:
+            description = "CXD9553GB";
+            break;
+        case 0x1f:
+            description = "CXD9619GB";
+            break;
+        case 0x20:
+            description = "CXD9660GB";
+            break;
+        case 0x21:
+            description = "CXD9697GP/CXD9732GP";
+            break;
+        case 0x22:
+            description = "CXD9697GP/CXD9732GP";
+            break;
+        case 0x24:
+            description = "CXD9798GP/CXD9799GP/CXD9799AGP";
+            break;
+        case 0x30: // Deckard PowerPC
+            if (EE_revision == 0x43)
+                description = "combined with EE";
+            else
+                description = "CXD9796GP/CXD9209GP"; // TODO: CXD9796GP - 75k only
+            break;
+        default:
+            description = "Missing chip";
             break;
     }
 
@@ -1279,7 +1307,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
                     "    RAM size:            %u bytes\r\n"
                     "    SSBUS I/F revision:  %u.%u (%s)\r\n",
             SystemInformation->mainboard.iop.revision >> 8,
-            (SystemInformation->mainboard.iop.revision & 0xFF) >> 4, SystemInformation->mainboard.iop.revision & 0xF, GetIOPChipDesc(SystemInformation->mainboard.iop.revision),
+            (SystemInformation->mainboard.iop.revision & 0xFF) >> 4, SystemInformation->mainboard.iop.revision & 0xF, GetIOPChipDesc(SystemInformation->mainboard.iop.revision, SystemInformation->mainboard.ee.revision),
             SystemInformation->mainboard.iop.RAMSize,
             SystemInformation->mainboard.ssbus.revision >> 4, SystemInformation->mainboard.ssbus.revision & 0xF,
             GetSSBUSIFDesc(SystemInformation->mainboard.ssbus.revision, SystemInformation->mainboard.ee.revision));

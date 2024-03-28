@@ -1662,10 +1662,10 @@ static void LoadIOPSPU2Information(const struct SystemInformation *SystemInforma
     // IOP
     UISetValue(&IOPSPU2ReportMenu, IOPSPU2_ID_IOP_REV_MAJOR, SystemInformation->mainboard.iop.revision >> 4);
     UISetValue(&IOPSPU2ReportMenu, IOPSPU2_ID_IOP_REV_MINOR, SystemInformation->mainboard.iop.revision & 0xF);
-    UISetString(&IOPSPU2ReportMenu, IOPSPU2_ID_IOP_NAME, GetIOPChipDesc(SystemInformation->mainboard.iop.revision));
+    UISetString(&IOPSPU2ReportMenu, IOPSPU2_ID_IOP_NAME, GetIOPChipDesc(SystemInformation->mainboard.iop.revision, SystemInformation->mainboard.ee.revision));
     UISetValue(&SummaryMenu, SUM_IOPSPU2_ID_IOP_REV_MAJOR, SystemInformation->mainboard.iop.revision >> 4);
     UISetValue(&SummaryMenu, SUM_IOPSPU2_ID_IOP_REV_MINOR, SystemInformation->mainboard.iop.revision & 0xF);
-    UISetString(&SummaryMenu, SUM_IOPSPU2_ID_IOP_NAME, GetIOPChipDesc(SystemInformation->mainboard.iop.revision));
+    UISetString(&SummaryMenu, SUM_IOPSPU2_ID_IOP_NAME, GetIOPChipDesc(SystemInformation->mainboard.iop.revision, SystemInformation->mainboard.ee.revision));
 
     UISetValue(&IOPSPU2ReportMenu, IOPSPU2_ID_IOP_RAM_SIZE, SystemInformation->mainboard.iop.RAMSize);
 
