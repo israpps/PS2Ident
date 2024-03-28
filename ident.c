@@ -1435,7 +1435,7 @@ unsigned int CalculateCPUCacheSize(unsigned char value)
 int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemInformation)
 {
     unsigned int i, modelID;
-    // unsigned short int conModelID;
+    unsigned short int conModelID;
     u32 Serial;
     int MayBeModded;
     const char *dvdplVer;
@@ -1606,7 +1606,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_ILINKID))
     {
         modelID = SystemInformation->mainboard.ModelID[0] | SystemInformation->mainboard.ModelID[1] << 8 | SystemInformation->mainboard.ModelID[2] << 16;
-        fprintf(stream, "0x%06x (%s)\r\n", modelID, GetModelIDDesc(SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8));
+        fprintf(stream, "0x%06x\r\n", modelID);
     }
     else
     {
@@ -1616,22 +1616,21 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     // SDMI Model ID (only 1 last byte, but we will keep 2 bytes)
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_CONSOLEID))
     {
-        // conModelID = SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8;
+        conModelID = SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8;
         Serial = (SystemInformation->ConsoleID[6]) << 16 | (SystemInformation->ConsoleID[5]) << 8 | (SystemInformation->ConsoleID[4]);
-        fprintf(stream, "    Console Model ID:    0x%02x\r\n"
-                        "    SDMI Company ID:     %02x-%02x-%02x\r\n"
+        fprintf(stream, "    Console Model ID:    0x%04x (%s)\r\n"
+                        // "    SDMI Company ID:     %02x-%02x-%02x\r\n"
                         "    EMCS ID:             0x%02x (%s)\r\n"
                         "    Serial range:        %03dxxxx\r\n",
-                // conModelID,
-                SystemInformation->mainboard.ConModelID[0],
-                SystemInformation->ConsoleID[3], SystemInformation->ConsoleID[2], SystemInformation->ConsoleID[1],
+                conModelID, GetModelIDDesc(conModelID),
+                // SystemInformation->ConsoleID[3], SystemInformation->ConsoleID[2], SystemInformation->ConsoleID[1],
                 SystemInformation->mainboard.EMCSID, GetEMCSIDDesc(SystemInformation->mainboard.EMCSID),
                 Serial / 10000);
     }
     else
     {
         fputs("    Console Model ID:    -\r\n"
-              "    SDMI Company ID:     -\r\n"
+            //   "    SDMI Company ID:     -\r\n"
               "    EMCS ID:             -\r\n"
               "    Serial range:        -\r\n",
               stream);

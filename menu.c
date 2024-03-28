@@ -44,8 +44,8 @@ enum SUMMARY_ID
     SUM_BOARD_ID_MODEL_NAME = 1,
     SUM_BOARD_ID_BOARD_NAME,
     SUM_BOARD2_ID_SERIAL,
-    SUM_BOARD2_ID_MODEL_ID,
-    SUM_BOARD2_ID_MODEL_ID_DESC,
+    SUM_BOARD2_ID_CON_MODEL_ID,
+    SUM_BOARD2_ID_CON_MODEL_ID_DESC,
     SUM_BOARD2_ID_EMCS_ID,
     SUM_BOARD2_ID_EMCS_ID_DESC,
     SUM_ROM_ID_ROMVER,
@@ -105,7 +105,7 @@ enum BOARD2_ID
     BOARD2_ID_MECHA_RENEWAL_MINUTE,
     BOARD2_ID_SERIAL,
     BOARD2_ID_MODEL_ID,
-    BOARD2_ID_MODEL_ID_DESC,
+    BOARD2_ID_CON_MODEL_ID_DESC,
     BOARD2_ID_CON_MODEL_ID,
     BOARD2_ID_SDMI_COMPANY_ID,
     BOARD2_ID_EMCS_ID,
@@ -265,11 +265,12 @@ static struct UIMenuItem SummaryMenuItems[] = {
     {MITEM_VALUE, SUM_BOARD2_ID_SERIAL, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC, 7},
     {MITEM_BREAK},
 
-    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_MODEL_ID},
+    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_CON_MODEL_ID},
     {MITEM_TAB},
-    {MITEM_VALUE, SUM_BOARD2_ID_MODEL_ID, MITEM_FLAG_READONLY | MITEM_FLAG_UNIT_PREFIX, MITEM_FORMAT_HEX, 6},
     {MITEM_TAB},
-    {MITEM_STRING, SUM_BOARD2_ID_MODEL_ID_DESC, MITEM_FLAG_READONLY},
+    {MITEM_VALUE, SUM_BOARD2_ID_CON_MODEL_ID, MITEM_FLAG_READONLY | MITEM_FLAG_UNIT_PREFIX, MITEM_FORMAT_HEX, 4},
+    {MITEM_TAB},
+    {MITEM_STRING, SUM_BOARD2_ID_CON_MODEL_ID_DESC, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
 
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_MAINBOARD_MODEL},
@@ -506,26 +507,24 @@ static struct UIMenuItem Board2MenuItems[] = {
     {MITEM_VALUE, BOARD2_ID_SERIAL, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC, 7},
     {MITEM_BREAK},
 
-    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_MODEL_ID},
-    {MITEM_TAB},
-    {MITEM_VALUE, BOARD2_ID_MODEL_ID, MITEM_FLAG_READONLY | MITEM_FLAG_UNIT_PREFIX, MITEM_FORMAT_HEX, 6},
-    {MITEM_TAB},
-    {MITEM_STRING, BOARD2_ID_MODEL_ID_DESC, MITEM_FLAG_READONLY},
-    {MITEM_BREAK},
-
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_CON_MODEL_ID},
     {MITEM_TAB},
     {MITEM_SPACE},
     {MITEM_SPACE},
-    {MITEM_SPACE},
-    {MITEM_SPACE},
-    {MITEM_VALUE, BOARD2_ID_CON_MODEL_ID, MITEM_FLAG_READONLY | MITEM_FLAG_UNIT_PREFIX, MITEM_FORMAT_HEX, 2},
+    {MITEM_VALUE, BOARD2_ID_CON_MODEL_ID, MITEM_FLAG_READONLY | MITEM_FLAG_UNIT_PREFIX, MITEM_FORMAT_HEX, 4},
+    {MITEM_TAB},
+    {MITEM_STRING, BOARD2_ID_CON_MODEL_ID_DESC, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
 
-    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_SDMI_COMPANY_ID},
+    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_MODEL_ID},
     {MITEM_TAB},
-    {MITEM_VALUE, BOARD2_ID_SDMI_COMPANY_ID, MITEM_FLAG_READONLY | MITEM_FLAG_UNIT_PREFIX, MITEM_FORMAT_HEX, 6},
+    {MITEM_VALUE, BOARD2_ID_MODEL_ID, MITEM_FLAG_READONLY | MITEM_FLAG_UNIT_PREFIX, MITEM_FORMAT_HEX, 6},
     {MITEM_BREAK},
+
+    // {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_SDMI_COMPANY_ID},
+    // {MITEM_TAB},
+    // {MITEM_VALUE, BOARD2_ID_SDMI_COMPANY_ID, MITEM_FLAG_READONLY | MITEM_FLAG_UNIT_PREFIX, MITEM_FORMAT_HEX, 6},
+    // {MITEM_BREAK},
 
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_EMCS_ID},
     {MITEM_TAB},
@@ -1302,8 +1301,8 @@ static void LoadBoardInformation(const struct SystemInformation *SystemInformati
 
 static void LoadBoard2Information(const struct SystemInformation *SystemInformation)
 {
-    u32 modelID;
-    // u16 conModelID;
+    u32 modelID    = (u32)(SystemInformation->mainboard.ModelID[0]) | (u32)(SystemInformation->mainboard.ModelID[1] << 8) | (u32)(SystemInformation->mainboard.ModelID[2]) << 16;
+    u16 conModelID = SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8;
 
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_MVER))
     {
@@ -1385,16 +1384,14 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
 
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_ILINKID))
     {
-        modelID = (u32)(SystemInformation->mainboard.ModelID[0]) | (u32)(SystemInformation->mainboard.ModelID[1] << 8) | (u32)(SystemInformation->mainboard.ModelID[2]) << 16;
-
         UISetType(&Board2ReportMenu, BOARD2_ID_MODEL_ID, MITEM_VALUE);
         UISetValue(&Board2ReportMenu, BOARD2_ID_MODEL_ID, modelID);
-        UISetType(&Board2ReportMenu, BOARD2_ID_MODEL_ID_DESC, MITEM_STRING);
-        UISetString(&Board2ReportMenu, BOARD2_ID_MODEL_ID_DESC, GetModelIDDesc(SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8));
-        UISetType(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID, MITEM_VALUE);
-        UISetValue(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID, modelID);
-        UISetType(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID_DESC, MITEM_STRING);
-        UISetString(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID_DESC, GetModelIDDesc(SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8));
+        UISetType(&Board2ReportMenu, BOARD2_ID_CON_MODEL_ID_DESC, MITEM_STRING);
+        UISetString(&Board2ReportMenu, BOARD2_ID_CON_MODEL_ID_DESC, GetModelIDDesc(conModelID));
+        UISetType(&SummaryMenu, SUM_BOARD2_ID_CON_MODEL_ID, MITEM_VALUE);
+        UISetValue(&SummaryMenu, SUM_BOARD2_ID_CON_MODEL_ID, conModelID);
+        UISetType(&SummaryMenu, SUM_BOARD2_ID_CON_MODEL_ID_DESC, MITEM_STRING);
+        UISetString(&SummaryMenu, SUM_BOARD2_ID_CON_MODEL_ID_DESC, GetModelIDDesc(conModelID));
 
         UISetType(&Board2ReportMenu, BOARD2_ID_ILINK_ID_00, MITEM_VALUE);
         UISetValue(&Board2ReportMenu, BOARD2_ID_ILINK_ID_00, SystemInformation->iLinkID[0]);
@@ -1416,9 +1413,9 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
     else
     {
         UISetType(&Board2ReportMenu, BOARD2_ID_MODEL_ID, MITEM_DASH);
-        UISetType(&Board2ReportMenu, BOARD2_ID_MODEL_ID_DESC, MITEM_DASH);
-        UISetType(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID, MITEM_DASH);
-        UISetType(&SummaryMenu, SUM_BOARD2_ID_MODEL_ID_DESC, MITEM_DASH);
+        UISetType(&Board2ReportMenu, BOARD2_ID_CON_MODEL_ID_DESC, MITEM_DASH);
+        UISetType(&SummaryMenu, SUM_BOARD2_ID_CON_MODEL_ID, MITEM_DASH);
+        UISetType(&SummaryMenu, SUM_BOARD2_ID_CON_MODEL_ID_DESC, MITEM_DASH);
 
         UISetType(&Board2ReportMenu, BOARD2_ID_ILINK_ID_00, MITEM_DASH);
         UISetType(&Board2ReportMenu, BOARD2_ID_ILINK_ID_01, MITEM_DASH);
@@ -1432,15 +1429,13 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
 
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_CONSOLEID))
     {
-        // conModelID = SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8;
-
         UISetType(&Board2ReportMenu, BOARD2_ID_SERIAL, MITEM_VALUE);
         UISetValue(&Board2ReportMenu, BOARD2_ID_SERIAL, ((u32)SystemInformation->ConsoleID[6]) << 16 | ((u32)SystemInformation->ConsoleID[5]) << 8 | ((u32)SystemInformation->ConsoleID[4]));
         UISetType(&SummaryMenu, SUM_BOARD2_ID_SERIAL, MITEM_VALUE);
         UISetValue(&SummaryMenu, SUM_BOARD2_ID_SERIAL, ((u32)SystemInformation->ConsoleID[6]) << 16 | ((u32)SystemInformation->ConsoleID[5]) << 8 | ((u32)SystemInformation->ConsoleID[4]));
 
         UISetType(&Board2ReportMenu, BOARD2_ID_CON_MODEL_ID, MITEM_VALUE);
-        UISetValue(&Board2ReportMenu, BOARD2_ID_CON_MODEL_ID, SystemInformation->ConsoleID[0]);
+        UISetValue(&Board2ReportMenu, BOARD2_ID_CON_MODEL_ID, conModelID);
         UISetType(&Board2ReportMenu, BOARD2_ID_SDMI_COMPANY_ID, MITEM_VALUE);
         UISetValue(&Board2ReportMenu, BOARD2_ID_SDMI_COMPANY_ID, (u32)(SystemInformation->ConsoleID[3] << 16 | (u32)SystemInformation->ConsoleID[2] << 8 | (u32)SystemInformation->ConsoleID[1]));
         UISetType(&Board2ReportMenu, BOARD2_ID_EMCS_ID, MITEM_VALUE);
