@@ -1288,7 +1288,7 @@ static void LoadBoardInformation(const struct SystemInformation *SystemInformati
     UISetString(&BoardReportMenu, BOARD_ID_MRP_DESC, GetMRPDesc(SystemInformation->mainboard.BoardInf));
     UISetValue(&BoardReportMenu, BOARD_ID_SSBUSIF_REV_MAJOR, SystemInformation->mainboard.ssbus.revision >> 4);
     UISetValue(&BoardReportMenu, BOARD_ID_SSBUSIF_REV_MINOR, SystemInformation->mainboard.ssbus.revision & 0xF);
-    UISetString(&BoardReportMenu, BOARD_ID_SSBUSIF_NAME, GetSSBUSIFDesc(SystemInformation->mainboard.ssbus.revision));
+    UISetString(&BoardReportMenu, BOARD_ID_SSBUSIF_NAME, GetSSBUSIFDesc(SystemInformation->mainboard.ssbus.revision, SystemInformation->mainboard.ee.revision));
     if (SystemInformation->mainboard.ssbus.status & PS2DB_SSBUS_HAS_AIF)
     {
         UISetType(&BoardReportMenu, BOARD_ID_AIF_REV, MITEM_VALUE);

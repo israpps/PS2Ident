@@ -490,18 +490,6 @@ const char *GetiLinkVendorDesc(unsigned int vendor)
     return description;
 }
 
-const char *GetSSBUSIFDesc(unsigned char revision)
-{
-    const char *description;
-
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_SSBUSIF, revision)) == NULL)
-    {
-        description = "Missing";
-    }
-
-    return description;
-}
-
 const char *GetSPEEDDesc(unsigned short int revision)
 {
     const char *description;
@@ -606,6 +594,38 @@ const char *GetIOPChipDesc(unsigned short int revision)
     if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_IOP, revision)) == NULL)
     {
         description = "Missing";
+    }
+
+    return description;
+}
+
+const char *GetSSBUSIFDesc(unsigned short int revision, unsigned short int EE_revision)
+{
+    const char *description;
+
+    switch (revision)
+    {
+        case 0x12:
+            description = "CXD9546R";
+            break;
+        case 0x20:
+            description = "CXD9566R";
+            break;
+        case 0x30:
+            description = "CXD9611R";
+            break;
+        case 0x31:
+            if (EE_revision == 0x43)
+                description = "combined with EE";
+            else
+                description = "CXD9611AR/CXD9611BR/CXD9686AR/CXD9686BR/CXD9686R"; // TODO: try to differ SSBUS 0x31 more
+            break;
+        case 0x32:
+            description = "combined with SPU2";
+            break;
+        default:
+            description = "Missing chip";
+            break;
     }
 
     return description;
@@ -1262,7 +1282,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
             (SystemInformation->mainboard.iop.revision & 0xFF) >> 4, SystemInformation->mainboard.iop.revision & 0xF, GetIOPChipDesc(SystemInformation->mainboard.iop.revision),
             SystemInformation->mainboard.iop.RAMSize,
             SystemInformation->mainboard.ssbus.revision >> 4, SystemInformation->mainboard.ssbus.revision & 0xF,
-            GetSSBUSIFDesc(SystemInformation->mainboard.ssbus.revision));
+            GetSSBUSIFDesc(SystemInformation->mainboard.ssbus.revision, SystemInformation->mainboard.ee.revision));
 
     fputs("    AIF revision:        ", stream);
     if (SystemInformation->mainboard.ssbus.status & PS2DB_SSBUS_HAS_AIF)
