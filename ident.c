@@ -563,7 +563,7 @@ const char *GetPHYModelDesc(unsigned int oui, unsigned char model)
     return description;
 }
 
-const char *GetSSBUSIFDesc(unsigned short int revision, unsigned short int EE_revision)
+const char *GetSSBUSIFDesc(unsigned char revision, unsigned char EE_revision)
 {
     const char *description;
 
@@ -595,7 +595,7 @@ const char *GetSSBUSIFDesc(unsigned short int revision, unsigned short int EE_re
     return description;
 }
 
-const char *GetSPU2ChipDesc(unsigned short int revision, unsigned short int EE_revision)
+const char *GetSPU2ChipDesc(unsigned char revision, unsigned char EE_revision)
 {
     const char *description;
 
@@ -626,13 +626,40 @@ const char *GetSPU2ChipDesc(unsigned short int revision, unsigned short int EE_r
     return description;
 }
 
-const char *GetGSChipDesc(unsigned short int revision)
+const char *GetGSChipDesc(unsigned char revision)
 {
     const char *description;
 
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_GS, revision)) == NULL)
+    printf("GS revision: 0x%02x\n", revision);
+
+    switch (revision)
     {
-        description = "Missing";
+        case 0x08:
+            description = "CXD2934GB";
+            break;
+        case 0x15:
+            description = "CXD2944GB";
+            break;
+        case 0x19:
+            description = "CXD2949GB/CXD2949BGB";
+            break;
+        case 0x1b:
+            description = "CXD2949CGB/CXD2949DGB";
+            break;
+        case 0x1c:
+        case 0x1d:
+            description = "combined with EE";
+            break;
+        // CXD2972GB - check CECH-C and E
+        case 0x1e:
+            description = "CXD2980CGB/CXD2980AGB"; // TODO: check A, B, C versions of chip
+            break;
+        case 0x1f:
+            description = "CXD2980GB/CXD2980BGB";
+            break;
+        default:
+            description = "Missing chip";
+            break;
     }
 
     return description;
@@ -650,7 +677,7 @@ const char *GetEEChipDesc(unsigned short int revision)
     return description;
 }
 
-const char *GetIOPChipDesc(unsigned short int revision, unsigned short int EE_revision)
+const char *GetIOPChipDesc(unsigned char revision, unsigned char EE_revision)
 {
     const char *description;
 
@@ -1522,7 +1549,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
             SystemInformation->mainboard.ee.DCacheSize, CalculateCPUCacheSize(SystemInformation->mainboard.ee.DCacheSize) / 1024,
             SystemInformation->mainboard.ee.RAMSize,
             SystemInformation->mainboard.gs.revision >> 4, SystemInformation->mainboard.gs.revision & 0xF,
-            GetGSChipDesc((u16)(SystemInformation->mainboard.gs.id) << 8 | SystemInformation->mainboard.gs.revision),
+            GetGSChipDesc(SystemInformation->mainboard.gs.revision & 0xFF),
             SystemInformation->mainboard.gs.id);
 
     fprintf(stream, "IOP:\r\n"
@@ -1617,7 +1644,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     if (!(SystemInformation->mainboard.status & PS2IDB_STAT_ERR_CONSOLEID))
     {
         conModelID = SystemInformation->mainboard.ConModelID[0] | SystemInformation->mainboard.ConModelID[1] << 8;
-        Serial = (SystemInformation->ConsoleID[6]) << 16 | (SystemInformation->ConsoleID[5]) << 8 | (SystemInformation->ConsoleID[4]);
+        Serial     = (SystemInformation->ConsoleID[6]) << 16 | (SystemInformation->ConsoleID[5]) << 8 | (SystemInformation->ConsoleID[4]);
         fprintf(stream, "    Console Model ID:    0x%04x (%s)\r\n"
                         // "    SDMI Company ID:     %02x-%02x-%02x\r\n"
                         "    EMCS ID:             0x%02x (%s)\r\n"
@@ -1630,7 +1657,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     else
     {
         fputs("    Console Model ID:    -\r\n"
-            //   "    SDMI Company ID:     -\r\n"
+              //   "    SDMI Company ID:     -\r\n"
               "    EMCS ID:             -\r\n"
               "    Serial range:        -\r\n",
               stream);

@@ -1644,10 +1644,10 @@ static void LoadEEGSInformation(const struct SystemInformation *SystemInformatio
     // GS
     UISetValue(&EEGSReportMenu, EEGS_ID_GS_REV_MAJOR, SystemInformation->mainboard.gs.revision >> 4);
     UISetValue(&EEGSReportMenu, EEGS_ID_GS_REV_MINOR, SystemInformation->mainboard.gs.revision & 0xF);
-    UISetString(&EEGSReportMenu, EEGS_ID_GS_NAME, GetGSChipDesc((u16)(SystemInformation->mainboard.gs.id) << 8 | SystemInformation->mainboard.gs.revision));
+    UISetString(&EEGSReportMenu, EEGS_ID_GS_NAME, GetGSChipDesc(SystemInformation->mainboard.gs.revision & 0xFF));
     UISetValue(&SummaryMenu, SUM_EEGS_ID_GS_REV_MAJOR, SystemInformation->mainboard.gs.revision >> 4);
     UISetValue(&SummaryMenu, SUM_EEGS_ID_GS_REV_MINOR, SystemInformation->mainboard.gs.revision & 0xF);
-    UISetString(&SummaryMenu, SUM_EEGS_ID_GS_NAME, GetGSChipDesc((u16)(SystemInformation->mainboard.gs.id) << 8 | SystemInformation->mainboard.gs.revision));
+    UISetString(&SummaryMenu, SUM_EEGS_ID_GS_NAME, GetGSChipDesc(SystemInformation->mainboard.gs.revision & 0xFF));
 
     UISetValue(&EEGSReportMenu, EEGS_ID_GS_ID, SystemInformation->mainboard.gs.id);
 }
