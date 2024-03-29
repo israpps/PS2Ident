@@ -721,12 +721,13 @@ const char *GetMECHACONChipDesc(unsigned int revision)
 {
     const char *description;
 
-    printf("MECHACON revision: 0x%04x\n", revision);
-
     if (revision >= 0x050000)
+    {
         revision = revision & 0xfffeff; // Retail and debug chips are identical
-    if (revision != 0x050607)
-        revision = revision & 0xffff00; // Mexico unit is unique
+        if (revision != 0x050607)
+            revision = revision & 0xffff00; // Mexico unit is unique
+    }
+    printf("MECHACON revision: 0x%08x\n", revision);
 
     switch (revision)
     {
@@ -811,7 +812,13 @@ const char *GetMECHACONChipDesc(unsigned int revision)
         case 0x020C02:
             description = "CXP102064-203R";
             break;
+        case 0x020E02:
+            description = "CXP102064-204R";
+            break;
         // Australia region only
+        case 0x020403:
+            description = "CXP102064-301R";
+            break;
         case 0x020603:
             description = "CXP102064-302R";
             break;
@@ -1577,7 +1584,8 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
                         "    System type:         0x%02x (%s)\r\n"
                         "    DSP revision:        %u (%s)\r\n",
                 SystemInformation->mainboard.MECHACONVersion[1], SystemInformation->mainboard.MECHACONVersion[2],
-                GetMECHACONChipDesc((unsigned int)(SystemInformation->mainboard.MECHACONVersion[1]) << 16 | (unsigned int)(SystemInformation->mainboard.MECHACONVersion[2]) << 8 | SystemInformation->mainboard.MECHACONVersion[0]), SystemInformation->mainboard.MECHACONVersion[0], GetRegionDesc(SystemInformation->mainboard.MECHACONVersion[0]),
+                GetMECHACONChipDesc((unsigned int)(SystemInformation->mainboard.MECHACONVersion[1]) << 16 | (unsigned int)(SystemInformation->mainboard.MECHACONVersion[2]) << 8 | SystemInformation->mainboard.MECHACONVersion[0]),
+                SystemInformation->mainboard.MECHACONVersion[0], GetRegionDesc(SystemInformation->mainboard.MECHACONVersion[0]),
                 SystemInformation->mainboard.MECHACONVersion[3], GetSystemTypeDesc(SystemInformation->mainboard.MECHACONVersion[3]),
                 SystemInformation->DSPVersion[1], GetDSPDesc(SystemInformation->DSPVersion[1]));
     }
