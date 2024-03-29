@@ -29,7 +29,6 @@ jobs:
         echo "::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
 
     - name: Upload artifacts
-      if: ${{ success() }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}
@@ -42,14 +41,11 @@ jobs:
           *.ttf
 
     - name: Compile PCSX2 version
-      continue-on-error: true
       run: |
         make clean
         make DEBUG=1 DSNET_HOST_SUPPORT=1 DISABLE_ILINK_DUMPING=1
 
     - name: Upload PCSX2 artifacts
-      if: ${{ success() }}
-      continue-on-error: true
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PCSX2
@@ -62,14 +58,11 @@ jobs:
           *.ttf
 
     - name: Compile PS2TOOL version
-      continue-on-error: true
       run: |
         make clean
         make DEBUG=1 DSNET_HOST_SUPPORT=1
 
     - name: Upload PS2TOOL artifacts
-      if: ${{ success() }}
-      continue-on-error: true
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PS2TOOL
@@ -83,48 +76,6 @@ jobs:
 
     # 'path' will create artifact with all *.elf in working directory
     # you can change this
-
-  # build-ps2idbms:
-  #   name: PS2IDdbms compilation
-  #   runs-on: windows-latest
-
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v4
-
-  #     - name: Setup msbuild
-  #       uses: microsoft/setup-msbuild@v2
-
-  #     - name: Build
-  #       run: |
-  #         cd PS2IDBMS
-  #         msbuild /p:Configuration=Release
-
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: PS2IDBMS
-  #         path: PS2IDBMS/Release/PS2IDBMS.exe
-
-  # build-romimg:
-  #   name: ROMIMG compilation
-  #   runs-on: windows-latest
-
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v4
-
-  #     - name: Setup msbuild
-  #       uses: microsoft/setup-msbuild@v2
-
-  #     - name: Build
-  #       run: |
-  #         cd ROMIMG
-  #         msbuild /p:PlatformToolset=v142 /p:Configuration=Release
-
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: ROMIMG
-  #         path: ROMIMG/Release/ROMIMG.exe
 
   release:
     needs: [build]
@@ -159,16 +110,6 @@ jobs:
       run: |
         7z a ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PS2TOOL.7z PS2Ident-PS2TOOL/*
 
-    - name: Download ps2idbms artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: PS2IDBMS
-
-    - name: Download romimg artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: ROMIMG
-
     - name: Create pre-release
       if: github.ref == 'refs/heads/master'
       uses: marvinpinto/action-automatic-releases@latest
@@ -180,8 +121,6 @@ jobs:
         files: |
           ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}.7z
           ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PS2TOOL.7z
-          PS2IDBMS.exe
-          ROMIMG.exe
 
     - name: Create Tagged Release Draft
       if: startsWith(github.ref, 'refs/tags/v')
@@ -194,5 +133,4 @@ jobs:
         files: |
           ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}.7z
           ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PS2TOOL.7z
-          PS2IDBMS.exe
 
