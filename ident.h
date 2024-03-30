@@ -43,7 +43,7 @@ const char *GetSSBUSIFDesc(unsigned char revision, unsigned char EE_revision);
 const char *GetSPU2ChipDesc(unsigned char revision, unsigned char EE_revision);
 const char *GetIOPChipDesc(unsigned char revision, unsigned char EE_revision);
 const char *GetGSChipDesc(unsigned char revision);
-const char *GetEEChipDesc(unsigned short int revision);
+const char *GetEEChipDesc(unsigned char revision, unsigned char GS_revision);
 const char *GetMECHACONChipDesc(unsigned int revision);
 const char *GetBOOTROMDesc(const char *extinfo, const char *romver, const char *dvdplVer);
 const char *GetDVDROMDesc(const char *dvdplVer);
@@ -66,6 +66,7 @@ int WriteNewMainboardDBRecord(const char *path, const struct PS2IDBMainboardEntr
 int DumpMECHACON_EEPROM(const char *filename);
 int DumpMECHACON_VERSION(const char *filename, const struct SystemInformation *SystemInformation);
 int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemInformation);
+int WriteExpDeviceInformation(FILE *stream, const struct SystemInformation *SystemInformation);
 
 int CheckROM(const struct PS2IDBMainboardEntry *entry);
 int readDevMemEEIOP(const void *MemoryStart, void *buffer, unsigned int NumBytes, int mode);

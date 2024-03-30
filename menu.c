@@ -1629,10 +1629,10 @@ static void LoadEEGSInformation(const struct SystemInformation *SystemInformatio
     UISetValue(&EEGSReportMenu, EEGS_ID_EE_IMPL, SystemInformation->mainboard.ee.implementation);
     UISetValue(&EEGSReportMenu, EEGS_ID_EE_REV_MAJOR, SystemInformation->mainboard.ee.revision >> 4);
     UISetValue(&EEGSReportMenu, EEGS_ID_EE_REV_MINOR, SystemInformation->mainboard.ee.revision & 0xF);
-    UISetString(&EEGSReportMenu, EEGS_ID_EE_NAME, GetEEChipDesc((u16)(SystemInformation->mainboard.ee.implementation) << 8 | SystemInformation->mainboard.ee.revision));
+    UISetString(&EEGSReportMenu, EEGS_ID_EE_NAME, GetEEChipDesc(SystemInformation->mainboard.ee.revision & 0xFF, SystemInformation->mainboard.gs.revision & 0xFF));
     UISetValue(&SummaryMenu, SUM_EEGS_ID_EE_REV_MAJOR, SystemInformation->mainboard.ee.revision >> 4);
     UISetValue(&SummaryMenu, SUM_EEGS_ID_EE_REV_MINOR, SystemInformation->mainboard.ee.revision & 0xF);
-    UISetString(&SummaryMenu, SUM_EEGS_ID_EE_NAME, GetEEChipDesc((u16)(SystemInformation->mainboard.ee.implementation) << 8 | SystemInformation->mainboard.ee.revision));
+    UISetString(&SummaryMenu, SUM_EEGS_ID_EE_NAME, GetEEChipDesc(SystemInformation->mainboard.ee.revision & 0xFF, SystemInformation->mainboard.gs.revision & 0xFF));
 
     UISetValue(&EEGSReportMenu, EEGS_ID_EE_FPU_IMPL, SystemInformation->mainboard.ee.FPUImplementation);
     UISetValue(&EEGSReportMenu, EEGS_ID_EE_FPU_REV_MAJOR, SystemInformation->mainboard.ee.FPURevision >> 4);
