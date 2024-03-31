@@ -2,6 +2,9 @@ name: CI-ps2idbms
 
 on:
   push:
+    paths:
+      - '.github/workflows/wintools.yml'
+      - 'PS2IDBMS/**'
   pull_request:
 
 jobs:

@@ -1,4 +1,5 @@
 - research new EE value from @wisi (data collection)
+  - seems done, F520 values correlates with EE version. 6 EE revision and 5 F520, EE 3.0 and 3.1 has the same value
 - add ROM CRC database (BOOT and DVD), mostly for redump database
 - CRC values can be used for detecting modchips
 - add ability to dump keys (all serials + HDD key) into separate file
