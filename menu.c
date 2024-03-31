@@ -1950,6 +1950,25 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
         fclose(logfile);
     }
 
+    // check if it is not slim and if it has SPEED
+    if ((SystemInformation->mainboard.ssbus.status & PS2DB_SSBUS_HAS_SPEED) && (SystemInformation->mainboard.MECHACONVersion[1] < 6))
+    {
+#ifndef DSNET_HOST_SUPPORT
+        sprintf(filename, "%s/exp_device_%02x-%02x-%02x-%02x-%02x-%02x_specs.txt", path,
+                SystemInformation->SMAP_MAC_address[0], SystemInformation->SMAP_MAC_address[1], SystemInformation->SMAP_MAC_address[2],
+                SystemInformation->SMAP_MAC_address[3], SystemInformation->SMAP_MAC_address[4], SystemInformation->SMAP_MAC_address[5]);
+#else
+        sprintf(filename, "%sexp_device_%02x-%02x-%02x-%02x-%02x-%02x_specs.txt", path,
+                SystemInformation->SMAP_MAC_address[0], SystemInformation->SMAP_MAC_address[1], SystemInformation->SMAP_MAC_address[2],
+                SystemInformation->SMAP_MAC_address[3], SystemInformation->SMAP_MAC_address[4], SystemInformation->SMAP_MAC_address[5]);
+#endif
+        if ((logfile = fopen(filename, "wb")) != NULL)
+        {
+            WriteExpDeviceInformation(logfile, SystemInformation);
+            fclose(logfile);
+        }
+    }
+
     // If the mainboard model is not recognized, write a new database record file to the disk.
     if (PS2IDBMS_LookupMainboardModel(&SystemInformation->mainboard) == NULL)
     {

@@ -1700,7 +1700,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     fprintf(stream, "    USB HC revision:     %u.%u\r\n",
             SystemInformation->mainboard.usb.HcRevision >> 4, SystemInformation->mainboard.usb.HcRevision & 0xF);
 
-    if (SystemInformation->mainboard.ssbus.status & PS2DB_SSBUS_HAS_SPEED)
+    if ((SystemInformation->mainboard.ssbus.status & PS2DB_SSBUS_HAS_SPEED) && (SystemInformation->mainboard.MECHACONVersion[1] >= 6))
     {
         fprintf(stream, "DEV9:\r\n"
                         "    MAC vendor:          %02x:%02x:%02x\r\n"
@@ -1713,7 +1713,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
                         "    PHY revision:        0x%02x\r\n",
                 SystemInformation->mainboard.ssbus.SPEED.SMAP_PHY_OUI, GetPHYVendDesc(SystemInformation->mainboard.ssbus.SPEED.SMAP_PHY_OUI), SystemInformation->mainboard.ssbus.SPEED.SMAP_PHY_VMDL, GetPHYModelDesc(SystemInformation->mainboard.ssbus.SPEED.SMAP_PHY_OUI, SystemInformation->mainboard.ssbus.SPEED.SMAP_PHY_VMDL), SystemInformation->mainboard.ssbus.SPEED.SMAP_PHY_REV);
     }
-    else
+    else if (!(SystemInformation->mainboard.ssbus.status & PS2DB_SSBUS_HAS_SPEED) && (SystemInformation->mainboard.MECHACONVersion[1] < 6))
     {
         fprintf(stream, "DEV9:\r\n    ***No expansion device connected***\r\n");
     }
