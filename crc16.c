@@ -3,6 +3,36 @@
 #include "crc16.h"
 
 static unsigned short int crc16_table[256];
+static unsigned int crc32_table[256];
+
+// Initialize CRC-32 lookup table
+void InitCRC32LookupTable(void)
+{
+    register int i, j;
+    unsigned int crc;
+    for (i = 0; i < 256; i++)
+    {
+        crc = i;
+        for (j = 0; j < 8; j++)
+        {
+            crc = (crc >> 1) ^ ((crc & 1) ? CRC32_POLYNOMIAL : 0);
+        }
+        crc32_table[i] = crc;
+    }
+}
+
+// Calculate CRC-32
+unsigned int CalculateCRC32(unsigned char *buffer, unsigned int length, unsigned int InitialChecksum)
+{
+    unsigned int crc32checksum;
+    unsigned int i;
+    crc32checksum = InitialChecksum;
+    for (i = 0; i < length; i++)
+    {
+        crc32checksum = crc32_table[(crc32checksum ^ buffer[i]) & 0xFF] ^ (crc32checksum >> 8);
+    }
+    return crc32checksum;
+}
 
 void InitCRC16LookupTable(void)
 {
