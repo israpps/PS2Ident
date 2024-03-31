@@ -132,7 +132,6 @@ static u32 CalculateCRCOfROM(void *buffer1, void *buffer2, void *start, unsigned
     pDestBuffer = (pDestBuffer == buffer1) ? buffer2 : buffer1;
     SysmanSync(0);
     crc = CalculateCRC32(UNCACHED_SEG(pDestBuffer), prevSize, crc);
-    // return ReflectAndXORCRC16(CalculateCRC16(UNCACHED_SEG(pDestBuffer), prevSize, crc));
     return ReflectAndXORCRC32(crc);
 }
 
@@ -142,13 +141,13 @@ int CheckROM(const struct PS2IDBMainboardEntry *entry)
 
     if ((other = PS2IDBMS_LookupMatchingROM(entry)) != NULL)
     {
-        if ((entry->BOOT_ROM.IsExists && (other->BOOT_ROM.crc16 != entry->BOOT_ROM.crc16)) || (other->DVD_ROM.IsExists && (other->DVD_ROM.crc16 != entry->DVD_ROM.crc16)))
+        if ((entry->BOOT_ROM.IsExists && (other->BOOT_ROM.crc32 != entry->BOOT_ROM.crc32)) || (other->DVD_ROM.IsExists && (other->DVD_ROM.crc32 != entry->DVD_ROM.crc32)))
         {
             printf("CheckROM: ROM mismatch:\n");
             if (entry->BOOT_ROM.IsExists)
-                printf("    BOOT: 0x%04x 0x%04x\n", other->BOOT_ROM.crc16, entry->BOOT_ROM.crc16);
+                printf("    BOOT: 0x%04x 0x%04x\n", other->BOOT_ROM.crc32, entry->BOOT_ROM.crc32);
             if (other->DVD_ROM.IsExists)
-                printf("    DVD: 0x%04x 0x%04x\n", other->DVD_ROM.crc16, entry->DVD_ROM.crc16);
+                printf("    DVD: 0x%04x 0x%04x\n", other->DVD_ROM.crc32, entry->DVD_ROM.crc32);
 
             return 1;
         }
@@ -187,14 +186,14 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
 
     if (SystemInformation->mainboard.BOOT_ROM.IsExists)
     {
-        SystemInformation->mainboard.BOOT_ROM.crc16 = CalculateCRCOfROM(buffer1, buffer2, (void *)SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size);
-        printf("BOOT ROM CRC32: 0x%08x\n", SystemInformation->mainboard.BOOT_ROM.crc16);
+        SystemInformation->mainboard.BOOT_ROM.crc32 = CalculateCRCOfROM(buffer1, buffer2, (void *)SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size);
+        printf("BOOT ROM CRC32: 0x%08x\n", SystemInformation->mainboard.BOOT_ROM.crc32);
     }
 
     if (SystemInformation->mainboard.DVD_ROM.IsExists)
     {
-        SystemInformation->mainboard.DVD_ROM.crc16 = CalculateCRCOfROM(buffer1, buffer2, (void *)SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size);
-        printf("DVD ROM CRC32: 0x%08x\n", SystemInformation->mainboard.DVD_ROM.crc16);
+        SystemInformation->mainboard.DVD_ROM.crc32 = CalculateCRCOfROM(buffer1, buffer2, (void *)SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size);
+        printf("DVD ROM CRC32: 0x%08x\n", SystemInformation->mainboard.DVD_ROM.crc32);
     }
 
     free(buffer1);
@@ -1536,7 +1535,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     {
         fprintf(stream, "%p (%u Mbit)    CRC32: 0x%08x\r\n",
                 SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size / 1024 / 128,
-                SystemInformation->mainboard.BOOT_ROM.crc16);
+                SystemInformation->mainboard.BOOT_ROM.crc32);
     }
     else
         fputs("<Not detected>\r\n", stream);
@@ -1546,7 +1545,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     {
         fprintf(stream, "%p (%u Mbit)    CRC32: 0x%08x\r\n",
                 SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size / 1024 / 128,
-                SystemInformation->mainboard.DVD_ROM.crc16);
+                SystemInformation->mainboard.DVD_ROM.crc32);
     }
     else
         fputs("<Not detected>\r\n", stream);

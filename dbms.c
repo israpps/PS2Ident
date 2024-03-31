@@ -95,7 +95,7 @@ static int PS2IDBMS_LoadDatabaseNormal(struct PS2IDBHeader *header, FILE *Databa
                         }
                     }
                     else
-                        result = 0; //Ignore unsupported entries.
+                        result = 0; // Ignore unsupported entries.
                 }
                 else
                     result = EIO;
@@ -174,7 +174,7 @@ int PS2IDBMS_SaveDatabase(const char *path)
     FILE *DatabaseFile;
     unsigned int offsets[PS2IDB_COMPONENT_COUNT], offset, NumEntries;
 
-    //If the database is empty, simply delete it.
+    // If the database is empty, simply delete it.
     for (i = 0, NumEntries = 0; i < PS2IDB_COMPONENT_COUNT; i++)
         NumEntries += peripherals[i].NumModels;
 
@@ -184,7 +184,7 @@ int PS2IDBMS_SaveDatabase(const char *path)
         header.version    = PS2IDB_FORMAT_VERSION;
         header.components = PS2IDB_COMPONENT_COUNT;
 
-        //Calculate the file offsets.
+        // Calculate the file offsets.
         for (i = 0, offset = sizeof(struct PS2IDBHeader) + sizeof(unsigned int) * PS2IDB_COMPONENT_COUNT; i < PS2IDB_COMPONENT_COUNT; i++)
         {
             offsets[i] = offset;
@@ -263,7 +263,7 @@ int PS2IDBMS_AddModel(int id, const struct PS2IDBComponentEntry *entry)
     database  = peripherals[id].models;
     NumModels = peripherals[id].NumModels;
 
-    //Check to see if this model has already been added.
+    // Check to see if this model has already been added.
     if (database != NULL)
     {
         for (i = 0; i < NumModels; i++)
@@ -306,7 +306,7 @@ int PS2IDBMS_AddMainboardModel(const struct PS2IDBMainboardEntry *entry)
     database  = peripherals[PS2IDB_COMPONENT_MAINBOARD].models;
     NumModels = peripherals[PS2IDB_COMPONENT_MAINBOARD].NumModels;
 
-    //Check to see if this model has already been added.
+    // Check to see if this model has already been added.
     if (database != NULL)
     {
         if (PS2IDBMS_LookupMainboardModel(entry) != NULL)
@@ -415,7 +415,7 @@ int PS2IDBMS_DeleteRecord(int id, unsigned int index)
         }
         else
         {
-            //Otherwise, just empty the database.
+            // Otherwise, just empty the database.
             free(peripherals[id].models);
             peripherals[id].NumModels = 0;
             peripherals[id].models    = NULL;
@@ -456,7 +456,7 @@ int PS2IDBMS_DeleteMainboardRecord(unsigned int index)
         }
         else
         {
-            //Otherwise, just empty the database.
+            // Otherwise, just empty the database.
             free(peripherals[PS2IDB_COMPONENT_MAINBOARD].models);
             peripherals[PS2IDB_COMPONENT_MAINBOARD].NumModels = 0;
             peripherals[PS2IDB_COMPONENT_MAINBOARD].models    = NULL;
@@ -495,27 +495,27 @@ const struct PS2IDBMainboardEntry *PS2IDBMS_LookupMainboardModel(const struct PS
     for (i = 0, result = NULL, entry = peripherals[PS2IDB_COMPONENT_MAINBOARD].models; i < peripherals[PS2IDB_COMPONENT_MAINBOARD].NumModels; i++, entry++)
     {
         /*	A console's mainboard can be determined based on the following:
-				BOOT ROM CRC
-				DVD ROM CRC
-				ROMVER string
-				Model name
-				EE revision
-				FPU revision
-				IOP revision
-				GS revision
-				MECHACON revision and region
-				SPU2 revision
-				SSBUSC revision
-				Model ID
-				Console model ID
-				EMCS ID
-				M Renewal Date
-				ADD0x010	*/
+                BOOT ROM CRC
+                DVD ROM CRC
+                ROMVER string
+                Model name
+                EE revision
+                FPU revision
+                IOP revision
+                GS revision
+                MECHACON revision and region
+                SPU2 revision
+                SSBUSC revision
+                Model ID
+                Console model ID
+                EMCS ID
+                M Renewal Date
+                ADD0x010	*/
 
         if (model->BOOT_ROM.IsExists == entry->BOOT_ROM.IsExists &&
-            model->BOOT_ROM.crc16 == entry->BOOT_ROM.crc16 &&
+            model->BOOT_ROM.crc32 == entry->BOOT_ROM.crc32 &&
             model->DVD_ROM.IsExists == entry->DVD_ROM.IsExists &&
-            model->DVD_ROM.crc16 == entry->DVD_ROM.crc16 &&
+            model->DVD_ROM.crc32 == entry->DVD_ROM.crc32 &&
             strcmp(model->romver, entry->romver) == 0 &&
             strcmp(model->ModelName, entry->ModelName) == 0 &&
             (model->ee.implementation == entry->ee.implementation) &&
@@ -550,11 +550,11 @@ const struct PS2IDBMainboardEntry *PS2IDBMS_LookupMatchingROM(const struct PS2ID
     for (i = 0, result = NULL, entry = peripherals[PS2IDB_COMPONENT_MAINBOARD].models; i < peripherals[PS2IDB_COMPONENT_MAINBOARD].NumModels; i++, entry++)
     {
         /*	Attempt to locate a matching entry, based on:
-				ROMVER string
-				ROMGEN
+                ROMVER string
+                ROMGEN
 
-			Ignore entries that have the PS2IDB_STAT_ERR_MODDED bit set.
-		*/
+            Ignore entries that have the PS2IDB_STAT_ERR_MODDED bit set.
+        */
 
         if (model->BOOT_ROM.IsExists == entry->BOOT_ROM.IsExists &&
             model->DVD_ROM.IsExists == entry->DVD_ROM.IsExists &&

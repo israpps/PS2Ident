@@ -69,7 +69,7 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     // Determine the sizes of the boot ROM and DVD ROM chips.
     // DEV2, BOOT ROM
     hwinfo->BOOT_ROM.StartAddress = 0x1FC00000; // Hardwired
-    hwinfo->BOOT_ROM.crc16        = 0;
+    hwinfo->BOOT_ROM.crc32        = 0;
     hwinfo->BOOT_ROM.size         = GetSizeFromDelay(SSBUSC_DEV_BOOTROM);
     hwinfo->BOOT_ROM.IsExists     = 1;
 
@@ -78,7 +78,7 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
 
     // DEV1, DVD ROM
     hwinfo->DVD_ROM.StartAddress = GetBaseAddress(SSBUSC_DEV_DVDROM);
-    hwinfo->DVD_ROM.crc16        = 0;
+    hwinfo->DVD_ROM.crc32        = 0;
     hwinfo->DVD_ROM.size         = GetSizeFromDelay(SSBUSC_DEV_DVDROM);
     hwinfo->DVD_ROM.IsExists     = romGetImageStat((const void *)hwinfo->DVD_ROM.StartAddress, (const void *)(hwinfo->DVD_ROM.StartAddress + 0x4000), &ImgStat) != NULL;
 
@@ -94,14 +94,14 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
         hwinfo->ROMs[0].IsExists     = 1;
         hwinfo->ROMs[0].StartAddress = (u32)pImgStat->ImageStart;
         hwinfo->ROMs[0].size         = 0;
-        hwinfo->ROMs[0].crc16        = 0;
+        hwinfo->ROMs[0].crc32        = 0;
     }
     else
     {
         hwinfo->ROMs[0].IsExists     = 0;
         hwinfo->ROMs[0].StartAddress = 0;
         hwinfo->ROMs[0].size         = 0;
-        hwinfo->ROMs[0].crc16        = 0;
+        hwinfo->ROMs[0].crc32        = 0;
     }
 
     // DEV1, DVD ROM
@@ -115,14 +115,14 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
         hwinfo->ROMs[1].IsExists     = 1;
         hwinfo->ROMs[1].StartAddress = (u32)pImgStat->ImageStart;
         hwinfo->ROMs[1].size         = 0;
-        hwinfo->ROMs[1].crc16        = 0;
+        hwinfo->ROMs[1].crc32        = 0;
     }
     else
     {
         hwinfo->ROMs[1].IsExists     = 0;
         hwinfo->ROMs[1].StartAddress = 0;
         hwinfo->ROMs[1].size         = 0;
-        hwinfo->ROMs[1].crc16        = 0;
+        hwinfo->ROMs[1].crc32        = 0;
     }
 
     // rom2 (part of DEV1)
@@ -132,14 +132,14 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
         hwinfo->ROMs[2].IsExists     = 1;
         hwinfo->ROMs[2].StartAddress = (u32)pImgStat->ImageStart;
         hwinfo->ROMs[2].size         = 0;
-        hwinfo->ROMs[2].crc16        = 0;
+        hwinfo->ROMs[2].crc32        = 0;
     }
     else
     {
         hwinfo->ROMs[2].IsExists     = 0;
         hwinfo->ROMs[2].StartAddress = 0;
         hwinfo->ROMs[2].size         = 0;
-        hwinfo->ROMs[2].crc16        = 0;
+        hwinfo->ROMs[2].crc32        = 0;
     }
 
     if (hwinfo->ROMs[1].IsExists)

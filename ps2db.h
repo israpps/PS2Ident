@@ -2,7 +2,7 @@ typedef struct PS2DBROMInformation
 {
     u8 IsExists;
     u8 padding;
-    u32 crc16;
+    u32 crc32;
     u32 StartAddress;
     u32 size;
 } t_PS2DBROMHardwareInfo;

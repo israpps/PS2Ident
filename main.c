@@ -199,7 +199,6 @@ int main(int argc, char *argv[])
     /* Go gather some information from the EE's peripherals while the IOP reset. */
     GetEEInformation(&SystemInformation);
 
-    InitCRC16LookupTable();
     InitCRC32LookupTable();
 
     ThreadSema.init_count = 0;
