@@ -17,45 +17,11 @@ jobs:
 
     - uses: actions/checkout@v4
 
-    - name: Compile project
-      run: |
-        make
-    # commands for compiling your project
-
     - name: Get short SHA and repository name
       id: slug
       run: |
         echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
         echo "::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}
-        path: |
-          PS2Ident.elf
-          PS2Ident.db
-          README.md
-          changelog.txt
-          LICENSE_OFL.txt
-          *.ttf
-
-    - name: Compile PCSX2 version
-      run: |
-        make clean
-        make DEBUG=1 DSNET_HOST_SUPPORT=1 DISABLE_ILINK_DUMPING=1
-
-    - name: Upload PCSX2 artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PCSX2
-        path: |
-          PS2Ident.elf
-          PS2Ident.db
-          README.md
-          changelog.txt
-          LICENSE_OFL.txt
-          *.ttf
 
     - name: Compile PS2TOOL version
       run: |
@@ -74,8 +40,23 @@ jobs:
           LICENSE_OFL.txt
           *.ttf
 
-    # 'path' will create artifact with all *.elf in working directory
-    # you can change this
+    - name: Compile project
+      run: |
+        make clean
+        make
+    # commands for compiling your project
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}
+        path: |
+          PS2Ident.elf
+          PS2Ident.db
+          README.md
+          changelog.txt
+          LICENSE_OFL.txt
+          *.ttf
 
   release:
     needs: [build]

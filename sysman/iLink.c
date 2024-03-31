@@ -12,7 +12,7 @@
 #include "sysinfo.h"
 #include "iLink.h"
 
-//#define DISABLE_ILINK_DUMPING	//For testing within PCSX2
+// #define DISABLE_ILINK_DUMPING	//For testing within PCSX2
 
 static struct ILINKMemMap *ILINKRegisterBase = (struct ILINKMemMap *)ILINK_REGISTER_BASE;
 
@@ -40,8 +40,18 @@ static inline int iLinkResetHW(void)
         ILINKRegisterBase->ctrl2 = iLink_CTRL2_LPSEn;
 
     /* Wait for the clock to stabilize. */
+    int retryCount = 0;
     while (!(ILINKRegisterBase->ctrl2 & iLink_CTRL2_SOK))
+    {
+        printf("SYSMAN: Waiting for clock to stabilize after %d retries.\n", retryCount);
+        retryCount++;
+        if (retryCount >= 100)
+        {
+            printf("SYSMAN: Emergency exit after 1000 retries.\n");
+            break;
+        }
         DelayThread(50);
+    }
 
     return 0;
 }
@@ -63,15 +73,35 @@ int iLinkInitialize(void)
 
 static void iLinkPhySync(void)
 {
-    while (ILINKRegisterBase->PHYAccess & (RdPhy | WrPhy)) {};
+    int retryCount = 0;
+    while (ILINKRegisterBase->PHYAccess & (RdPhy | WrPhy))
+    {
+        printf("SYSMAN: iLink PHY sync failed after %d retries.\n", retryCount);
+        retryCount++;
+        if (retryCount >= 100)
+        {
+            printf("SYSMAN: Emergency exit after 1000 retries.\n");
+            break;
+        }
+    };
 }
 
 unsigned char iLinkReadPhy(unsigned char address)
 {
     ILINKRegisterBase->PHYAccess = (((unsigned int)address) << 24) | RdPhy;
     iLinkPhySync();
+    int retryCount = 0;
 
-    while (!(ILINKRegisterBase->intr0 & iLink_INTR0_PhyRRx)) {};
+    while (!(ILINKRegisterBase->intr0 & iLink_INTR0_PhyRRx))
+    {
+        printf("SYSMAN: iLink PHY read failed after %d retries.\n", retryCount);
+        retryCount++;
+        if (retryCount >= 100)
+        {
+            printf("SYSMAN: Emergency exit after 100 retries.\n");
+            break;
+        }
+    };
     ILINKRegisterBase->intr0 = iLink_INTR0_PhyRRx;
 
     return (ILINKRegisterBase->PHYAccess & 0xFF);
@@ -103,7 +133,7 @@ int iLinkGetHardwareInfo(t_PS2DBiLinkHardwareInfo *devinfo)
 #ifndef DISABLE_ILINK_DUMPING
     unsigned int value;
 
-    DEBUG_PRINTF("SYSMAN: Probing i.Link.\n");
+    printf("SYSMAN: Probing i.Link.\n");
 
     devinfo->NumPorts = iLinkPHYGetNumPorts();
     devinfo->MaxSpeed = iLinkPHYGetMaxSpeed();
