@@ -2,6 +2,8 @@
 #define CRC16_INITIAL_CHECKSUM 0x0
 #define CRC16_FINAL_XOR_VALUE  0x0
 #define CRC32_POLYNOMIAL       0xEDB88320
+#define CRC32_INITIAL_CHECKSUM 0xFFFFFFFF
+#define CRC32_FINAL_XOR_VALUE  0xFFFFFFFF
 
 void InitCRC16LookupTable(void);
 unsigned short int CalculateCRC16(unsigned char *buffer, unsigned int length, unsigned short int InitialChecksum);
@@ -9,3 +11,4 @@ unsigned short int ReflectAndXORCRC16(unsigned short int crc);
 
 void InitCRC32LookupTable(void);
 unsigned int CalculateCRC32(unsigned char *buffer, unsigned int length, unsigned int InitialChecksum);
+unsigned int ReflectAndXORCRC32(unsigned int crc);

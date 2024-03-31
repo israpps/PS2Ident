@@ -22,7 +22,7 @@
 #include "system.h"
 #include "pad.h"
 #include "graphics.h"
-#include "crc16.h"
+#include "crc.h"
 #include "libcdvd_add.h"
 #include "dvdplayer.h"
 #include "OSDInit.h"
@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
     GetEEInformation(&SystemInformation);
 
     InitCRC16LookupTable();
+    InitCRC32LookupTable();
 
     ThreadSema.init_count = 0;
     ThreadSema.max_count  = 1;

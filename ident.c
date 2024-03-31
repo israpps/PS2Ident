@@ -33,7 +33,7 @@
 
 #include "UI.h"
 #include "menu.h"
-#include "crc16.h"
+#include "crc.h"
 #include "dbms.h"
 
 extern struct UIDrawGlobal UIDrawGlobal;
@@ -109,13 +109,13 @@ int GetEEInformation(struct SystemInformation *SystemInformation)
     return 0;
 }
 
-static u16 CalculateCRCOfROM(void *buffer1, void *buffer2, void *start, unsigned int length)
+static u32 CalculateCRCOfROM(void *buffer1, void *buffer2, void *start, unsigned int length)
 {
-    u16 crc;
+    u32 crc;
     unsigned int i, size = 0, prevSize;
     void *pDestBuffer, *pSrcBuffer;
 
-    for (i = 0, prevSize = size, crc = CRC16_INITIAL_CHECKSUM, pDestBuffer = buffer1, pSrcBuffer = start; i < length; i += size, pSrcBuffer += size)
+    for (i = 0, prevSize = size, crc = CRC32_INITIAL_CHECKSUM, pDestBuffer = buffer1, pSrcBuffer = start; i < length; i += size, pSrcBuffer += size)
     {
         size = length - i > MEM_IO_BLOCK_SIZE ? MEM_IO_BLOCK_SIZE : length - i;
 
@@ -125,13 +125,15 @@ static u16 CalculateCRCOfROM(void *buffer1, void *buffer2, void *start, unsigned
 
         pDestBuffer = (pDestBuffer == buffer1) ? buffer2 : buffer1;
         if (i > 0)
-            crc = CalculateCRC16(UNCACHED_SEG(pDestBuffer), prevSize, crc);
+            crc = CalculateCRC32(UNCACHED_SEG(pDestBuffer), prevSize, crc);
         prevSize = size;
     }
 
     pDestBuffer = (pDestBuffer == buffer1) ? buffer2 : buffer1;
     SysmanSync(0);
-    return ReflectAndXORCRC16(CalculateCRC16(UNCACHED_SEG(pDestBuffer), prevSize, crc));
+    crc = CalculateCRC32(UNCACHED_SEG(pDestBuffer), prevSize, crc);
+    // return ReflectAndXORCRC16(CalculateCRC16(UNCACHED_SEG(pDestBuffer), prevSize, crc));
+    return ReflectAndXORCRC32(crc);
 }
 
 int CheckROM(const struct PS2IDBMainboardEntry *entry)
@@ -186,13 +188,13 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
     if (SystemInformation->mainboard.BOOT_ROM.IsExists)
     {
         SystemInformation->mainboard.BOOT_ROM.crc16 = CalculateCRCOfROM(buffer1, buffer2, (void *)SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size);
-        DEBUG_PRINTF("BOOT ROM CRC16: 0x%04x\n", SystemInformation->mainboard.BOOT_ROM.crc16);
+        printf("BOOT ROM CRC32: 0x%08x\n", SystemInformation->mainboard.BOOT_ROM.crc16);
     }
 
     if (SystemInformation->mainboard.DVD_ROM.IsExists)
     {
         SystemInformation->mainboard.DVD_ROM.crc16 = CalculateCRCOfROM(buffer1, buffer2, (void *)SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size);
-        DEBUG_PRINTF("DVD ROM CRC16: 0x%04x\n", SystemInformation->mainboard.DVD_ROM.crc16);
+        printf("DVD ROM CRC32: 0x%08x\n", SystemInformation->mainboard.DVD_ROM.crc16);
     }
 
     free(buffer1);
@@ -1532,7 +1534,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
           stream);
     if (SystemInformation->mainboard.BOOT_ROM.IsExists)
     {
-        fprintf(stream, "%p (%u Mbit)    CRC16: 0x%04x\r\n",
+        fprintf(stream, "%p (%u Mbit)    CRC32: 0x%08x\r\n",
                 SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size / 1024 / 128,
                 SystemInformation->mainboard.BOOT_ROM.crc16);
     }
@@ -1542,7 +1544,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     fputs("    DVD ROM:       ", stream);
     if (SystemInformation->mainboard.DVD_ROM.IsExists)
     {
-        fprintf(stream, "%p (%u Mbit)    CRC16: 0x%04x\r\n",
+        fprintf(stream, "%p (%u Mbit)    CRC32: 0x%08x\r\n",
                 SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size / 1024 / 128,
                 SystemInformation->mainboard.DVD_ROM.crc16);
     }
