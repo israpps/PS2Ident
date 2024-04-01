@@ -17,6 +17,7 @@
 
 #include "graphics.h"
 #include "font.h"
+#include "main.h"
 
 /*	Draw the glyphs as close as possible to each other, to save VRAM.
 
@@ -153,7 +154,7 @@ static int ResetThisFont(struct UIDrawGlobal *gsGlobal, Font_t *font)
     }
     else
     {
-        printf("Font: error - unable to allocate VRAM for CLUT.\n");
+        DEBUG_PRINTF("Font: error - unable to allocate VRAM for CLUT.\n");
         result = -1;
     }
 
@@ -309,7 +310,7 @@ static int AtlasInit(Font_t *font, struct FontAtlas *atlas)
         TextureSizeEE = width_aligned * height_aligned;
         if ((atlas->buffer = memalign(64, TextureSizeEE)) == NULL)
         {
-            printf("Font: error - unable to allocate memory for atlas.\n");
+            DEBUG_PRINTF("Font: error - unable to allocate memory for atlas.\n");
             result = -ENOMEM;
         }
         memset(atlas->buffer, 0, TextureSizeEE);
@@ -317,7 +318,7 @@ static int AtlasInit(Font_t *font, struct FontAtlas *atlas)
     }
     else
     {
-        printf("Font: error - unable to allocate VRAM for atlas.\n");
+        DEBUG_PRINTF("Font: error - unable to allocate VRAM for atlas.\n");
         result = -ENOMEM;
     }
 
@@ -355,7 +356,7 @@ static struct FontGlyphSlot *AtlasAlloc(Font_t *font, struct FontAtlas *atlas, s
         }
         else
         {
-            printf("Font: error - unable to allocate a new glyph slot.\n");
+            DEBUG_PRINTF("Font: error - unable to allocate a new glyph slot.\n");
             atlas->NumGlyphs = 0;
         }
 
@@ -386,7 +387,7 @@ static struct FontGlyphSlot *AtlasAlloc(Font_t *font, struct FontAtlas *atlas, s
             }
             else
             {
-                printf("Font: error - unable to allocate a new glyph slot.\n");
+                DEBUG_PRINTF("Font: error - unable to allocate a new glyph slot.\n");
                 atlas->NumGlyphs = 0;
             }
             // Now try the vertical frontier.
@@ -421,7 +422,7 @@ static struct FontGlyphSlot *AtlasAlloc(Font_t *font, struct FontAtlas *atlas, s
             }
             else
             {
-                printf("Font: error - unable to allocate a new glyph slot.\n");
+                DEBUG_PRINTF("Font: error - unable to allocate a new glyph slot.\n");
                 atlas->NumGlyphs = 0;
             }
         }
@@ -476,7 +477,7 @@ static struct FontGlyphSlot *UploadGlyph(struct UIDrawGlobal *gsGlobal, Font_t *
         GsLoadImage(atlas->buffer, &font->Texture);
     }
     else
-        printf("Font: error - all atlas are full.\n");
+        DEBUG_PRINTF("Font: error - all atlas are full.\n");
 
     return GlyphSlot;
 }
@@ -511,7 +512,7 @@ static int GetGlyph(struct UIDrawGlobal *gsGlobal, Font_t *font, wint_t characte
         if ((glyphSlot = UploadGlyph(gsGlobal, font, character, font->FTFace->glyph, &atlas)) == NULL)
             return -1;
 
-        //		printf("Uploading %c, %u, %u\n", character, GlyphSlot->VramPageX, GlyphSlot->VramPageY);
+        //		("Uploading %c, %u, %u\n", character, GlyphSlot->VramPageX, GlyphSlot->VramPageY);
 
         glyphInfo->slot = glyphSlot;
         glyphInfo->vram = atlas->vram;

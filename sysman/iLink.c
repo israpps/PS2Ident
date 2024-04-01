@@ -43,11 +43,11 @@ static inline int iLinkResetHW(void)
     int retryCount = 0;
     while (!(ILINKRegisterBase->ctrl2 & iLink_CTRL2_SOK))
     {
-        printf("SYSMAN: Waiting for clock to stabilize after %d retries.\n", retryCount);
+        DEBUG_PRINTF("SYSMAN: Waiting for clock to stabilize after %d retries.\n", retryCount);
         retryCount++;
         if (retryCount >= 100)
         {
-            printf("SYSMAN: Emergency exit after 1000 retries.\n");
+            DEBUG_PRINTF("SYSMAN: Emergency exit after 1000 retries.\n");
             break;
         }
         DelayThread(50);
@@ -76,11 +76,11 @@ static void iLinkPhySync(void)
     int retryCount = 0;
     while (ILINKRegisterBase->PHYAccess & (RdPhy | WrPhy))
     {
-        printf("SYSMAN: iLink PHY sync failed after %d retries.\n", retryCount);
+        DEBUG_PRINTF("SYSMAN: iLink PHY sync failed after %d retries.\n", retryCount);
         retryCount++;
         if (retryCount >= 100)
         {
-            printf("SYSMAN: Emergency exit after 1000 retries.\n");
+            DEBUG_PRINTF("SYSMAN: Emergency exit after 1000 retries.\n");
             break;
         }
     };
@@ -94,11 +94,11 @@ unsigned char iLinkReadPhy(unsigned char address)
 
     while (!(ILINKRegisterBase->intr0 & iLink_INTR0_PhyRRx))
     {
-        printf("SYSMAN: iLink PHY read failed after %d retries.\n", retryCount);
+        DEBUG_PRINTF("SYSMAN: iLink PHY read failed after %d retries.\n", retryCount);
         retryCount++;
         if (retryCount >= 100)
         {
-            printf("SYSMAN: Emergency exit after 100 retries.\n");
+            DEBUG_PRINTF("SYSMAN: Emergency exit after 100 retries.\n");
             break;
         }
     };
@@ -133,7 +133,7 @@ int iLinkGetHardwareInfo(t_PS2DBiLinkHardwareInfo *devinfo)
 #ifndef DISABLE_ILINK_DUMPING
     unsigned int value;
 
-    printf("SYSMAN: Probing i.Link.\n");
+    DEBUG_PRINTF("SYSMAN: Probing i.Link.\n");
 
     devinfo->NumPorts = iLinkPHYGetNumPorts();
     devinfo->MaxSpeed = iLinkPHYGetMaxSpeed();

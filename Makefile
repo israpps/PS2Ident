@@ -23,6 +23,7 @@ EE_TEMP_FILES = SIO2MAN_irx.c MCMAN_irx.c MCSERV_irx.c PADMAN_irx.c POWEROFF_irx
 
 ifeq ($(DSNET_HOST_SUPPORT),1)
 	EE_CFLAGS += -DDSNET_HOST_SUPPORT
+	DEBUG = 1
 endif
 
 ifeq ($(DEBUG),1)

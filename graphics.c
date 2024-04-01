@@ -234,7 +234,7 @@ static int LoadPNGImage(struct UIDrawGlobal *gsGlobal, GS_IMAGE *Texture, GS_IMA
     }
     else
     {
-        printf("This texture depth is not supported yet!\n");
+        DEBUG_PRINTF("This texture depth is not supported yet!\n");
         png_read_end(png_ptr, NULL);
         png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
         return -1;

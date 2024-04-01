@@ -79,7 +79,7 @@ static int LoadEROMDRV(void)
         eromdrv[12] = '\0'; // Replace '?' with a NULL.
 
     _ps2sdk_close(fd);
-    printf("EROMDRV: %s\n", eromdrv);
+    DEBUG_PRINTF("EROMDRV: %s\n", eromdrv);
 
     return SifLoadModuleEncrypted(eromdrv, 0, NULL);
 }
@@ -137,7 +137,7 @@ static void SystemInitThread(struct SystemInitParams *SystemInitParams)
         _ps2sdk_close(fd);
         SystemInitParams->SystemInformation->mainboard.extinfo[15] = '\0';
     }
-    printf("B EXTINFO: %s\n", SystemInitParams->SystemInformation->mainboard.extinfo);
+    DEBUG_PRINTF("B EXTINFO: %s\n", SystemInitParams->SystemInformation->mainboard.extinfo);
 
     fd                                                 = _ps2sdk_open("rom1:EXTINFO", O_RDONLY);
     SystemInitParams->SystemInformation->DVDextinfo[0] = '\0';
@@ -148,7 +148,7 @@ static void SystemInitThread(struct SystemInitParams *SystemInitParams)
         _ps2sdk_close(fd);
         SystemInitParams->SystemInformation->DVDextinfo[15] = '\0';
     }
-    printf("D EXTINFO: %s\n", SystemInitParams->SystemInformation->DVDextinfo);
+    DEBUG_PRINTF("D EXTINFO: %s\n", SystemInitParams->SystemInformation->DVDextinfo);
 
     SignalSema(SystemInitParams->InitCompleteSema);
     ExitDeleteThread();

@@ -190,7 +190,7 @@ static int ParseLanguageFile(char **array, FILE *file, unsigned int ExpectedNumL
     {
         if (LinesLoaded != ExpectedNumLines)
         {
-            printf("ParseLanguageFile: Mismatched number of lines (%d/%u)\n", LinesLoaded, ExpectedNumLines);
+            DEBUG_PRINTF("ParseLanguageFile: Mismatched number of lines (%d/%u)\n", LinesLoaded, ExpectedNumLines);
             result = -1;
         }
     }
@@ -233,7 +233,7 @@ static int ParseFontListFile(char **array, FILE *file, unsigned int ExpectedNumL
     {
         if (LinesLoaded != ExpectedNumLines)
         {
-            printf("ParseFontListFile: Mismatched number of lines (%d/%u)\n", LinesLoaded, ExpectedNumLines);
+            DEBUG_PRINTF("ParseFontListFile: Mismatched number of lines (%d/%u)\n", LinesLoaded, ExpectedNumLines);
             result = -1;
         }
     }
@@ -545,7 +545,7 @@ static int InitFont(void)
     }
     else
     {
-        printf("Can't get font file path from GetFontFilePath(%d).\n", language);
+        DEBUG_PRINTF("Can't get font file path from GetFontFilePath(%d).\n", language);
         return -1;
     }
 
@@ -558,7 +558,7 @@ static int InitFont(void)
         result        = FontInit(&UIDrawGlobal, pFontFilePath);
     }
     if (result != 0)
-        printf("InitFont(%s) error: %d\n", pFontFilePath, result);
+        DEBUG_PRINTF("InitFont(%s) error: %d\n", pFontFilePath, result);
     free(pFontFilePath);
 
     return result;
@@ -577,7 +577,7 @@ static int InitFontWithBuffer(void)
         }
         else
         {
-            printf("Can't get font file path from GetFontFilePath(%d).\n", language);
+            DEBUG_PRINTF("Can't get font file path from GetFontFilePath(%d).\n", language);
             return -1;
         }
 
@@ -590,7 +590,7 @@ static int InitFontWithBuffer(void)
             result        = LoadFontIntoBuffer(&UIDrawGlobal, pFontFilePath);
         }
         if (result != 0)
-            printf("InitFont(%s) error: %d\n", pFontFilePath, result);
+            DEBUG_PRINTF("InitFont(%s) error: %d\n", pFontFilePath, result);
         free(pFontFilePath);
     }
     else

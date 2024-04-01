@@ -74,7 +74,7 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     hwinfo->BOOT_ROM.IsExists     = 1;
 
     if (hwinfo->BOOT_ROM.size > 0)
-        printf("DEV2: 0x%lx-0x%lx\n", hwinfo->BOOT_ROM.StartAddress, hwinfo->BOOT_ROM.StartAddress + hwinfo->BOOT_ROM.size - 1);
+        DEBUG_PRINTF("DEV2: 0x%lx-0x%lx\n", hwinfo->BOOT_ROM.StartAddress, hwinfo->BOOT_ROM.StartAddress + hwinfo->BOOT_ROM.size - 1);
 
     // DEV1, DVD ROM
     hwinfo->DVD_ROM.StartAddress = GetBaseAddress(SSBUSC_DEV_DVDROM);
@@ -83,7 +83,7 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     hwinfo->DVD_ROM.IsExists     = romGetImageStat((const void *)hwinfo->DVD_ROM.StartAddress, (const void *)(hwinfo->DVD_ROM.StartAddress + 0x4000), &ImgStat) != NULL;
 
     if (hwinfo->DVD_ROM.size > 0)
-        printf("DEV1: 0x%lx-0x%lx\n", hwinfo->DVD_ROM.StartAddress, hwinfo->DVD_ROM.StartAddress + hwinfo->DVD_ROM.size - 1);
+        DEBUG_PRINTF("DEV1: 0x%lx-0x%lx\n", hwinfo->DVD_ROM.StartAddress, hwinfo->DVD_ROM.StartAddress + hwinfo->DVD_ROM.size - 1);
 
     // Process virtual directories
     // DEV2, BOOT ROM
@@ -157,7 +157,7 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
         {
             if ((result = SysmanCalcROMRegionSize((void *)hwinfo->ROMs[i].StartAddress)) > 0)
             {
-                printf("rom%u:\t%d bytes\n", i, result);
+                DEBUG_PRINTF("rom%u:\t%d bytes\n", i, result);
                 hwinfo->ROMs[i].size = result;
             }
         }
@@ -179,7 +179,7 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     if (size < hwinfo->DVD_ROM.size)
         hwinfo->DVD_ROM.size = size;
 
-    printf("DVD ROM real size: %u (DEV1: %lu)\n", size, hwinfo->DVD_ROM.size);
+    DEBUG_PRINTF("DVD ROM real size: %u (DEV1: %lu)\n", size, hwinfo->DVD_ROM.size);
 
     return 0;
 }
@@ -404,13 +404,13 @@ static int EROMInitialize(void)
         }
         else
         {
-            printf("SYSMAN: Error - Unable to locate EROM address.\n");
+            DEBUG_PRINTF("SYSMAN: Error - Unable to locate EROM address.\n");
             EROMStart = NULL;
         }
     }
     else
     {
-        printf("SYSMAN: EROM filesystem driver not found.\n");
+        DEBUG_PRINTF("SYSMAN: EROM filesystem driver not found.\n");
         EromArea  = NULL;
         EROMStart = NULL;
     }
@@ -427,11 +427,11 @@ static int EROMGetHardwareInfo(t_PS2DBROMHardwareInfo *devinfo)
         devinfo->StartAddress = (u32)EromArea;
         devinfo->size         = get_val_from_hash0(EROMStart->fileoffset_hash);
 
-        printf("SYSMAN: EROM detected: %p, %p, %lu\n", EromArea, EROMStart, devinfo->size);
+        DEBUG_PRINTF("SYSMAN: EROM detected: %p, %p, %lu\n", EromArea, EROMStart, devinfo->size);
     }
     else
     {
-        printf("SYSMAN: EROM not detected.\n");
+        DEBUG_PRINTF("SYSMAN: EROM not detected.\n");
     }
 
     return 0;

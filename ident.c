@@ -143,11 +143,11 @@ int CheckROM(const struct PS2IDBMainboardEntry *entry)
     {
         if ((entry->BOOT_ROM.IsExists && (other->BOOT_ROM.crc32 != entry->BOOT_ROM.crc32)) || (other->DVD_ROM.IsExists && (other->DVD_ROM.crc32 != entry->DVD_ROM.crc32)))
         {
-            printf("CheckROM: ROM mismatch:\n");
+            DEBUG_PRINTF("CheckROM: ROM mismatch:\n");
             if (entry->BOOT_ROM.IsExists)
-                printf("    BOOT: 0x%04x 0x%04x\n", other->BOOT_ROM.crc32, entry->BOOT_ROM.crc32);
+                DEBUG_PRINTF("BOOT: 0x%04x 0x%04x\n", other->BOOT_ROM.crc32, entry->BOOT_ROM.crc32);
             if (other->DVD_ROM.IsExists)
-                printf("    DVD: 0x%04x 0x%04x\n", other->DVD_ROM.crc32, entry->DVD_ROM.crc32);
+                DEBUG_PRINTF("DVD: 0x%04x 0x%04x\n", other->DVD_ROM.crc32, entry->DVD_ROM.crc32);
 
             return 1;
         }
@@ -187,13 +187,13 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
     if (SystemInformation->mainboard.BOOT_ROM.IsExists)
     {
         SystemInformation->mainboard.BOOT_ROM.crc32 = CalculateCRCOfROM(buffer1, buffer2, (void *)SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size);
-        printf("BOOT ROM CRC32: 0x%08x\n", SystemInformation->mainboard.BOOT_ROM.crc32);
+        DEBUG_PRINTF("BOOT ROM CRC32: 0x%08x\n", SystemInformation->mainboard.BOOT_ROM.crc32);
     }
 
     if (SystemInformation->mainboard.DVD_ROM.IsExists)
     {
         SystemInformation->mainboard.DVD_ROM.crc32 = CalculateCRCOfROM(buffer1, buffer2, (void *)SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size);
-        printf("DVD ROM CRC32: 0x%08x\n", SystemInformation->mainboard.DVD_ROM.crc32);
+        DEBUG_PRINTF("DVD ROM CRC32: 0x%08x\n", SystemInformation->mainboard.DVD_ROM.crc32);
     }
 
     free(buffer1);
@@ -237,26 +237,26 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
 
     if (sceGetDspVersion(SystemInformation->DSPVersion, &stat) == 0 || (stat & 0x80) != 0)
     {
-        printf("Failed to read DSP version. Stat: %x\n", stat);
+        DEBUG_PRINTF("Failed to read DSP version. Stat: %x\n", stat);
     }
     sceCdAltMV(SystemInformation->mainboard.MECHACONVersion, &stat);
-    printf("MECHACON version: %u %u %u %u\n", SystemInformation->mainboard.MECHACONVersion[0], SystemInformation->mainboard.MECHACONVersion[1], SystemInformation->mainboard.MECHACONVersion[2], SystemInformation->mainboard.MECHACONVersion[3]);
+    DEBUG_PRINTF("MECHACON version: %u %u %u %u\n", SystemInformation->mainboard.MECHACONVersion[0], SystemInformation->mainboard.MECHACONVersion[1], SystemInformation->mainboard.MECHACONVersion[2], SystemInformation->mainboard.MECHACONVersion[3]);
 
     if (sceCdReadConsoleID(SystemInformation->ConsoleID, &result) == 0 || (result & 0x80))
     {
-        printf("Failed to read console ID. Stat: %x\n", result);
+        DEBUG_PRINTF("Failed to read console ID. Stat: %x\n", result);
         SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_CONSOLEID;
     }
     if (sceCdRI(SystemInformation->iLinkID, &result) == 0 || (result & 0x80))
     {
-        printf("Failed to read i.Link ID. Stat: %x\n", result);
+        DEBUG_PRINTF("Failed to read i.Link ID. Stat: %x\n", result);
         SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_ILINKID;
     }
     if (SystemInformation->mainboard.MECHACONVersion[1] >= 5)
     { // v5.x MECHACON (SCPH-50000 and later) supports Mechacon Renewal Date.
         if (sceCdAltReadRenewalDate(SystemInformation->mainboard.MRenewalDate, &result) == 0 || (result & 0x80))
         {
-            printf("Failed to read M Renewal Date. Stat: %x\n", result);
+            DEBUG_PRINTF("Failed to read M Renewal Date. Stat: %x\n", result);
             SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_MRENEWDATE;
         }
         /*mechacon 5.8 and 5.9 are the same chip patched with dex flag, so 5.8 and 5.9 -> 5.8 */
@@ -267,7 +267,7 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
     SystemInformation->mainboard.ADD010 = 0xFFFF;
     if (GetADD010(SystemInformation->mainboard.MECHACONVersion[1] >= 5 ? 0x001 : 0x010, &SystemInformation->mainboard.ADD010) != 0)
     {
-        printf("Failed to read ADD0x010.\n");
+        DEBUG_PRINTF("Failed to read ADD0x010.\n");
         SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_ADD010;
     }
 
@@ -600,7 +600,7 @@ const char *GetSPU2ChipDesc(unsigned char revision, unsigned char EE_revision)
 {
     const char *description;
 
-    printf("SPU2 revision: 0x%02x\n", revision);
+    DEBUG_PRINTF("SPU2 revision: 0x%02x\n", revision);
 
     switch (revision)
     {
@@ -631,7 +631,7 @@ const char *GetGSChipDesc(unsigned char revision)
 {
     const char *description;
 
-    printf("GS revision: 0x%02x\n", revision);
+    DEBUG_PRINTF("GS revision: 0x%02x\n", revision);
 
     switch (revision)
     {
@@ -670,7 +670,7 @@ const char *GetEEChipDesc(unsigned char revision, unsigned char GS_revision)
 {
     const char *description;
 
-    printf("EE revision: 0x%02x\n", revision);
+    DEBUG_PRINTF("EE revision: 0x%02x\n", revision);
 
     // TODO: more researches on EE+GS
     switch (revision)
@@ -708,7 +708,7 @@ const char *GetIOPChipDesc(unsigned char revision, unsigned char EE_revision)
 {
     const char *description;
 
-    printf("IOP revision: 0x%02x\n", revision);
+    DEBUG_PRINTF("IOP revision: 0x%02x\n", revision);
 
     switch (revision)
     {
@@ -754,7 +754,7 @@ const char *GetMECHACONChipDesc(unsigned int revision)
         if (revision != 0x050607)
             revision = revision & 0xffff00; // Mexico unit is unique
     }
-    printf("MECHACON revision: 0x%08x\n", revision);
+    DEBUG_PRINTF("MECHACON revision: 0x%08x\n", revision);
 
     switch (revision)
     {
@@ -976,7 +976,6 @@ const char *GetBOOTROMDesc(const char *extinfo, const char *romver, const char *
     }
     char combined[20];
     snprintf(combined, sizeof(combined), "%s%c", extinfo, romver[5]);
-    printf("combined: %s\n", combined);
 
     // clang-format off
          if (strcmp(combined, "20000117-050310C") == 0) description = "00-100";

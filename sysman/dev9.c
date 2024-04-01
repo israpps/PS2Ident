@@ -131,11 +131,11 @@ int dev9GetHardwareInfo(t_PS2DBSSBUSHardwareInfo *devinfo)
     {
         if ((*(u16 *)mode & 0xfe) == 0x60)
         {
-            printf("SYSMAN: T10K detected.\n");
+            DEBUG_PRINTF("SYSMAN: T10K detected.\n");
 
             if (aif_regs[AIF_IDENT] == 0xa1)
             {
-                printf("AIF controller revision: %d.\n", aif_regs[AIF_REVISION]);
+                DEBUG_PRINTF("AIF controller revision: %d.\n", aif_regs[AIF_REVISION]);
                 devinfo->status |= PS2DB_SSBUS_HAS_AIF;
                 devinfo->AIFRevision = aif_regs[AIF_REVISION];
             }
