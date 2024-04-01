@@ -1114,10 +1114,12 @@ const char *GetSystemTypeDesc(unsigned char type)
 {
     const char *description;
 
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_SYSTEM_TYPE, type)) == NULL)
-    {
+    if (type == 0)
+        description = "PlayStation 2";
+    else if (type == 1)
+        description = "PSX";
+    else
         description = "Unknown";
-    }
 
     return description;
 }
@@ -1126,10 +1128,24 @@ const char *GetRegionDesc(unsigned char region)
 {
     const char *description;
 
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_MG_REGION, region)) == NULL)
-    {
+    if (region == 0)
+        description = "Japan";
+    else if (region == 1)
+        description = "USA";
+    else if (region == 2)
+        description = "Europe";
+    else if (region == 3)
+        description = "Oceania";
+    else if (region == 4)
+        description = "Asia";
+    else if (region == 5)
+        description = "Russia";
+    else if (region == 6)
+        description = "China";
+    else if (region == 7)
+        description = "Mexico";
+    else
         description = "Unknown";
-    }
 
     return description;
 }
@@ -1451,11 +1467,30 @@ const char *GetModelIDDesc(unsigned short int ModelId)
 const char *GetEMCSIDDesc(unsigned char id)
 {
     const char *description;
-
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_EMCS_ID, id)) == NULL)
-    {
-        description = "Sticker";
-    }
+    if (id == 0x00)
+        description = "Japan";
+    else if (id == 0x01)
+        description = "FOXC";
+    else if (id == 0x02)
+        description = "SZMT";
+    else if (id == 0x03)
+        description = "SKZ";
+    else if (id == 0x10)
+        description = "S EMCS";
+    else if (id == 0x11)
+        description = "SKD";
+    else if (id == 0x18)
+        description = "S EMCS (PSX)";
+    else if (id == 0x20)
+        description = "FOXC";
+    else if (id == 0x21)
+        description = "FOXC"; // TODO: why they changed FOXC id in the slims middle age?
+    else if (id == 0x30)
+        description = "SZMT";
+    else if (id == 0x40)
+        description = "S WUXI";
+    else
+        description = "Sticker missing";
 
     return description;
 }
