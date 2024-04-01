@@ -278,7 +278,8 @@ int PS2IDBMS_AddModel(int id, const struct PS2IDBComponentEntry *entry)
 
     if (result == 0)
     {
-        if ((database = realloc(database, (NumModels + 1) * sizeof(struct PS2IDBComponentEntry))) != NULL)
+        struct PS2IDBMainboardEntry *temp = realloc(database, (NumModels + 1) * sizeof(struct PS2IDBMainboardEntry));
+        if (temp != NULL)
         {
             memcpy(&database[NumModels], entry, sizeof(struct PS2IDBComponentEntry));
             peripherals[id].NumModels++;
@@ -286,6 +287,8 @@ int PS2IDBMS_AddModel(int id, const struct PS2IDBComponentEntry *entry)
         }
         else
         {
+            free(database);
+            database                  = NULL;
             peripherals[id].NumModels = 0;
             result                    = ENOMEM;
         }
@@ -317,14 +320,18 @@ int PS2IDBMS_AddMainboardModel(const struct PS2IDBMainboardEntry *entry)
 
     if (result == 0)
     {
-        if ((database = realloc(database, (NumModels + 1) * sizeof(struct PS2IDBMainboardEntry))) != NULL)
+        struct PS2IDBMainboardEntry *temp = realloc(database, (NumModels + 1) * sizeof(struct PS2IDBMainboardEntry));
+        if (temp != NULL)
         {
+            database = temp;
             memcpy(&database[NumModels], entry, sizeof(struct PS2IDBMainboardEntry));
             peripherals[PS2IDB_COMPONENT_MAINBOARD].NumModels++;
             result = 0;
         }
         else
         {
+            free(database);
+            database                                          = NULL;
             peripherals[PS2IDB_COMPONENT_MAINBOARD].NumModels = 0;
             result                                            = ENOMEM;
         }

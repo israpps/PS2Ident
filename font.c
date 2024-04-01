@@ -626,7 +626,7 @@ static int GetGlyphWidth(struct UIDrawGlobal *gsGlobal, Font_t *font, wint_t cha
 
 int FontGetGlyphWidth(struct UIDrawGlobal *gsGlobal, wint_t character)
 {
-    int width;
+    int width = 0;
 
     if ((width = GetGlyphWidth(gsGlobal, &GS_FTFont, character, 0)) == 0)
     {
@@ -635,4 +635,5 @@ int FontGetGlyphWidth(struct UIDrawGlobal *gsGlobal, wint_t character)
             width = GetGlyphWidth(gsGlobal, &GS_FTFont, character, 1);
         }
     }
+    return width;
 }

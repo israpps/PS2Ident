@@ -1128,7 +1128,7 @@ static int GetUserSaveDeviceSelection(char *SelectedDevice, const struct Require
 
             if (PadStatus & SelectButton)
             {
-                for (i = 0, DeviceID = 0; DeviceID < NUM_SUPPORTED_DEVICES; DeviceID++)
+                for (i = 0, DeviceID = 0; DeviceID < NumDevicesAvailable; DeviceID++)
                 {
                     if (devices[DeviceID].IsReady)
                     {
@@ -1195,7 +1195,7 @@ static int DumpSystemROMScreen(const struct SystemInformation *SystemInformation
 {
     char DumpPath[96];
     struct RequiredFileSpaceStat RequiredSpace[7];
-    int i, result;
+    int result;
     unsigned int NumFiles;
 
     NumFiles                = 3;

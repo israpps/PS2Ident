@@ -45,7 +45,7 @@ unsigned int ReflectAndXORCRC32(unsigned int crc)
 
 void InitCRC16LookupTable(void)
 {
-    register int i, j;
+    int i, j;
     unsigned short int crc;
 
     for (i = 0; i < 256; i++)
