@@ -9,7 +9,10 @@ jobs:
     name: PS2Ident compilation
     runs-on: ubuntu-latest
     container: ghcr.io/ps2dev/ps2dev:v1.0
-    # instead of "ps2dev/ps2dev:latest" you can use different tags, for example for old projects you can use "ps2dev/ps2dev:v1.0"
+    strategy:
+      fail-fast: false
+      matrix:
+        debug: [DEBUG=0 DSNET_HOST_SUPPORT=0, DEBUG=1 DSNET_HOST_SUPPORT=1]
     steps:
     - name: Install dependencies
       run: |
@@ -17,39 +20,15 @@ jobs:
 
     - uses: actions/checkout@v4
 
-    - name: Get short SHA and repository name
-      id: slug
-      run: |
-        echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
-        echo "::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
-
-    - name: Compile PS2TOOL version
-      run: |
-        make clean
-        make DEBUG=1 DSNET_HOST_SUPPORT=1
-
-    - name: Upload PS2TOOL artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PS2TOOL
-        path: |
-          PS2Ident_np.elf
-          PS2Ident.db
-          README.md
-          changelog.txt
-          LICENSE_OFL.txt
-          *.ttf
-
     - name: Compile project
       run: |
-        make clean
-        make
+        make ${{ matrix.debug }}
     # commands for compiling your project
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}
+        name: PS2Ident-${{ matrix.debug }}-${{ github.sha }}
         path: |
           PS2Ident.elf
           PS2Ident.db
@@ -65,31 +44,25 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Get short SHA and repository name
-      id: slug
-      run: |
-        echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
-        echo "::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
-
     - name: Download PS2Ident artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}
+        name: "PS2Ident-DEBUG=0 DSNET_HOST_SUPPORT=0-${{ github.sha }}"
         path: PS2Ident
 
     - name: Prepare PS2Ident archive
       run: |
-        7z a ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}.7z PS2Ident/*
+        7z a PS2Ident.7z PS2Ident/*
 
     - name: Download PS2Ident for PS2TOOL artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PS2TOOL
+        name: "PS2Ident-DEBUG=0 DSNET_HOST_SUPPORT=0-${{ github.sha }}"
         path: PS2Ident-PS2TOOL
 
     - name: Prepare PS2Ident for PS2TOOL archive
       run: |
-        7z a ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PS2TOOL.7z PS2Ident-PS2TOOL/*
+        7z a PS2Ident-debug.7z PS2Ident-PS2TOOL/*
 
     - name: Create pre-release
       if: github.ref == 'refs/heads/master'
@@ -100,8 +73,8 @@ jobs:
         automatic_release_tag: "latest"
         title: "Development build"
         files: |
-          ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}.7z
-          ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PS2TOOL.7z
+          PS2Ident.7z
+          PS2Ident-debug.7z
 
     - name: Create Tagged Release Draft
       if: startsWith(github.ref, 'refs/tags/v')
@@ -112,6 +85,6 @@ jobs:
         automatic_release_tag: "stable"
         draft: true
         files: |
-          ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}.7z
-          ${{ steps.slug.outputs.REPOSITORY_NAME }}-${{ steps.slug.outputs.sha8 }}-PS2TOOL.7z
+          PS2Ident.7z
+          PS2Ident-debug.7z
 
