@@ -59,8 +59,8 @@ static inline int GetPHYData(t_PS2DBSSBUSHardwareInfo *devinfo)
     idr2                         = _smap_read_phy(SMAP_DsPHYTER_PHYIDR2);
 
     /*	IDR1's value is generated with OUI<<2>>8, so do the reverse.
-		The bits are swapped around, and the most significant 2 bits are omitted.
-	*/
+        The bits are swapped around, and the most significant 2 bits are omitted.
+    */
     devinfo->SPEED.SMAP_PHY_OUI  = idr1 << 6 | (idr2 >> 10);
     devinfo->SPEED.SMAP_PHY_VMDL = idr2 >> 4 & 0x3F;
     devinfo->SPEED.SMAP_PHY_REV  = idr2 & SMAP_PHY_IDR2_REV_MSK;

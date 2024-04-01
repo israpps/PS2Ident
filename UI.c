@@ -67,7 +67,7 @@ static int FormatLanguageString(const char *in, int len, char *out)
         if ((CharLen2 > 0) && (wchar1 == '\\' && wchar2 != '\0'))
         {
             switch (wchar2)
-            { //When a translation file is used, escape characters appear like "\n" in the file.
+            { // When a translation file is used, escape characters appear like "\n" in the file.
                 case 'n':
                     *out = '\n';
                     out++;
@@ -119,7 +119,7 @@ static void BreakLongLanguageString(char *str)
                 LastWhitespaceOut = NULL;
                 PxSinceLastSpace  = 0;
                 break;
-            case ' ': //Record where the latest whitespace is.
+            case ' ': // Record where the latest whitespace is.
                 LastWhitespaceOut = str;
                 PxSinceLastSpace  = 0;
                 break;
@@ -159,7 +159,7 @@ static int ParseLanguageFile(char **array, FILE *file, unsigned int ExpectedNumL
     char line[512];
 
     if (fread(BOMTemp, 1, 3, file) != 3 || (BOMTemp[0] != 0xEF || BOMTemp[1] != 0xBB || BOMTemp[2] != 0xBF))
-    { //Check for the BOM byte sequence. Skip it, if it exists.
+    { // Check for the BOM byte sequence. Skip it, if it exists.
         rewind(file);
     }
 
@@ -168,7 +168,7 @@ static int ParseLanguageFile(char **array, FILE *file, unsigned int ExpectedNumL
     {
         len = strlen(line);
 
-        if (len >= 1 && line[len - 1] == '\n') //Remove the newline character, if it exists.
+        if (len >= 1 && line[len - 1] == '\n') // Remove the newline character, if it exists.
         {
             line[len - 1] = '\0';
             len--;
@@ -208,7 +208,7 @@ static int ParseFontListFile(char **array, FILE *file, unsigned int ExpectedNumL
     {
         len = strlen(line);
 
-        if (len >= 1 && line[len - 1] == '\n') //Remove the newline character, if it exists.
+        if (len >= 1 && line[len - 1] == '\n') // Remove the newline character, if it exists.
         {
             line[len - 1] = '\0';
             len--;
@@ -347,7 +347,7 @@ static int LoadDefaultLanguageStrings(void)
     memset(LangStringTable, 0, sizeof(LangStringTable));
     memset(LangLblStringTable, 0, sizeof(LangLblStringTable));
 
-    //Load default strings
+    // Load default strings
     for (LinesLoaded = 0; LinesLoaded < SYS_UI_MSG_COUNT; LinesLoaded++)
     {
         len = strlen(DefaultLanguageStringTable[LinesLoaded]);
@@ -366,7 +366,7 @@ static int LoadDefaultLanguageStrings(void)
 
     if (result == 0)
     {
-        //Load default labels
+        // Load default labels
         for (LinesLoaded = 0; LinesLoaded < SYS_UI_LBL_COUNT; LinesLoaded++)
         {
             len = strlen(DefaultLanguageLabelStringTable[LinesLoaded]);
@@ -440,7 +440,7 @@ static void InitGraphics(void)
     UIDrawGlobal.ffmd       = GS_FFMD_FIELD;
 
     if (OSDGetVideoMode() == 0)
-    { //NTSC
+    { // NTSC
         UIDrawGlobal.vmode  = GS_MODE_NTSC;
         UIDrawGlobal.width  = 640;
         UIDrawGlobal.height = 448;
@@ -449,7 +449,7 @@ static void InitGraphics(void)
     }
     else
     {
-        //PAL
+        // PAL
         UIDrawGlobal.vmode  = GS_MODE_PAL;
         UIDrawGlobal.width  = 640;
         UIDrawGlobal.height = 512;
@@ -473,23 +473,23 @@ static void InitGraphics(void)
     GsSetDefaultDisplayEnv(&UIDrawGlobal.disp_env, UIDrawGlobal.psm, UIDrawGlobal.width, UIDrawGlobal.height, dx, dy);
     GsSetDefaultDisplayEnvAddress(&UIDrawGlobal.disp_env, FrameBufferVRAMAddress);
 
-    //execute draw/display environment(s)  (context 1)
+    // execute draw/display environment(s)  (context 1)
     GsPutDrawEnv1(&UIDrawGlobal.draw_env);
     GsPutDisplayEnv1(&UIDrawGlobal.disp_env);
 
-    //set common primitive-drawing settings (Refer to documentation on PRMODE and PRMODECONT registers).
+    // set common primitive-drawing settings (Refer to documentation on PRMODE and PRMODECONT registers).
     GsOverridePrimAttributes(GS_DISABLE, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    //Set transparency settings for context 1 (Refer to documentation on TEST and TEXA registers).
-    //Alpha test = disabled, always pass, alpha reference = 128, fail method = no update
+    // Set transparency settings for context 1 (Refer to documentation on TEST and TEXA registers).
+    // Alpha test = disabled, always pass, alpha reference = 128, fail method = no update
     GsEnableAlphaTransparency1(GS_DISABLE, GS_ALPHA_ALWAYS, 0x80, GS_ALPHA_NO_UPDATE);
-    //Global alpha blending is enabled
+    // Global alpha blending is enabled
     GsEnableAlphaBlending1(GS_ENABLE);
 
-    //Set transparency settings for context 2 (Refer to documentation on TEST and TEXA registers).
-    //Alpha test = disabled, always pass, alpha reference = 128, fail method = no update
+    // Set transparency settings for context 2 (Refer to documentation on TEST and TEXA registers).
+    // Alpha test = disabled, always pass, alpha reference = 128, fail method = no update
     GsEnableAlphaTransparency2(GS_DISABLE, GS_ALPHA_ALWAYS, 0x80, GS_ALPHA_NO_UPDATE);
-    //Global alpha blending is enabled
+    // Global alpha blending is enabled
     GsEnableAlphaBlending2(GS_ENABLE);
 }
 
@@ -981,7 +981,7 @@ void UIDrawMenu(struct UIMenu *menu, unsigned short int frame, short int StartX,
                 x = StartX;
                 y += UI_FONT_HEIGHT;
                 DrawLine(&UIDrawGlobal, x, y + UI_FONT_HEIGHT / 2, UIDrawGlobal.width - UI_OFFSET_X, y + UI_FONT_HEIGHT / 2, 1, GS_WHITE);
-                //Fall through.
+                // Fall through.
             case MITEM_BREAK:
                 x = StartX;
                 y += UI_FONT_HEIGHT;
@@ -1123,7 +1123,7 @@ void UIDrawMenu(struct UIMenu *menu, unsigned short int frame, short int StartX,
         }
     }
 
-    //Draw legends
+    // Draw legends
     if (menu->next != NULL)
     {
         if (frame % 180 < 30)
@@ -1350,11 +1350,11 @@ int UIExecMenu(struct UIMenu *FirstMenu, short int SelectedItem, struct UIMenu *
     menu                = FirstMenu;
 
     if ((selection = UIGetSelectableItem(menu, SelectedItem)) >= 0)
-    { //If the item selected is specified, select it.
+    { // If the item selected is specified, select it.
         item = &menu->items[selection];
     }
     else
-        //Find first selectable option.
+        // Find first selectable option.
         item = ((selection = UIGetNextSelectableItem(menu, -1)) >= 0) ? &menu->items[selection] : NULL;
 
     if (callback != NULL)
@@ -1367,7 +1367,7 @@ int UIExecMenu(struct UIMenu *FirstMenu, short int SelectedItem, struct UIMenu *
     {
         PadStatus       = ReadCombinedPadStatus();
 
-        //For the pad repeat delay effect.
+        // For the pad repeat delay effect.
         PadRepeatStatus = ReadCombinedPadStatus_raw();
         if (PadRepeatStatus == 0 || ((PadRepeatStatusOld != 0) && (PadRepeatStatus != PadRepeatStatusOld)))
         {
@@ -1382,7 +1382,7 @@ int UIExecMenu(struct UIMenu *FirstMenu, short int SelectedItem, struct UIMenu *
         {
             if (PadRepeatDelayTicks == 0)
             {
-                //Allow the pad presses to repeat, but only after the pad repeat delay expires.
+                // Allow the pad presses to repeat, but only after the pad repeat delay expires.
                 if (PadRepeatRateTicks == 0)
                 {
                     PadRepeatRateTicks = UI_PAD_REPEAT_DELAY;
@@ -1408,7 +1408,7 @@ int UIExecMenu(struct UIMenu *FirstMenu, short int SelectedItem, struct UIMenu *
 
         if (PadRepeatStatus & PAD_UP)
         {
-            //Try to find the previous selectable option.
+            // Try to find the previous selectable option.
             if ((NextSel = UIGetPrevSelectableItem(menu, selection)) >= 0)
             {
                 selection = NextSel;
@@ -1417,7 +1417,7 @@ int UIExecMenu(struct UIMenu *FirstMenu, short int SelectedItem, struct UIMenu *
         }
         else if (PadRepeatStatus & PAD_DOWN)
         {
-            //Try to find the next selectable option.
+            // Try to find the next selectable option.
             if ((NextSel = UIGetNextSelectableItem(menu, selection)) >= 0)
             {
                 selection = NextSel;
@@ -1490,7 +1490,7 @@ int UIExecMenu(struct UIMenu *FirstMenu, short int SelectedItem, struct UIMenu *
         }
         else if (PadStatus & CancelButton)
         {
-            //User aborted.
+            // User aborted.
             result = 1;
             break;
         }
@@ -1502,7 +1502,7 @@ int UIExecMenu(struct UIMenu *FirstMenu, short int SelectedItem, struct UIMenu *
                 UITransition(menu, UIMT_RIGHT_OUT, selection);
 
                 menu = menu->next;
-                //Find first selectable option.
+                // Find first selectable option.
                 item = ((selection = UIGetNextSelectableItem(menu, -1)) >= 0) ? &menu->items[selection] : NULL;
 
                 UITransition(menu, UIMT_LEFT_IN, selection);
@@ -1515,7 +1515,7 @@ int UIExecMenu(struct UIMenu *FirstMenu, short int SelectedItem, struct UIMenu *
                 UITransition(menu, UIMT_LEFT_OUT, selection);
 
                 menu = menu->prev;
-                //Find first selectable option.
+                // Find first selectable option.
                 item = ((selection = UIGetNextSelectableItem(menu, -1)) >= 0) ? &menu->items[selection] : NULL;
 
                 UITransition(menu, UIMT_RIGHT_IN, selection);

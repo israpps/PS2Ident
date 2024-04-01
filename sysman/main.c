@@ -216,7 +216,9 @@ static void *SYSMAN_rpc_handler(int fno, void *buffer, int size)
                     old_dmat_id = dmat_id;
                     dmat_id     = EE_memcpy_async(IOBuffer[BufferID], destination, BytesToRead);
                     if (old_dmat_id >= 0)
-                        while (sceSifDmaStat(old_dmat_id) >= 0) {}; //Do not overwrite data that has not been transferred over to the EE.
+                        while (sceSifDmaStat(old_dmat_id) >= 0)
+                        {
+                        }; // Do not overwrite data that has not been transferred over to the EE.
                 }
                 else
                     break;

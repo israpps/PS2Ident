@@ -1,6 +1,6 @@
 /*	Font-drawing engine
-	Version:	1.22
-	Last updated:	2018/12/08	*/
+    Version:	1.22
+    Last updated:	2018/12/08	*/
 
 #include <malloc.h>
 #include <string.h>
@@ -20,58 +20,58 @@
 
 /*	Draw the glyphs as close as possible to each other, to save VRAM.
 
-	C: character
-	X: Horizontal frontier
-	Y: Vertical frontier
-	I: Initial state, no frontier.
+    C: character
+    X: Horizontal frontier
+    Y: Vertical frontier
+    I: Initial state, no frontier.
 
-	Initial state:
-		IIII
-		IIII
-		IIII
-		IIII
+    Initial state:
+        IIII
+        IIII
+        IIII
+        IIII
 
-	After one character is added to an empty atlas, initialize the X and Y frontier.
-		CXXX
-		YXXX
-		YXXX
-		YXXX
+    After one character is added to an empty atlas, initialize the X and Y frontier.
+        CXXX
+        YXXX
+        YXXX
+        YXXX
 
-	After one more character is added:
-		CCXX
-		YYXX
-		YYXX
-		YYXX
+    After one more character is added:
+        CCXX
+        YYXX
+        YYXX
+        YYXX
 
-	After one more character is added:
-		CCCX
-		YYYX
-		YYYX
-		YYYX
+    After one more character is added:
+        CCCX
+        YYYX
+        YYYX
+        YYYX
 
-	After one more character is added:
-		CCCC
-		YYYY
-		YYYY
-		YYYY
+    After one more character is added:
+        CCCC
+        YYYY
+        YYYY
+        YYYY
 
-	After one more character is added:
-		CCCC
-		CXXX
-		YXXX
-		YXXX	*/
+    After one more character is added:
+        CCCC
+        CXXX
+        YXXX
+        YXXX	*/
 
 struct FontGlyphSlotInfo
 {
     struct FontGlyphSlot *slot;
-    u32 vram; //Address of the atlas buffer in VRAM
+    u32 vram; // Address of the atlas buffer in VRAM
 };
 
 struct FontGlyphSlot
 {
     wint_t character;
     unsigned short int VramPageX, VramPageY;
-    short int top, left; //Offsets to place the glyph at. Refer to the FreeType documentation.
+    short int top, left; // Offsets to place the glyph at. Refer to the FreeType documentation.
     short int advance_x, advance_y;
     unsigned short int width, height;
 };
@@ -84,8 +84,8 @@ struct FontFrontier
 
 struct FontAtlas
 {
-    u32 vram;     //Address of the buffer in VRAM
-    void *buffer; //Address of the buffer in local memory
+    u32 vram;     // Address of the buffer in VRAM
+    void *buffer; // Address of the buffer in local memory
 
     unsigned int NumGlyphs;
     struct FontGlyphSlot *GlyphSlot;
@@ -119,7 +119,7 @@ static int ResetThisFont(struct UIDrawGlobal *gsGlobal, Font_t *font)
     font->Clut.y          = 0;
     font->Clut.width      = 16;
     font->Clut.height     = 16;
-    font->Clut.vram_width = 1; //width (16) / 64 = 1
+    font->Clut.vram_width = 1; // width (16) / 64 = 1
 
     vram                  = GsVramAllocTextureBuffer(font->Clut.width, font->Clut.height, font->Clut.psm);
 
@@ -288,7 +288,7 @@ int AddSubFontWithBuffer(struct UIDrawGlobal *gsGlobal, void *buffer, unsigned i
     return result;
 }
 
-//VRAM stays allocated.
+// VRAM stays allocated.
 void FontDeinit(void)
 {
     UnloadFont(&GS_sub_FTFont);
@@ -330,11 +330,11 @@ static struct FontGlyphSlot *AtlasAlloc(Font_t *font, struct FontAtlas *atlas, s
 
     GlyphSlot = NULL;
     if (atlas->buffer == NULL)
-    { //No frontier (empty atlas)
+    { // No frontier (empty atlas)
         if (AtlasInit(font, atlas) != 0)
             return NULL;
 
-        //Give the glyph 1px more, for texel rendering.
+        // Give the glyph 1px more, for texel rendering.
         atlas->frontier[0].width  = FNT_ATLAS_WIDTH - (width + 1);
         atlas->frontier[0].height = FNT_ATLAS_HEIGHT;
         atlas->frontier[0].x      = width + 1;
@@ -362,8 +362,8 @@ static struct FontGlyphSlot *AtlasAlloc(Font_t *font, struct FontAtlas *atlas, s
         return GlyphSlot;
     }
     else
-    { //We have the frontiers
-        //Try to allocate from the horizontal frontier first.
+    { // We have the frontiers
+        // Try to allocate from the horizontal frontier first.
         if ((atlas->frontier[0].width >= width + 1) && (atlas->frontier[0].height >= height + 1))
         {
             atlas->NumGlyphs++;
@@ -375,12 +375,12 @@ static struct FontGlyphSlot *AtlasAlloc(Font_t *font, struct FontAtlas *atlas, s
                 GlyphSlot->VramPageX = atlas->frontier[0].x;
                 GlyphSlot->VramPageY = atlas->frontier[0].y;
 
-                //Give the glyph 1px more, for texel rendering.
-                //Update frontier.
+                // Give the glyph 1px more, for texel rendering.
+                // Update frontier.
                 atlas->frontier[0].width -= width + 1;
                 atlas->frontier[0].x += width + 1;
 
-                //If the new glyph is a little taller than the glyphs under the horizontal frontier, move the vertical frontier.
+                // If the new glyph is a little taller than the glyphs under the horizontal frontier, move the vertical frontier.
                 if (atlas->frontier[0].y + height + 1 > atlas->frontier[1].y)
                     atlas->frontier[1].y = atlas->frontier[0].y + height + 1;
             }
@@ -389,7 +389,7 @@ static struct FontGlyphSlot *AtlasAlloc(Font_t *font, struct FontAtlas *atlas, s
                 printf("Font: error - unable to allocate a new glyph slot.\n");
                 atlas->NumGlyphs = 0;
             }
-            //Now try the vertical frontier.
+            // Now try the vertical frontier.
         }
         else if ((atlas->frontier[1].width >= width + 1) && (atlas->frontier[1].height >= height + 1))
         {
@@ -402,16 +402,16 @@ static struct FontGlyphSlot *AtlasAlloc(Font_t *font, struct FontAtlas *atlas, s
                 GlyphSlot->VramPageX      = atlas->frontier[1].x;
                 GlyphSlot->VramPageY      = atlas->frontier[1].y;
 
-                //Give the glyph 1px more, for texel rendering.
+                // Give the glyph 1px more, for texel rendering.
                 /*	Update frontier.
-					If we got here, it means that the horizontal frontier is very close the edge of VRAM.
-					Give a large portion of the space recorded under this frontier to the horizontal frontier.
+                    If we got here, it means that the horizontal frontier is very close the edge of VRAM.
+                    Give a large portion of the space recorded under this frontier to the horizontal frontier.
 
-					Before:		After one more character is added:
-						CCCC		CCCC
-						YYYY		CXXX
-						YYYY		YXXX
-						YYYY		YXXX	*/
+                    Before:		After one more character is added:
+                        CCCC		CCCC
+                        YYYY		CXXX
+                        YYYY		YXXX
+                        YYYY		YXXX	*/
                 atlas->frontier[0].x      = width + 1;
                 atlas->frontier[0].y      = atlas->frontier[1].y;
                 atlas->frontier[0].width  = FNT_ATLAS_WIDTH - (width + 1);
@@ -468,7 +468,7 @@ static struct FontGlyphSlot *UploadGlyph(struct UIDrawGlobal *gsGlobal, Font_t *
 
         *AtlasOut            = atlas;
 
-        //Initiate a texture flush before reusing the VRAM page, if the slot was just used earlier.
+        // Initiate a texture flush before reusing the VRAM page, if the slot was just used earlier.
         GsTextureFlush();
 
         AtlasCopyFT(font, atlas, GlyphSlot, FT_GlyphSlot);
@@ -488,7 +488,7 @@ static int GetGlyph(struct UIDrawGlobal *gsGlobal, Font_t *font, wint_t characte
     struct FontGlyphSlot *glyphSlot;
     FT_UInt glyphIndex;
 
-    //Scan through all uploaded glyph slots.
+    // Scan through all uploaded glyph slots.
     for (i = 0, atlas = font->atlas; i < FNT_MAX_ATLASES; i++, atlas++)
     {
         for (slot = 0; slot < atlas->NumGlyphs; slot++)
@@ -502,7 +502,7 @@ static int GetGlyph(struct UIDrawGlobal *gsGlobal, Font_t *font, wint_t characte
         }
     }
 
-    //Not in VRAM? Upload it.
+    // Not in VRAM? Upload it.
     if ((glyphIndex = FT_Get_Char_Index(font->FTFace, character)) != 0 || DrawMissingGlyph)
     {
         if (FT_Load_Glyph(font->FTFace, glyphIndex, FT_LOAD_RENDER))
@@ -517,7 +517,7 @@ static int GetGlyph(struct UIDrawGlobal *gsGlobal, Font_t *font, wint_t characte
         glyphInfo->vram = atlas->vram;
         return 0;
     }
-    else //Otherwise, the glyph is missing from font
+    else // Otherwise, the glyph is missing from font
         return 1;
 
     return -1;
@@ -543,15 +543,15 @@ static int DrawGlyph(struct UIDrawGlobal *gsGlobal, Font_t *font, wint_t charact
         YCoordinates            = y + FNT_CHAR_HEIGHT * scale - glyphSlot->top * scale;
         XCoordinates            = x + glyphSlot->left * scale;
         DrawSpriteTexturedClut(gsGlobal, &font->Texture, &font->Clut,
-                               XCoordinates, YCoordinates,                                                        //x1, y1
-                               glyphSlot->VramPageX, glyphSlot->VramPageY,                                        //u1, v1
-                               XCoordinates + glyphSlot->width * scale, YCoordinates + glyphSlot->height * scale, //x2, y2
-                               glyphSlot->VramPageX + glyphSlot->width, glyphSlot->VramPageY + glyphSlot->height, //u2, v2
+                               XCoordinates, YCoordinates,                                                        // x1, y1
+                               glyphSlot->VramPageX, glyphSlot->VramPageY,                                        // u1, v1
+                               XCoordinates + glyphSlot->width * scale, YCoordinates + glyphSlot->height * scale, // x2, y2
+                               glyphSlot->VramPageX + glyphSlot->width, glyphSlot->VramPageY + glyphSlot->height, // u2, v2
                                z, colour);
 
         *width = glyphSlot->advance_x * scale;
     }
-    else //Not loaded
+    else // Not loaded
         return -1;
 
     return 0;
@@ -568,7 +568,7 @@ void FontPrintfWithFeedback(struct UIDrawGlobal *gsGlobal, short x, short int y,
 
     for (bufmax = strlen(string) + 1; *string != '\0'; string += charsize, bufmax -= charsize)
     {
-        //Up to MB_CUR_MAX
+        // Up to MB_CUR_MAX
         charsize = mbtowc(&wchar, string, bufmax);
 
         switch (wchar)
@@ -588,7 +588,7 @@ void FontPrintfWithFeedback(struct UIDrawGlobal *gsGlobal, short x, short int y,
                 if (DrawGlyph(gsGlobal, &GS_FTFont, wchar, x, y, z, scale, colour, 0, &width) != 0)
                 {
                     if (DrawGlyph(gsGlobal, &GS_sub_FTFont, wchar, x, y, z, scale, colour, 0, &width) != 0)
-                    { //Cannot locate the glyph, so draw the missing glyph character.
+                    { // Cannot locate the glyph, so draw the missing glyph character.
                         DrawGlyph(gsGlobal, &GS_FTFont, wchar, x, y, z, scale, colour, 1, &width);
                     }
                 }
@@ -614,7 +614,7 @@ static int GetGlyphWidth(struct UIDrawGlobal *gsGlobal, Font_t *font, wint_t cha
     int result;
 
     if (font->IsLoaded)
-    { //Calling FT_Get_Advance is slow when I/O is slow, hence a cache is required. Here, the atlas is used as a cache.
+    { // Calling FT_Get_Advance is slow when I/O is slow, hence a cache is required. Here, the atlas is used as a cache.
         if ((result = GetGlyph(gsGlobal, font, character, DrawMissingGlyph, &glyphInfo)) != 0)
             return result;
 
