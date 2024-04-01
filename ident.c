@@ -1550,16 +1550,20 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
         fputs("<Not detected>\r\n", stream);
     fputs("    Boot EXTINFO:  ", stream);
     fprintf(stream, "%s (%s)\r\n", SystemInformation->mainboard.extinfo, GetBOOTROMDesc(SystemInformation->mainboard.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
-    fputs("    DVD  EXTINFO:  ", stream);
-    fprintf(stream, "%s (%s)\r\n", SystemInformation->DVDextinfo, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
+    if (SystemInformation->mainboard.DVD_ROM.IsExists)
+    {
+        fputs("    DVD  EXTINFO:  ", stream);
+        fprintf(stream, "%s (%s)\r\n", SystemInformation->DVDextinfo, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
 
-    // Version numbers
-    dvdplVer = SystemInformation->DVDPlayerVer[0] == '\0' ? "-" : SystemInformation->DVDPlayerVer;
-    OSDVer   = SystemInformation->OSDVer[0] == '\0' ? "-" : SystemInformation->OSDVer;
-    fprintf(stream, "    DVD Player:    %s (%s)\r\n"
-                    "    OSDVer:        %s\r\n"
+        // Version numbers
+        dvdplVer = SystemInformation->DVDPlayerVer[0] == '\0' ? "-" : SystemInformation->DVDPlayerVer;
+        fputs("    DVD Player:    ", stream);
+        fprintf(stream, "%s (%s)\r\n", dvdplVer, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
+    }
+    OSDVer = SystemInformation->OSDVer[0] == '\0' ? "-" : SystemInformation->OSDVer;
+    fprintf(stream, "    OSDVer:        %s\r\n"
                     "    PS1DRV:        %s\r\n",
-            dvdplVer, GetDVDROMDesc(SystemInformation->DVDPlayerVer), OSDVer, SystemInformation->PS1DRVVer);
+            OSDVer, SystemInformation->PS1DRVVer);
 
     // Chip revisions
     fprintf(stream, "EE/GS:\r\n"
