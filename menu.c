@@ -1592,13 +1592,13 @@ static void LoadROMInformation(const struct SystemInformation *SystemInformation
 
     // Version information
     UISetString(&ROMReportMenu, ROM_ID_ROMVER, SystemInformation->mainboard.romver);
-    UISetString(&ROMReportMenu, ROM_ID_B_EXTINFO, SystemInformation->mainboard.extinfo);
+    UISetString(&ROMReportMenu, ROM_ID_B_EXTINFO, SystemInformation->mainboard.BOOT_ROM.extinfo);
     UISetType(&ROMReportMenu, ROM_ID_BOOTROM_NAME, MITEM_STRING);
-    UISetString(&ROMReportMenu, ROM_ID_BOOTROM_NAME, GetBOOTROMDesc(SystemInformation->mainboard.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
+    UISetString(&ROMReportMenu, ROM_ID_BOOTROM_NAME, GetBOOTROMDesc(SystemInformation->mainboard.BOOT_ROM.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
     UISetString(&SummaryMenu, SUM_ROM_ID_ROMVER, SystemInformation->mainboard.romver);
-    UISetString(&SummaryMenu, SUM_ROM_ID_B_EXTINFO, SystemInformation->mainboard.extinfo);
+    UISetString(&SummaryMenu, SUM_ROM_ID_B_EXTINFO, SystemInformation->mainboard.BOOT_ROM.extinfo);
     UISetType(&SummaryMenu, SUM_ROM_ID_BOOTROM_NAME, MITEM_STRING);
-    UISetString(&SummaryMenu, SUM_ROM_ID_BOOTROM_NAME, GetBOOTROMDesc(SystemInformation->mainboard.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
+    UISetString(&SummaryMenu, SUM_ROM_ID_BOOTROM_NAME, GetBOOTROMDesc(SystemInformation->mainboard.BOOT_ROM.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
     // UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_MMDD, SystemInformation->mainboard.ROMGEN_MonthDate);
     // UISetValue(&ROMReportMenu, ROM_ID_ROMGEN_YYYY, SystemInformation->mainboard.ROMGEN_Year);
     if (SystemInformation->DVDPlayerVer[0] != '\0')
@@ -1607,7 +1607,7 @@ static void LoadROMInformation(const struct SystemInformation *SystemInformation
         UISetString(&ROMReportMenu, ROM_ID_DVDPLVER, SystemInformation->DVDPlayerVer);
         UISetType(&ROMReportMenu, ROM_ID_DVDROM_NAME, MITEM_STRING);
         UISetString(&ROMReportMenu, ROM_ID_DVDROM_NAME, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
-        UISetString(&ROMReportMenu, ROM_ID_D_EXTINFO, SystemInformation->DVDextinfo);
+        UISetString(&ROMReportMenu, ROM_ID_D_EXTINFO, SystemInformation->mainboard.DVD_ROM.extinfo);
         UISetVisible(&SummaryMenu, SUM_ROM_ID_DVDPLVER, 1);
         UISetString(&SummaryMenu, SUM_ROM_ID_DVDPLVER, SystemInformation->DVDPlayerVer);
         UISetType(&SummaryMenu, SUM_ROM_ID_DVDROM_NAME, MITEM_STRING);

@@ -72,6 +72,7 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     hwinfo->BOOT_ROM.crc32        = 0;
     hwinfo->BOOT_ROM.size         = GetSizeFromDelay(SSBUSC_DEV_BOOTROM);
     hwinfo->BOOT_ROM.IsExists     = 1;
+    memset(hwinfo->BOOT_ROM.extinfo, 0, sizeof(hwinfo->BOOT_ROM.extinfo));
 
     if (hwinfo->BOOT_ROM.size > 0)
         DEBUG_PRINTF("DEV2: 0x%lx-0x%lx\n", hwinfo->BOOT_ROM.StartAddress, hwinfo->BOOT_ROM.StartAddress + hwinfo->BOOT_ROM.size - 1);
@@ -81,6 +82,7 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     hwinfo->DVD_ROM.crc32        = 0;
     hwinfo->DVD_ROM.size         = GetSizeFromDelay(SSBUSC_DEV_DVDROM);
     hwinfo->DVD_ROM.IsExists     = romGetImageStat((const void *)hwinfo->DVD_ROM.StartAddress, (const void *)(hwinfo->DVD_ROM.StartAddress + 0x4000), &ImgStat) != NULL;
+    memset(hwinfo->DVD_ROM.extinfo, 0, sizeof(hwinfo->DVD_ROM.extinfo));
 
     if (hwinfo->DVD_ROM.size > 0)
         DEBUG_PRINTF("DEV1: 0x%lx-0x%lx\n", hwinfo->DVD_ROM.StartAddress, hwinfo->DVD_ROM.StartAddress + hwinfo->DVD_ROM.size - 1);
@@ -93,16 +95,15 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     {
         hwinfo->ROMs[0].IsExists     = 1;
         hwinfo->ROMs[0].StartAddress = (u32)pImgStat->ImageStart;
-        hwinfo->ROMs[0].size         = 0;
-        hwinfo->ROMs[0].crc32        = 0;
     }
     else
     {
         hwinfo->ROMs[0].IsExists     = 0;
         hwinfo->ROMs[0].StartAddress = 0;
-        hwinfo->ROMs[0].size         = 0;
-        hwinfo->ROMs[0].crc32        = 0;
     }
+    hwinfo->ROMs[0].size  = 0;
+    hwinfo->ROMs[0].crc32 = 0;
+    memset(hwinfo->ROMs[0].extinfo, 0, sizeof(hwinfo->ROMs[0].extinfo));
 
     // DEV1, DVD ROM
     /*	The DVD ROM contains the rom1, erom, and rom2 regions, and these regions exist in this order within the DVD ROM chip.
@@ -114,16 +115,15 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     {
         hwinfo->ROMs[1].IsExists     = 1;
         hwinfo->ROMs[1].StartAddress = (u32)pImgStat->ImageStart;
-        hwinfo->ROMs[1].size         = 0;
-        hwinfo->ROMs[1].crc32        = 0;
     }
     else
     {
         hwinfo->ROMs[1].IsExists     = 0;
         hwinfo->ROMs[1].StartAddress = 0;
-        hwinfo->ROMs[1].size         = 0;
-        hwinfo->ROMs[1].crc32        = 0;
     }
+    hwinfo->ROMs[1].size  = 0;
+    hwinfo->ROMs[1].crc32 = 0;
+    memset(hwinfo->ROMs[1].extinfo, 0, sizeof(hwinfo->ROMs[1].extinfo));
 
     // rom2 (part of DEV1)
     pImgStat = romGetDevice(2);
@@ -131,16 +131,15 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
     {
         hwinfo->ROMs[2].IsExists     = 1;
         hwinfo->ROMs[2].StartAddress = (u32)pImgStat->ImageStart;
-        hwinfo->ROMs[2].size         = 0;
-        hwinfo->ROMs[2].crc32        = 0;
     }
     else
     {
         hwinfo->ROMs[2].IsExists     = 0;
         hwinfo->ROMs[2].StartAddress = 0;
-        hwinfo->ROMs[2].size         = 0;
-        hwinfo->ROMs[2].crc32        = 0;
     }
+    hwinfo->ROMs[2].size  = 0;
+    hwinfo->ROMs[2].crc32 = 0;
+    memset(hwinfo->ROMs[2].extinfo, 0, sizeof(hwinfo->ROMs[2].extinfo));
 
     if (hwinfo->ROMs[1].IsExists)
     { // If rom1 exists, erom may exist.
@@ -168,13 +167,9 @@ int ROMGetHardwareInfo(t_SysmanHardwareInfo *hwinfo)
        The DVD ROM contains the rom1, erom, and rom2 regions, and these regions exist in this order within the DVD ROM chip.
        The rom2 region only exists on Chinese consoles. */
     if (hwinfo->ROMs[2].IsExists)
-    {
         size = SysmanCalcROMChipSize(hwinfo->ROMs[2].StartAddress - hwinfo->ROMs[1].StartAddress + hwinfo->ROMs[2].size);
-    }
     else if (hwinfo->erom.IsExists)
-    {
         size = SysmanCalcROMChipSize(hwinfo->erom.StartAddress - hwinfo->ROMs[1].StartAddress + hwinfo->erom.size);
-    }
 
     if (size < hwinfo->DVD_ROM.size)
         hwinfo->DVD_ROM.size = size;

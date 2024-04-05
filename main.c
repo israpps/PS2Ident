@@ -94,7 +94,7 @@ struct SystemInitParams
 
 static void SystemInitThread(struct SystemInitParams *SystemInitParams)
 {
-    int fd = 0;
+    int fd = 0, i;
     GetRomName(SystemInitParams->SystemInformation->mainboard.romver);
 
     SifExecModuleBuffer(MCSERV_irx, size_MCSERV_irx, 0, NULL, NULL);
@@ -121,34 +121,36 @@ static void SystemInitThread(struct SystemInitParams *SystemInitParams)
     SysmanInit();
 
     GetPeripheralInformation(SystemInitParams->SystemInformation);
-    fd                                                        = _ps2sdk_open("rom0:EXTINFO", O_RDONLY);
-    SystemInitParams->SystemInformation->mainboard.extinfo[0] = '\0';
 
-    if (fd >= 0)
+    char rom_extinfo[16];
+    for (i = 0; i < 3; i++)
     {
-        // This function returns part of EXTINFO data of the BIOS rom
-        // This module contains information about Sony build environment at offst 0x10
-        // first 15 symbols is build date/time that is unique per rom and can be used as unique serial
-        // Example for romver 0160EC20010704
-        // 20010704-160707,ROMconf,PS20160EC20010704.bin,kuma@rom-server/~/f10k/g/app/rom
-        // 20010704-160707 can be used as unique ID for Bios
-        _ps2sdk_lseek(fd, 0x10, SEEK_SET);
-        _ps2sdk_read(fd, SystemInitParams->SystemInformation->mainboard.extinfo, sizeof(SystemInitParams->SystemInformation->mainboard.extinfo));
-        _ps2sdk_close(fd);
-        SystemInitParams->SystemInformation->mainboard.extinfo[15] = '\0';
-    }
-    DEBUG_PRINTF("B EXTINFO: %s\n", SystemInitParams->SystemInformation->mainboard.extinfo);
+        if (SystemInitParams->SystemInformation->ROMs[i].IsExists)
+        {
+            sprintf(rom_extinfo, "rom%d:EXTINFO", i);
+            fd = _ps2sdk_open(rom_extinfo, O_RDONLY);
 
-    fd                                                 = _ps2sdk_open("rom1:EXTINFO", O_RDONLY);
-    SystemInitParams->SystemInformation->DVDextinfo[0] = '\0';
-    if (fd >= 0)
-    {
-        _ps2sdk_lseek(fd, 0x10, SEEK_SET);
-        _ps2sdk_read(fd, SystemInitParams->SystemInformation->DVDextinfo, sizeof(SystemInitParams->SystemInformation->DVDextinfo));
-        _ps2sdk_close(fd);
-        SystemInitParams->SystemInformation->DVDextinfo[15] = '\0';
+            if (fd >= 0)
+            {
+                // This function returns part of EXTINFO data of the rom
+                // This module contains information about Sony build environment at offst 0x10
+                // first 15 symbols is build date/time that should be unique per rom and can be used as unique serial
+                // Example for romver 0160EC20010704
+                // 20010704-160707,ROMconf,PS20160EC20010704.bin,kuma@rom-server/~/f10k/g/app/rom
+                // 20010704-160707 can be used as unique ID for Bios
+                SystemInitParams->SystemInformation->ROMs[i].extinfo[0] = '\0';
+                _ps2sdk_lseek(fd, 0x10, SEEK_SET);
+                _ps2sdk_read(fd, SystemInitParams->SystemInformation->ROMs[i].extinfo, sizeof(SystemInitParams->SystemInformation->ROMs[i].extinfo));
+                _ps2sdk_close(fd);
+                SystemInitParams->SystemInformation->ROMs[i].extinfo[15] = '\0';
+            }
+            DEBUG_PRINTF("ROMs[%d]. EXTINFO: %s\n", i, SystemInitParams->SystemInformation->ROMs[i].extinfo);
+            if (i == 0)
+                strncpy(SystemInitParams->SystemInformation->mainboard.BOOT_ROM.extinfo, SystemInitParams->SystemInformation->ROMs[i].extinfo, 15);
+            else if (i == 1)
+                strncpy(SystemInitParams->SystemInformation->mainboard.DVD_ROM.extinfo, SystemInitParams->SystemInformation->ROMs[i].extinfo, 15);
+        }
     }
-    DEBUG_PRINTF("D EXTINFO: %s\n", SystemInitParams->SystemInformation->DVDextinfo);
 
     SignalSema(SystemInitParams->InitCompleteSema);
     ExitDeleteThread();

@@ -12,7 +12,6 @@ struct SystemInformation
     unsigned char ConsoleID[8];        // EEPROM
     unsigned char iLinkID[8];          // EEPROM
     char chassis[14];
-    char DVDextinfo[16];   // TODO: move to ROM
     char DVDPlayerVer[16]; // TODO: move to ROM
     char OSDVer[16];       // TODO: move to ROM
     char PS1DRVVer[32];    // TODO: move to ROM

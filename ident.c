@@ -1617,11 +1617,11 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     else
         fputs("<Not detected>\r\n", stream);
     fputs("    Boot EXTINFO:  ", stream);
-    fprintf(stream, "%s (%s)\r\n", SystemInformation->mainboard.extinfo, GetBOOTROMDesc(SystemInformation->mainboard.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
+    fprintf(stream, "%s (%s)\r\n", SystemInformation->mainboard.BOOT_ROM.extinfo, GetBOOTROMDesc(SystemInformation->mainboard.BOOT_ROM.extinfo, SystemInformation->mainboard.romver, SystemInformation->DVDPlayerVer));
     if (SystemInformation->mainboard.DVD_ROM.IsExists)
     {
         fputs("    DVD  EXTINFO:  ", stream);
-        fprintf(stream, "%s (%s)\r\n", SystemInformation->DVDextinfo, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
+        fprintf(stream, "%s (%s)\r\n", SystemInformation->mainboard.DVD_ROM.extinfo, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
 
         // Version numbers
         dvdplVer = SystemInformation->DVDPlayerVer[0] == '\0' ? "-" : SystemInformation->DVDPlayerVer;

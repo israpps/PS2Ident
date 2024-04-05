@@ -5,6 +5,7 @@ typedef struct PS2DBROMInformation
     u32 crc32;
     u32 StartAddress;
     u32 size;
+    char extinfo[16];
 } t_PS2DBROMHardwareInfo;
 
 typedef struct PS2DBIOPInformation
@@ -116,7 +117,6 @@ struct PS2IDBMainboardEntry
     u8 MECHACONVersion[4]; // RR MM DD TT, where RR = (7-bit) region, MM = major revision, mm = minor revision, TT = system type.
     s8 ModelName[16];
     s8 romver[16];
-    s8 extinfo[17];
     s8 MainboardName[16];
     u8 ModelID[3];
     u8 EMCSID;
