@@ -101,9 +101,9 @@ int GetEEInformation(struct SystemInformation *SystemInformation)
     SystemInformation->mainboard.gs.id                = revision >> 8;
 
     ee_kmode_enter();
-    SystemInformation->EE_F520 = *(volatile unsigned int *)0xB000F520;
-    SystemInformation->EE_F540 = *(volatile unsigned int *)0xB000F540;
-    SystemInformation->EE_F550 = *(volatile unsigned int *)0xB000F550;
+    SystemInformation->mainboard.ee.F520 = *(volatile unsigned int *)0xB000F520;
+    SystemInformation->mainboard.ee.F540 = *(volatile unsigned int *)0xB000F540;
+    SystemInformation->mainboard.ee.F550 = *(volatile unsigned int *)0xB000F550;
     ee_kmode_exit();
 
     return 0;
@@ -1648,7 +1648,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
                     "    GS revision:         %u.%02u (%s)\r\n"
                     "    GS ID:               0x%02x\r\n",
             SystemInformation->mainboard.ee.implementation, SystemInformation->mainboard.ee.revision >> 4, SystemInformation->mainboard.ee.revision & 0xF, GetEEChipDesc(SystemInformation->mainboard.ee.revision & 0xFF, SystemInformation->mainboard.gs.revision & 0xFF),
-            SystemInformation->EE_F520, SystemInformation->EE_F540, SystemInformation->EE_F550,
+            SystemInformation->mainboard.ee.F520, SystemInformation->mainboard.ee.F540, SystemInformation->mainboard.ee.F550,
             SystemInformation->mainboard.ee.FPUImplementation, SystemInformation->mainboard.ee.FPURevision >> 4, SystemInformation->mainboard.ee.FPURevision & 0xF,
             SystemInformation->mainboard.ee.ICacheSize, CalculateCPUCacheSize(SystemInformation->mainboard.ee.ICacheSize) / 1024,
             SystemInformation->mainboard.ee.DCacheSize, CalculateCPUCacheSize(SystemInformation->mainboard.ee.DCacheSize) / 1024,

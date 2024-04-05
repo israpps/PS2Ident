@@ -9,18 +9,15 @@ struct SystemInformation
     struct PS2IDBMainboardEntry mainboard;
     t_PS2DBROMHardwareInfo ROMs[3];
     t_PS2DBROMHardwareInfo erom;
-    unsigned char ConsoleID[8];
-    unsigned char iLinkID[8];
-    unsigned char SMAP_MAC_address[6];
+    unsigned char ConsoleID[8];        // EEPROM
+    unsigned char iLinkID[8];          // EEPROM
     char chassis[14];
-    char DVDextinfo[16];
-    char DVDPlayerVer[16];
-    char OSDVer[16];
-    char PS1DRVVer[32];
+    char DVDextinfo[16];   // TODO: move to ROM
+    char DVDPlayerVer[16]; // TODO: move to ROM
+    char OSDVer[16];       // TODO: move to ROM
+    char PS1DRVVer[32];    // TODO: move to ROM
     u8 DSPVersion[2];
-    unsigned int EE_F520;
-    unsigned int EE_F540;
-    unsigned int EE_F550;
+    unsigned char SMAP_MAC_address[6]; // only for 70k is real, Deckard from eeprom, FATS from netowrk adapter
 };
 
 struct DumpingStatus
