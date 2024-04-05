@@ -40,22 +40,22 @@ const char *GetSPEEDCapsDesc(unsigned short int caps);
 const char *GetPHYVendDesc(unsigned int oui);
 const char *GetPHYModelDesc(unsigned int oui, unsigned char model);
 const char *GetSSBUSIFDesc(unsigned char revision, unsigned char EE_revision);
-const char *GetSPU2ChipDesc(unsigned char revision, unsigned char EE_revision);
+const char *GetSPU2ChipDesc(unsigned short int revision, unsigned char EE_revision);
 const char *GetIOPChipDesc(unsigned char revision, unsigned char EE_revision);
 const char *GetGSChipDesc(unsigned char revision);
 const char *GetEEChipDesc(unsigned char revision, unsigned char GS_revision);
-const char *GetMECHACONChipDesc(unsigned int revision);
 const char *GetBOOTROMDesc(const char *extinfo, const char *romver, const char *dvdplVer);
 const char *GetDVDROMDesc(const char *dvdplVer);
+const char *GetMECHACONChipDesc(unsigned int revision);
 const char *GetSystemTypeDesc(unsigned char type);
 const char *GetRegionDesc(unsigned char region);
-const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *SystemInformation);
 const char *GetMRPDesc(unsigned short int id);
-const char *GetChassisDesc(const struct PS2IDBMainboardEntry *SystemInformation);
 const char *GetModelIDDesc(unsigned short int ModelId);
 const char *GetEMCSIDDesc(unsigned char id);
 const char *GetADD010Desc(unsigned short int id);
 const char *GetDSPDesc(unsigned char revision);
+const char *GetChassisDesc(const struct PS2IDBMainboardEntry *mainboard);
+const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *mainboard);
 
 int GetADD010(u16 address, u16 *word);
 

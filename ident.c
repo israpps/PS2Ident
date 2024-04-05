@@ -259,7 +259,7 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
             DEBUG_PRINTF("Failed to read M Renewal Date. Stat: %x\n", result);
             SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_MRENEWDATE;
         }
-        /*mechacon 5.8 and 5.9 are the same chip patched with dex flag, so 5.8 and 5.9 -> 5.8 */
+        /* mechacon 5.8 and 5.9 are the same chip patched with dex flag, so 5.8 and 5.9 -> 5.8 */
         SystemInformation->mainboard.MECHACONVersion[2] = SystemInformation->mainboard.MECHACONVersion[2] & 0xFE;
     }
     SysmanGetMACAddress(SystemInformation->SMAP_MAC_address);
@@ -596,7 +596,7 @@ const char *GetSSBUSIFDesc(unsigned char revision, unsigned char EE_revision)
     return description;
 }
 
-const char *GetSPU2ChipDesc(unsigned char revision, unsigned char EE_revision)
+const char *GetSPU2ChipDesc(unsigned short int revision, unsigned char EE_revision)
 {
     const char *description;
 
@@ -740,6 +740,151 @@ const char *GetIOPChipDesc(unsigned char revision, unsigned char EE_revision)
             description = "Missing chip";
             break;
     }
+
+    return description;
+}
+
+const char *GetBOOTROMDesc(const char *extinfo, const char *romver, const char *dvdplVer)
+{
+    const char *description;
+
+    if (romver[4] == 'T' && romver[5] == 'D')
+    {
+        description = "TOOL flashrom no label";
+        return description;
+    }
+    char combined[20];
+    snprintf(combined, sizeof(combined), "%s%c", extinfo, romver[5]);
+
+    // clang-format off
+         if (strcmp(combined, "20000117-050310C") == 0) description = "00-100";
+    else if (strcmp(combined, "20000117-050652D") == 0) description = "01-100";
+    else if (strcmp(combined, "20000217-181313C") == 0) description = "00-101";
+    else if (strcmp(combined, "20000217-181557D") == 0) description = "01-101 (Not confirmed)";
+    else if (strcmp(combined, "20000224-172900D") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20000727-013725C") == 0) description = "B10010";
+    else if (strcmp(combined, "20000727-013728D") == 0) description = "B11010 (Not confirmed)";
+    else if (strcmp(combined, "20000901-114731Z") == 0) description = "A-000-010 (Not confirmed)";
+    else if (strcmp(combined, "20000902-234318C") == 0) description = "B10020 (Not confirmed)";
+    else if (strcmp(combined, "20000902-234321C") == 0) description = "B20020";
+    else if (strcmp(combined, "20000902-234323D") == 0) description = "B21020 (Not confirmed)";
+    else if (strcmp(combined, "20001027-185015C") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20001027-191435C") == 0) description = "B00012";
+    else if (strcmp(combined, "20001228-190952C") == 0) description = "B10030 (Not confirmed)";
+    else if (strcmp(combined, "20001228-234538C") == 0) description = "B20030";
+    else if (strcmp(combined, "20010118-210306C") == 0) description = "B00030";
+    else if (strcmp(combined, "20010118-210307D") == 0) description = "B01030";
+    else if (strcmp(combined, "20010427-140035C") == 0) description = "B00040";
+    else if (strcmp(combined, "20010427-140043C") == 0) description = "B10040";
+    else if (strcmp(combined, "20010704-160658C") == 0) description = "B10050";
+    else if (strcmp(combined, "20010704-160707C") == 0) description = "B20050";
+    else if (strcmp(combined, "20010730-223219C") == 0) description = "B40050";
+    else if (strcmp(combined, "20011004-175827C") == 0) description = "B10060";
+    else if (strcmp(combined, "20011004-175839C") == 0) description = "B20060";
+    else if (strcmp(combined, "20020207-164243C") == 0) description = "B10070";
+    else if (strcmp(combined, "20020319-181154C") == 0) description = "B20080";
+    else if (strcmp(combined, "20020426-130151C") == 0) description = "B00090";
+    else if (strcmp(combined, "20020426-130201C") == 0) description = "B20090";
+    else if (strcmp(combined, "20020426-130207C") == 0) description = "B40090";
+    else if (strcmp(combined, "20021119-163841Z") == 0) description = "namco 2 unknwon chip";
+    else if (strcmp(combined, "20030110-133906D") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20030110-134044C") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20030206-083918C") == 0) description = "B00102 (Not confirmed)";
+    else if (strcmp(combined, "20030206-083919D") == 0) description = "B01102 (Not confirmed)";
+    else if (strcmp(combined, "20030224-185856D") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20030227-193050C") == 0)
+    {
+        if (dvdplVer[4] == 'A')
+            description = "B30103"; // AU
+        else
+            description = "B20101"; // EU
+    }
+    else if (strcmp(combined, "20030227-193050D") == 0) description = "B21101 (Not confirmed)";
+    else if (strcmp(combined, "20030325-181554C") == 0) description = "B10102";
+    else if (strcmp(combined, "20030325-181555D") == 0) description = "B11102 (Not confirmed)";
+    else if (strcmp(combined, "20030520-144137D") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20030520-144207D") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20030623-142351C") == 0) description = "B00103 (Not confirmed)";
+    else if (strcmp(combined, "20030623-142356C") == 0) description = "B10103 (Not confirmed)";
+    else if (strcmp(combined, "20030623-142357D") == 0) description = "B11103 (Not confirmed)";
+    else if (strcmp(combined, "20030623-142401C") == 0) description = "B20103";
+    else if (strcmp(combined, "20030623-142406C") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20030623-142411C") == 0) description = "B60103";
+    else if (strcmp(combined, "20030623-142419C") == 0) description = "B70103";
+    else if (strcmp(combined, "20030623-142420C") == 0) description = "B71103 (Not confirmed)";
+    else if (strcmp(combined, "20030623-142424C") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20030623-142429C") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20030822-152237C") == 0) description = "B00120";
+    else if (strcmp(combined, "20030822-152247C") == 0) description = "B20120 (Not confirmed)";
+    else if (strcmp(combined, "20031028-053521C") == 0) description = "XB00010";
+    else if (strcmp(combined, "20040329-172942C") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20040519-145634Z") == 0) description = "namco s256 no label";
+    else if (strcmp(combined, "20040614-100905C") == 0) description = "B3110A";
+    else if (strcmp(combined, "20040614-100909C") == 0) description = "B1110A";
+    else if (strcmp(combined, "20040614-100914C") == 0) description = "B2110A";
+    else if (strcmp(combined, "20040614-100915D") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20040614-100920C") == 0) description = "B4110A";
+    else if (strcmp(combined, "20040917-150737C") == 0) description = "xpd-005 no label";
+    else if (strcmp(combined, "20050620-175641C") == 0) description = "B6120B";
+    else if (strcmp(combined, "20050620-175642D") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20060210-142424C") == 0) description = "B6130B";
+    else if (strcmp(combined, "20060905-125923C") == 0) description = "B6140B";
+    else if (strcmp(combined, "20060905-125924D") == 0) description = "Unknown chip";
+    else if (strcmp(combined, "20080220-175343C") == 0) description = "B6150B";
+    else if (strcmp(combined, "20100415-124238C") == 0) description = "B6160B";
+    // clang-format on
+    else
+        description = "Unknown (provide bios dump)";
+
+    return description;
+}
+
+const char *GetDVDROMDesc(const char *dvdplVer)
+{
+    const char *description;
+
+    // clang-format off
+         if (strncmp(dvdplVer, "1.10U", 5) == 0) description = "D110010";
+    else if (strncmp(dvdplVer, "1.20U", 5) == 0) description = "D110020 (Not confirmed)";
+    else if (strncmp(dvdplVer, "1.20E", 5) == 0) description = "D221020";
+    else if (strncmp(dvdplVer, "1.20A", 5) == 0) description = "D341020 (Not confirmed)";
+    else if (strncmp(dvdplVer, "2.00J", 5) == 0) description = "D020020";
+    else if (strncmp(dvdplVer, "1.30U", 5) == 0) description = "D110030 (Not confirmed)";
+    else if (strncmp(dvdplVer, "1.30E", 5) == 0) description = "D221030";
+    else if (strncmp(dvdplVer, "1.30A", 5) == 0) description = "D341030 (Not confirmed)";
+    else if (strncmp(dvdplVer, "2.02J", 5) == 0) description = "D020030";
+    else if (strncmp(dvdplVer, "2.10J", 5) == 0) description = "D020040";
+    else if (strncmp(dvdplVer, "2.10U", 5) == 0) description = "D110040";
+    else if (strncmp(dvdplVer, "2.10E", 5) == 0) description = "D221040";
+    else if (strncmp(dvdplVer, "2.10A", 5) == 0) description = "D341040";
+    else if (strncmp(dvdplVer, "2.12U", 5) == 0) description = "D110050";
+    else if (strncmp(dvdplVer, "2.12G", 5) == 0) description = "D630050";
+    else if (strncmp(dvdplVer, "2.12K", 5) == 0) description = "D430050";
+    else if (strncmp(dvdplVer, "2.13E", 5) == 0) description = "D221060";
+    else if (strncmp(dvdplVer, "2.13A", 5) == 0) description = "D341060 (Not confirmed)";
+    else if (strncmp(dvdplVer, "2.14J", 5) == 0) description = "Unknown chip";
+    else if (strncmp(dvdplVer, "2.15G", 5) == 0) description = "D630080";
+    else if (strncmp(dvdplVer, "2.16J", 5) == 0) description = "D020090";
+    else if (strncmp(dvdplVer, "2.16D", 5) == 0) description = "D552090";
+    else if (strncmp(dvdplVer, "3.00J", 5) == 0) description = "D020110 (Not confirmed)";
+    else if (strncmp(dvdplVer, "3.00U", 5) == 0) description = "D110110";
+    else if (strncmp(dvdplVer, "3.00E", 5) == 0) description = "D221110";
+    else if (strncmp(dvdplVer, "3.00A", 5) == 0) description = "D341110";
+    else if (strncmp(dvdplVer, "3.02J", 5) == 0) description = "D020111";
+    else if (strncmp(dvdplVer, "3.02U", 5) == 0) description = "Unknown chip";
+    else if (strncmp(dvdplVer, "3.02E", 5) == 0) description = "D221111";
+    else if (strncmp(dvdplVer, "3.02K", 5) == 0) description = "Unknown chip";
+    else if (strncmp(dvdplVer, "3.02G", 5) == 0) description = "D630111";
+    else if (strncmp(dvdplVer, "3.02D", 5) == 0) description = "D552111";
+    else if (strncmp(dvdplVer, "3.02C", 5) == 0) description = "D762110";
+    else if (strncmp(dvdplVer, "3.03J", 5) == 0) description = "D020111";
+    else if (strncmp(dvdplVer, "3.03E", 5) == 0) description = "D221111 (Not confirmed)";
+    else if (strncmp(dvdplVer, "3.04M", 5) == 0) description = "Unknown chip";
+    else if (strncmp(dvdplVer, "3.10", 4) == 0) description = "D1010U";
+    else if (strncmp(dvdplVer, "3.11", 4) == 0) description = "D0020U";
+    // clang-format on
+    else
+        description = "Unknown (provide dvdrom dump)";
 
     return description;
 }
@@ -965,151 +1110,6 @@ const char *GetMECHACONChipDesc(unsigned int revision)
     return description;
 }
 
-const char *GetBOOTROMDesc(const char *extinfo, const char *romver, const char *dvdplVer)
-{
-    const char *description;
-
-    if (romver[4] == 'T' && romver[5] == 'D')
-    {
-        description = "TOOL flashrom no label";
-        return description;
-    }
-    char combined[20];
-    snprintf(combined, sizeof(combined), "%s%c", extinfo, romver[5]);
-
-    // clang-format off
-         if (strcmp(combined, "20000117-050310C") == 0) description = "00-100";
-    else if (strcmp(combined, "20000117-050652D") == 0) description = "01-100";
-    else if (strcmp(combined, "20000217-181313C") == 0) description = "00-101";
-    else if (strcmp(combined, "20000217-181557D") == 0) description = "01-101 (Not confirmed)";
-    else if (strcmp(combined, "20000224-172900D") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20000727-013725C") == 0) description = "B10010";
-    else if (strcmp(combined, "20000727-013728D") == 0) description = "B11010 (Not confirmed)";
-    else if (strcmp(combined, "20000901-114731Z") == 0) description = "A-000-010 (Not confirmed)";
-    else if (strcmp(combined, "20000902-234318C") == 0) description = "B10020 (Not confirmed)";
-    else if (strcmp(combined, "20000902-234321C") == 0) description = "B20020";
-    else if (strcmp(combined, "20000902-234323D") == 0) description = "B21020 (Not confirmed)";
-    else if (strcmp(combined, "20001027-185015C") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20001027-191435C") == 0) description = "B00012";
-    else if (strcmp(combined, "20001228-190952C") == 0) description = "B10030 (Not confirmed)";
-    else if (strcmp(combined, "20001228-234538C") == 0) description = "B20030";
-    else if (strcmp(combined, "20010118-210306C") == 0) description = "B00030";
-    else if (strcmp(combined, "20010118-210307D") == 0) description = "B01030";
-    else if (strcmp(combined, "20010427-140035C") == 0) description = "B00040";
-    else if (strcmp(combined, "20010427-140043C") == 0) description = "B10040";
-    else if (strcmp(combined, "20010704-160658C") == 0) description = "B10050";
-    else if (strcmp(combined, "20010704-160707C") == 0) description = "B20050";
-    else if (strcmp(combined, "20010730-223219C") == 0) description = "B40050";
-    else if (strcmp(combined, "20011004-175827C") == 0) description = "B10060";
-    else if (strcmp(combined, "20011004-175839C") == 0) description = "B20060";
-    else if (strcmp(combined, "20020207-164243C") == 0) description = "B10070";
-    else if (strcmp(combined, "20020319-181154C") == 0) description = "B20080";
-    else if (strcmp(combined, "20020426-130151C") == 0) description = "B00090";
-    else if (strcmp(combined, "20020426-130201C") == 0) description = "B20090";
-    else if (strcmp(combined, "20020426-130207C") == 0) description = "B40090";
-    else if (strcmp(combined, "20021119-163841Z") == 0) description = "namco 2 unknwon chip";
-    else if (strcmp(combined, "20030110-133906D") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20030110-134044C") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20030206-083918C") == 0) description = "B00102 (Not confirmed)";
-    else if (strcmp(combined, "20030206-083919D") == 0) description = "B01102 (Not confirmed)";
-    else if (strcmp(combined, "20030224-185856D") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20030227-193050C") == 0)
-    {
-        if (dvdplVer[4] == 'A')
-            description = "B30103"; // AU
-        else
-            description = "B20101"; // EU
-    }
-    else if (strcmp(combined, "20030227-193050D") == 0) description = "B21101 (Not confirmed)";
-    else if (strcmp(combined, "20030325-181554C") == 0) description = "B10102";
-    else if (strcmp(combined, "20030325-181555D") == 0) description = "B11102 (Not confirmed)";
-    else if (strcmp(combined, "20030520-144137D") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20030520-144207D") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20030623-142351C") == 0) description = "B00103 (Not confirmed)";
-    else if (strcmp(combined, "20030623-142356C") == 0) description = "B10103 (Not confirmed)";
-    else if (strcmp(combined, "20030623-142357D") == 0) description = "B11103 (Not confirmed)";
-    else if (strcmp(combined, "20030623-142401C") == 0) description = "B20103";
-    else if (strcmp(combined, "20030623-142406C") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20030623-142411C") == 0) description = "B60103";
-    else if (strcmp(combined, "20030623-142419C") == 0) description = "B70103";
-    else if (strcmp(combined, "20030623-142420C") == 0) description = "B71103 (Not confirmed)";
-    else if (strcmp(combined, "20030623-142424C") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20030623-142429C") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20030822-152237C") == 0) description = "B00120";
-    else if (strcmp(combined, "20030822-152247C") == 0) description = "B20120 (Not confirmed)";
-    else if (strcmp(combined, "20031028-053521C") == 0) description = "XB00010";
-    else if (strcmp(combined, "20040329-172942C") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20040519-145634Z") == 0) description = "namco s256 no label";
-    else if (strcmp(combined, "20040614-100905C") == 0) description = "B3110A";
-    else if (strcmp(combined, "20040614-100909C") == 0) description = "B1110A";
-    else if (strcmp(combined, "20040614-100914C") == 0) description = "B2110A";
-    else if (strcmp(combined, "20040614-100915D") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20040614-100920C") == 0) description = "B4110A";
-    else if (strcmp(combined, "20040917-150737C") == 0) description = "xpd-005 no label";
-    else if (strcmp(combined, "20050620-175641C") == 0) description = "B6120B";
-    else if (strcmp(combined, "20050620-175642D") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20060210-142424C") == 0) description = "B6130B";
-    else if (strcmp(combined, "20060905-125923C") == 0) description = "B6140B";
-    else if (strcmp(combined, "20060905-125924D") == 0) description = "Unknown chip";
-    else if (strcmp(combined, "20080220-175343C") == 0) description = "B6150B";
-    else if (strcmp(combined, "20100415-124238C") == 0) description = "B6160B";
-    // clang-format on
-    else
-        description = "Unknown (provide bios dump)";
-
-    return description;
-}
-
-const char *GetDVDROMDesc(const char *dvdplVer)
-{
-    const char *description;
-
-    // clang-format off
-         if (strncmp(dvdplVer, "1.10U", 5) == 0) description = "D110010";
-    else if (strncmp(dvdplVer, "1.20U", 5) == 0) description = "D110020 (Not confirmed)";
-    else if (strncmp(dvdplVer, "1.20E", 5) == 0) description = "D221020";
-    else if (strncmp(dvdplVer, "1.20A", 5) == 0) description = "D341020 (Not confirmed)";
-    else if (strncmp(dvdplVer, "2.00J", 5) == 0) description = "D020020";
-    else if (strncmp(dvdplVer, "1.30U", 5) == 0) description = "D110030 (Not confirmed)";
-    else if (strncmp(dvdplVer, "1.30E", 5) == 0) description = "D221030";
-    else if (strncmp(dvdplVer, "1.30A", 5) == 0) description = "D341030 (Not confirmed)";
-    else if (strncmp(dvdplVer, "2.02J", 5) == 0) description = "D020030";
-    else if (strncmp(dvdplVer, "2.10J", 5) == 0) description = "D020040";
-    else if (strncmp(dvdplVer, "2.10U", 5) == 0) description = "D110040";
-    else if (strncmp(dvdplVer, "2.10E", 5) == 0) description = "D221040";
-    else if (strncmp(dvdplVer, "2.10A", 5) == 0) description = "D341040";
-    else if (strncmp(dvdplVer, "2.12U", 5) == 0) description = "D110050";
-    else if (strncmp(dvdplVer, "2.12G", 5) == 0) description = "D630050";
-    else if (strncmp(dvdplVer, "2.12K", 5) == 0) description = "D430050";
-    else if (strncmp(dvdplVer, "2.13E", 5) == 0) description = "D221060";
-    else if (strncmp(dvdplVer, "2.13A", 5) == 0) description = "D341060 (Not confirmed)";
-    else if (strncmp(dvdplVer, "2.14J", 5) == 0) description = "Unknown chip";
-    else if (strncmp(dvdplVer, "2.15G", 5) == 0) description = "D630080";
-    else if (strncmp(dvdplVer, "2.16J", 5) == 0) description = "D020090";
-    else if (strncmp(dvdplVer, "2.16D", 5) == 0) description = "D552090";
-    else if (strncmp(dvdplVer, "3.00J", 5) == 0) description = "D020110 (Not confirmed)";
-    else if (strncmp(dvdplVer, "3.00U", 5) == 0) description = "D110110";
-    else if (strncmp(dvdplVer, "3.00E", 5) == 0) description = "D221110";
-    else if (strncmp(dvdplVer, "3.00A", 5) == 0) description = "D341110";
-    else if (strncmp(dvdplVer, "3.02J", 5) == 0) description = "D020111 (Not confirmed)";
-    else if (strncmp(dvdplVer, "3.02U", 5) == 0) description = "Unknown chip";
-    else if (strncmp(dvdplVer, "3.02E", 5) == 0) description = "D221111";
-    else if (strncmp(dvdplVer, "3.02K", 5) == 0) description = "Unknown chip";
-    else if (strncmp(dvdplVer, "3.02G", 5) == 0) description = "D630111";
-    else if (strncmp(dvdplVer, "3.02D", 5) == 0) description = "D552111";
-    else if (strncmp(dvdplVer, "3.02C", 5) == 0) description = "D762110";
-    else if (strncmp(dvdplVer, "3.03J", 5) == 0) description = "D020120";
-    else if (strncmp(dvdplVer, "3.03E", 5) == 0) description = "D221120 (Not confirmed)";
-    else if (strncmp(dvdplVer, "3.04M", 5) == 0) description = "Unknown chip";
-    else if (strncmp(dvdplVer, "3.10", 4) == 0) description = "D1010U";
-    else if (strncmp(dvdplVer, "3.11", 4) == 0) description = "D0020U";
-    // clang-format on
-    else
-        description = "Unknown (provide dvdrom dump)";
-
-    return description;
-}
-
 const char *GetSystemTypeDesc(unsigned char type)
 {
     const char *description;
@@ -1128,41 +1128,36 @@ const char *GetRegionDesc(unsigned char region)
 {
     const char *description;
 
-    if (region == 0)
-        description = "Japan";
-    else if (region == 1)
-        description = "USA";
-    else if (region == 2)
-        description = "Europe";
-    else if (region == 3)
-        description = "Oceania";
-    else if (region == 4)
-        description = "Asia";
-    else if (region == 5)
-        description = "Russia";
-    else if (region == 6)
-        description = "China";
-    else if (region == 7)
-        description = "Mexico";
-    else
-        description = "Unknown";
-
-    return description;
-}
-
-const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *SystemInformation)
-{
-    const char *description;
-    const struct PS2IDBMainboardEntry *ModelData;
-
-    if ((ModelData = PS2IDBMS_LookupMainboardModel(SystemInformation)) != NULL)
-        description = ModelData->MainboardName;
-    else if (!strncmp(SystemInformation->romver, "0170", 4) || !strncmp(SystemInformation->romver, "0190", 4))
-        description = "Sticker"; // SCPH-5xxxx can be retrieved from sticker
-    else
-        description = "Missing";
-
-
+    switch (region)
+    {
+        case 0:
+            description = "Japan";
+            break;
+        case 1:
+            description = "USA";
+            break;
+        case 2:
+            description = "Europe";
+            break;
+        case 3:
+            description = "Oceania";
+            break;
+        case 4:
+            description = "Asia";
+            break;
+        case 5:
+            description = "Russia";
+            break;
+        case 6:
+            description = "China";
+            break;
+        case 7:
+            description = "Mexico";
+            break;
+        default:
+            description = "Unknown";
+            break;
+    }
     return description;
 }
 
@@ -1174,56 +1169,6 @@ const char *GetMRPDesc(unsigned short int id)
     {
         description = "Unknown";
     }
-
-    return description;
-}
-
-const char *GetChassisDesc(const struct PS2IDBMainboardEntry *SystemInformation)
-{
-    const char *description;
-
-    if (!strcmp(SystemInformation->MainboardName, "GH-001") || !strcmp(SystemInformation->MainboardName, "GH-003"))
-        description = "A-chassis"; // SCPH-10000 and SCPH-15000
-    else if (!strcmp(SystemInformation->MainboardName, "GH-003") && strncmp("0101", SystemInformation->romver, 4))
-        description = "A-chassis+"; // SCPH-18000 with GH-003
-    else if (!strcmp(SystemInformation->MainboardName, "GH-008"))
-        description = "AB-chassis"; // SCPH-18000
-    else if (!strcmp(SystemInformation->MainboardName, "GH-004") || !strcmp(SystemInformation->MainboardName, "GH-005"))
-        description = "B-chassis"; // SCPH-30000
-    else if (!strcmp(SystemInformation->MainboardName, "GH-006") || !strcmp(SystemInformation->MainboardName, "GH-007"))
-        description = "C-chassis"; // SCPH-30000
-    else if (!strcmp(SystemInformation->MainboardName, "GH-010") || !strcmp(SystemInformation->MainboardName, "GH-011") || !strcmp(SystemInformation->MainboardName, "GH-012") || !strcmp(SystemInformation->MainboardName, "GH-013") || !strcmp(SystemInformation->MainboardName, "GH-014") || !strcmp(SystemInformation->MainboardName, "GH-016"))
-        description = "D-chassis"; // SCPH-30000, SCPH-30000R and SCPH-35000
-    else if (!strcmp(SystemInformation->MainboardName, "GH-015"))
-        description = "F-chassis"; // SCPH-30000 and SCPH-30000R
-    else if (!strcmp(SystemInformation->MainboardName, "GH-016"))
-        description = "DR-chassis"; // SCPH-30000
-    else if (!strcmp(SystemInformation->MainboardName, "GH-017") || !strcmp(SystemInformation->MainboardName, "GH-019") || !strcmp(SystemInformation->MainboardName, "GH-022"))
-        description = "G-chassis"; // SCPH-37000 and SCPH-39000
-    else if (!strcmp(SystemInformation->MainboardName, "GH-023"))
-        description = "H-chassis"; // SCPH-50000
-    else if (!strcmp(SystemInformation->MainboardName, "GH-026"))
-        description = "I-chassis"; // SCPH-50000a
-    else if (!strcmp(SystemInformation->MainboardName, "GH-029"))
-        description = "J-chassis"; // SCPH-50000b
-    else if (!strncmp(SystemInformation->MainboardName, "GH-032", 6) || !strncmp(SystemInformation->MainboardName, "GH-035", 6))
-        description = "K-chassis"; // SCPH-70000
-    else if (!strncmp(SystemInformation->MainboardName, "GH-037", 6) || !strncmp(SystemInformation->MainboardName, "GH-040", 6) || !strncmp(SystemInformation->MainboardName, "GH-041", 6))
-        description = "L-chassis"; // SCPH-75000
-    else if (!strncmp(SystemInformation->MainboardName, "GH-051", 6) || !strncmp(SystemInformation->MainboardName, "GH-052", 6))
-        description = "M-chassis"; // SCPH-77000
-    else if (!strncmp(SystemInformation->MainboardName, "GH-061", 6) || !strncmp(SystemInformation->MainboardName, "GH-062", 6))
-        description = "N-chassis"; // SCPH-79000
-    else if (!strncmp(SystemInformation->MainboardName, "GH-070", 6) || !strncmp(SystemInformation->MainboardName, "GH-071", 6))
-        description = "P-chassis"; // SCPH-90000, TVcombo
-    else if (!strncmp(SystemInformation->MainboardName, "GH-072", 6))
-        description = "R-chassis"; // SCPH-90000
-    else if (!strncmp(SystemInformation->MainboardName, "XPD-", 4))
-        description = "X-chassis"; // PSX
-    else if (!strncmp(SystemInformation->romver, "0170", 4) || !strncmp(SystemInformation->romver, "0190", 4))
-        description = "Sticker"; // SCPH-5xxxx can be retrieved from sticker
-    else
-        description = "Unknown";
 
     return description;
 }
@@ -1467,31 +1412,39 @@ const char *GetModelIDDesc(unsigned short int ModelId)
 const char *GetEMCSIDDesc(unsigned char id)
 {
     const char *description;
-    if (id == 0x00)
-        description = "Japan";
-    else if (id == 0x01)
-        description = "FOXC";
-    else if (id == 0x02)
-        description = "SZMT";
-    else if (id == 0x03)
-        description = "SKZ";
-    else if (id == 0x10)
-        description = "S EMCS";
-    else if (id == 0x11)
-        description = "SKD";
-    else if (id == 0x18)
-        description = "S EMCS (PSX)";
-    else if (id == 0x20)
-        description = "FOXC";
-    else if (id == 0x21)
-        description = "FOXC"; // TODO: why they changed FOXC id in the slims middle age?
-    else if (id == 0x30)
-        description = "SZMT";
-    else if (id == 0x40)
-        description = "S WUXI";
-    else
-        description = "Sticker missing";
-
+    switch (id)
+    {
+        case 0x00:
+            description = "Japan";
+            break;
+        case 0x01:
+        case 0x20:
+        case 0x21: // TODO: why they changed FOXC id in the slims middle age?
+            description = "FOXC";
+            break;
+        case 0x02:
+        case 0x30:
+            description = "SZMT";
+            break;
+        case 0x03:
+            description = "SKZ";
+            break;
+        case 0x10:
+            description = "S EMCS";
+            break;
+        case 0x11:
+            description = "SKD";
+            break;
+        case 0x18:
+            description = "S EMCS (PSX)";
+            break;
+        case 0x40:
+            description = "S WUXI";
+            break;
+        default:
+            description = "Sticker missing";
+            break;
+    }
     return description;
 }
 
@@ -1520,6 +1473,86 @@ const char *GetDSPDesc(unsigned char revision)
         revision = 4;
 
     return revisions[revision];
+}
+
+const char *GetChassisDesc(const struct PS2IDBMainboardEntry *mainboard)
+{
+    const char *description;
+
+    if (mainboard->MECHACONVersion[3] == 0x01)
+        description = "X-chassis";
+    else if (mainboard->MECHACONVersion[1] == 0x06)
+    {
+        if (mainboard->MECHACONVersion[2] < 0x06)
+            description = "K-chassis"; // all of them has bios and mechacon different from Fats, other chips can be the same
+        else if ((mainboard->MECHACONVersion[2] & 0xFE) == 0x06)
+            description = "L-chassis"; // all of them has bios and mechacon different from M chassis, other chips can be the same
+        else if ((mainboard->MECHACONVersion[2] & 0xFE) == 0x0a)
+            description = "M-chassis"; // all of them has bios and mechacon different from L and P chassis, other chips can be the same
+        else if (!strncmp(mainboard->romver, "025", 3))
+            description = "P-chassis"; // Bravia differs only in bootrom from early 90k
+        else if (!strncmp(mainboard->romver, "023", 3))
+            description = "R-chassis"; // late 90k differs only in bootrom from early 90k
+        else if (!strncmp(mainboard->romver + 6, "20080220", 8))
+            description = "N,P-chassis"; // TODO: only way to determine 79k from 90k is EEPROM, all 90k in fanconfig area has checksum 0x0c, all 79k differs
+        else
+            description = "Unknown";
+    }
+    else if (mainboard->MECHACONVersion[1] == 0x05)
+    {
+        if (mainboard->spu2.revision == 0x10)
+        {
+            if ((mainboard->MECHACONVersion[2] & 0xFE) == 0x0c)
+                description = "J-chassis"; // seems J chassis has mecha 5.12
+            else
+                description = "I-chassis";
+        }
+        else
+            description = "H-Chassis"; // old SPU2 and SSBUSC
+    }
+    else if (mainboard->MECHACONVersion[1] == 0x03)
+    {
+        if (mainboard->MECHACONVersion[2] == 0x09)
+            description = "PS3-chassis"; // PS3 reports 3.9 software version
+        else if ((mainboard->MECHACONVersion[2] >= 0x06) && (mainboard->MECHACONVersion[2] < 0x09))
+            description = "G-chassis"; // 3.6, 3.8 - G-chassis
+        else if (mainboard->MECHACONVersion[2] < 0x06)
+            description = "F-chassis"; // 3.0, 3.2, 3.4 - F-chassis
+        else
+            description = "Unknown";
+    }
+    else if (mainboard->MECHACONVersion[1] == 0x02)
+    {
+        if (mainboard->MECHACONVersion[2] > 0x0a)
+            description = "D-chassis";
+        else if (mainboard->MECHACONVersion[2] < 0x04)
+            description = "A, AB-chassis"; // TODO: differ by romver?
+        else if (!strncmp(mainboard->romver, "015", 3))
+            description = "D-chassis";
+        else
+            description = "B,C-chassis"; // TODO: how to differ?
+    }
+    else if (mainboard->MECHACONVersion[1] == 0x01)
+        description = "A-chassis"; // late 90k differs only in bootrom
+    else
+        description = "Unknown";
+
+    return description;
+}
+
+const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *mainboard)
+{
+    const char *description;
+    const struct PS2IDBMainboardEntry *ModelData;
+
+    if ((ModelData = PS2IDBMS_LookupMainboardModel(mainboard)) != NULL)
+        description = ModelData->MainboardName;
+    else if (!strncmp(mainboard->romver, "0170", 4) || !strncmp(mainboard->romver, "0190", 4))
+        description = "Sticker"; // SCPH-5xxxx can be retrieved from sticker
+    else
+        description = "Work in progress";
+
+    return description;
 }
 
 unsigned int CalculateCPUCacheSize(unsigned char value)
