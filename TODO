@@ -4,7 +4,15 @@
 - CRC values can be used for detecting modchips
 - add ability to dump keys (all serials + HDD key) into separate file
 - add additional field for network adapters for FAT models (including non-official)
-- split network adapter, so al possible official adapters will be shown
+- split network adapter, so al possible official adapters will be shown. Done. Now collect data
 - or at least add gamestar detection
 - add first 3 bytes of MAC address into database
 - fix some SPU2 chips
+- ilink data not generate for non-ilink consoles
+- print debug messages in loading screen
+- Console Model Id buggy??
+- freeze on my scph-39004?
+- compile with embedded foont
+- do something if folder exists (currently freeze sometimes)
+- switch to modern sdk
+- add license

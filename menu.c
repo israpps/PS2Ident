@@ -42,7 +42,7 @@ static int DumpLargeRoms = 1;
 enum SUMMARY_ID
 {
     SUM_BOARD_ID_MODEL_NAME = 1,
-    SUM_BOARD_ID_BOARD_NAME,
+    SUM_BOARD_ID_CHASSIS_NAME,
     SUM_BOARD2_ID_SERIAL,
     SUM_BOARD2_ID_CON_MODEL_ID,
     SUM_BOARD2_ID_CON_MODEL_ID_DESC,
@@ -273,9 +273,9 @@ static struct UIMenuItem SummaryMenuItems[] = {
     {MITEM_STRING, SUM_BOARD2_ID_CON_MODEL_ID_DESC, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
 
-    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_MAINBOARD_MODEL},
+    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_CHASSIS_MODEL},
     {MITEM_TAB},
-    {MITEM_STRING, SUM_BOARD_ID_BOARD_NAME, MITEM_FLAG_READONLY},
+    {MITEM_STRING, SUM_BOARD_ID_CHASSIS_NAME, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
 
     // {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_EMCS_ID},
@@ -1279,7 +1279,7 @@ static void LoadBoardInformation(const struct SystemInformation *SystemInformati
         UISetType(&SummaryMenu, SUM_BOARD_ID_MODEL_NAME, MITEM_DASH);
     }
     UISetString(&BoardReportMenu, BOARD_ID_BOARD_NAME, SystemInformation->mainboard.MainboardName);
-    UISetString(&SummaryMenu, SUM_BOARD_ID_BOARD_NAME, SystemInformation->mainboard.MainboardName);
+    UISetString(&SummaryMenu, SUM_BOARD_ID_CHASSIS_NAME, SystemInformation->chassis);
     UISetString(&BoardReportMenu, BOARD_ID_CHASSIS_NAME, SystemInformation->chassis);
     UISetValue(&BoardReportMenu, BOARD_ID_MACHINE_TYPE, SystemInformation->mainboard.MachineType);
     UISetValue(&BoardReportMenu, BOARD_ID_MPU_ID, SystemInformation->mainboard.MPUBoardID);

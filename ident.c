@@ -1626,7 +1626,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
         // Version numbers
         dvdplVer = SystemInformation->DVDPlayerVer[0] == '\0' ? "-" : SystemInformation->DVDPlayerVer;
         fputs("    DVD Player:    ", stream);
-        fprintf(stream, "%s (%s)\r\n", dvdplVer, GetDVDROMDesc(SystemInformation->DVDPlayerVer));
+        fprintf(stream, "%s\r\n", dvdplVer);
     }
     OSDVer = SystemInformation->OSDVer[0] == '\0' ? "-" : SystemInformation->OSDVer;
     fprintf(stream, "    OSDVer:        %s\r\n"
