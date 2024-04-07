@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <kernel.h>
 #include <string.h>
+#include <fcntl.h>
 #include <libcdvd.h>
 #include <osd_config.h>
 

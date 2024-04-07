@@ -76,7 +76,6 @@ static void iLinkPhySync(void)
     int retryCount = 0;
     while (ILINKRegisterBase->PHYAccess & (RdPhy | WrPhy))
     {
-        DEBUG_PRINTF("SYSMAN: iLink PHY sync failed after %d retries.\n", retryCount);
         retryCount++;
         if (retryCount >= 100)
         {
@@ -94,7 +93,6 @@ unsigned char iLinkReadPhy(unsigned char address)
 
     while (!(ILINKRegisterBase->intr0 & iLink_INTR0_PhyRRx))
     {
-        DEBUG_PRINTF("SYSMAN: iLink PHY read failed after %d retries.\n", retryCount);
         retryCount++;
         if (retryCount >= 100)
         {

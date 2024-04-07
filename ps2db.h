@@ -1,3 +1,5 @@
+#include <tamtypes.h>
+
 typedef struct PS2DBROMInformation
 {
     u8 IsExists;

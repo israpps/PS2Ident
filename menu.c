@@ -1246,7 +1246,7 @@ static int DumpSystemROMScreen(const struct SystemInformation *SystemInformation
         DisplayFlashStatusUpdate(SYS_UI_MSG_PLEASE_WAIT);
 
         DEBUG_PRINTF("Cleaning up %s\n", DumpPath);
-        RemoveFolder(DumpPath);
+        rmdir(DumpPath);
         DEBUG_PRINTF("Creating %s\n", DumpPath);
         if (((result = mkdir(DumpPath)) >= 0) || (result == -EEXIST))
         {

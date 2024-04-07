@@ -16,7 +16,7 @@ EE_OBJS = main.o system.o UI.o menu.o ident.o dbms.o SYSMAN_rpc.o graphics.o fon
 EE_INCS := -I$(PS2SDK)/ee/include -I$(PS2SDK)/ports/include/freetype2 -I$(PS2SDK)/common/include -I. -I$(PS2SDK)/ports/include
 EE_LDFLAGS :=  -L$(PS2SDK)/ee/lib -L$(PS2SDK)/ports/lib -s
 EE_LIBS := -lgs -lpng -lz -lcdvd -lmc -lpadx -lpatches -liopreboot -lfreetype -lm
-EE_GPVAL = -G383
+# EE_GPVAL = -G383
 EE_CFLAGS += -D_EE -O2 -mgpopt $(EE_GPVAL)
 
 EE_TEMP_FILES = SIO2MAN_irx.c MCMAN_irx.c MCSERV_irx.c PADMAN_irx.c POWEROFF_irx.c PS2DEV9_irx.c USBD_irx.c USBHDFSD_irx.c USBHDFSDFSV_irx.c SYSMAN_irx.c buttons.c devices.c background_img.c IOPRP_img.c
@@ -104,3 +104,5 @@ IOPRP_img.c:
 	bin2c irx/ioprp.img IOPRP_img.c IOPRP_img
 
 include $(PS2SDK)/samples/Makefile.pref
+include $(PS2SDK)/samples/Makefile.iopglobal
+include $(PS2SDK)/samples/Makefile.eeglobal

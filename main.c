@@ -9,9 +9,11 @@
 #include <libmc.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <usbhdfsd-common.h>
 #include <limits.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 #include <libgs.h>
 

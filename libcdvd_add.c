@@ -1,7 +1,7 @@
 #include <kernel.h>
 #include <sifrpc.h>
 #include <string.h>
-#include <libcdvd.h>
+#include <libcdvd-common.h>
 
 #include "libcdvd_add.h"
 
@@ -41,7 +41,7 @@ int sceCdAltReadRegionParams(u8 *data, u32 *stat)
     memset(data, 0, 13);
     if (MECHACON_CMD_S36_supported)
     {
-        if ((result = sceCdApplySCmd(0x36, NULL, 0, RegionData, sizeof(RegionData))) != 0)
+        if ((result = sceCdApplySCmd(0x36, NULL, 0, RegionData)) != 0)
         {
             *stat = RegionData[0];
             memcpy(data, &RegionData[1], 13);
@@ -70,7 +70,7 @@ int sceCdAltMV(u8 *buffer, u32 *stat)
     unsigned char subcommand, out_buffer[4];
 
     subcommand = 0;
-    if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer, sizeof(out_buffer))) != 0)
+    if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer)) != 0)
     {
         *stat = out_buffer[0] & 0x80;
         out_buffer[0] &= 0x7F;
@@ -87,7 +87,7 @@ int sceGetDspVersion(u8 *buffer, u32 *stat)
     unsigned char subcommand, out_buffer[2];
 
     subcommand = 1;
-    if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer, sizeof(out_buffer))) != 0)
+    if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer)) != 0)
     {
         *stat = out_buffer[0];
     }
@@ -105,13 +105,13 @@ int sceCdAltRM(char *ModelName, u32 *stat)
     int result1, result2;
 
     sdata   = 0;
-    result1 = sceCdApplySCmd(0x17, &sdata, 1, rdata, 9);
+    result1 = sceCdApplySCmd(0x17, &sdata, 1, rdata);
 
     *stat   = rdata[0];
     memcpy(ModelName, &rdata[1], 8);
 
     sdata   = 8;
-    result2 = sceCdApplySCmd(0x17, &sdata, 1, rdata, 9);
+    result2 = sceCdApplySCmd(0x17, &sdata, 1, rdata);
 
     *stat |= rdata[0];
     memcpy(&ModelName[8], &rdata[1], 8);
@@ -125,7 +125,7 @@ int sceCdAltReadRenewalDate(void *buffer, u32 *stat)
     unsigned char subcommand, out_buffer[16];
 
     subcommand = 0xFD;
-    if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer, sizeof(out_buffer))) != 0)
+    if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer)) != 0)
     {
         *stat = out_buffer[0];
     }

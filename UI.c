@@ -7,6 +7,7 @@
 #include <osd_config.h>
 #include <limits.h>
 #include <wchar.h>
+#include <errno.h>
 
 #include <libgs.h>
 

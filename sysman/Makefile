@@ -20,7 +20,7 @@ IOP_INCS += -I$(PS2SDK)/iop/include -I$(PS2SDK)/common/include -I../romdrv/inclu
 all: $(IOP_BIN)
 
 clean:
-	rm -f $(IOP_BIN) $(IOP_OBJS)
+	rm -rf $(IOP_BIN) $(IOP_OBJS) $(IOP_OBJS_DIR)
 
-include $(PS2SDK)/Defs.make
-include Rules.make
+include $(PS2SDK)/samples/Makefile.pref
+include $(PS2SDK)/samples/Makefile.iopglobal

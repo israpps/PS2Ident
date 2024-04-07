@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <kernel.h>
+#include <fcntl.h>
 #include <sifcmd.h>
 #include <libmc.h>
 

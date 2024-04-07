@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <kernel.h>
+#include <fcntl.h>
 #include <sifcmd.h>
 #include <libmc.h>
 

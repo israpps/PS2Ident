@@ -1,8 +1,10 @@
 #include <kernel.h>
-#include <fileio.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <sys/stat.h>
+#include <dirent.h>
 
 #include "system.h"
 
@@ -35,48 +37,6 @@ int GetBootDeviceID(void)
     }
     else
         result = BootDevice;
-
-    return result;
-}
-
-int RemoveFolder(const char *path)
-{
-    fio_dirent_t dirent;
-    char *fullpath;
-    int fd, result;
-
-    result = 0;
-    if ((fd = fioDopen(path)) >= 0)
-    {
-        while (fioDread(fd, &dirent) > 0 && result >= 0)
-        {
-            if (!strcmp(dirent.name, ".") || !strcmp(dirent.name, ".."))
-                continue;
-
-            if ((fullpath = malloc(strlen(path) + strlen(dirent.name) + 2)) != NULL)
-            {
-                sprintf(fullpath, "%s/%s", path, dirent.name);
-
-                if (FIO_S_ISDIR(dirent.stat.mode))
-                {
-                    result = RemoveFolder(fullpath);
-                }
-                else
-                {
-                    result = fioRemove(fullpath);
-                }
-
-                free(fullpath);
-            }
-        }
-
-        fioDclose(fd);
-
-        if (result >= 0)
-            fioRmdir(path);
-    }
-    else
-        result = fd;
 
     return result;
 }
