@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <libcdvd.h>
 #include <osd_config.h>
+#include <ps2sdkapi.h>
 
 #include "OSDInit.h"
 
@@ -177,7 +178,7 @@ static int GetConsoleRegion(void)
 
     if ((result = ConsoleRegion) < 0)
     {
-        if ((fd = _ps2sdk_open("rom0:ROMVER", O_RDONLY)) >= 0)
+        if ((fd = open("rom0:ROMVER", O_RDONLY)) >= 0)
         {
             _ps2sdk_read(fd, romver, sizeof(romver));
             _ps2sdk_close(fd);
@@ -241,7 +242,7 @@ static int GetOSDRegion(void)
     if (ConsoleOSDRegionInitStatus == 0 || ConsoleOSDRegion == -1)
     {
         ConsoleOSDRegionInitStatus = 1;
-        if ((fd = _ps2sdk_open("rom0:OSDVER", O_RDONLY)) >= 0)
+        if ((fd = open("rom0:OSDVER", O_RDONLY)) >= 0)
         {
             _ps2sdk_read(fd, OSDVer, sizeof(OSDVer));
             _ps2sdk_close(fd);
@@ -589,7 +590,7 @@ int OSDInitROMVER(void)
     int fd;
 
     memset(ConsoleROMVER, 0, ROMVER_MAX_LEN);
-    if ((fd = _ps2sdk_open("rom0:ROMVER", O_RDONLY)) >= 0)
+    if ((fd = open("rom0:ROMVER", O_RDONLY)) >= 0)
     {
         _ps2sdk_read(fd, ConsoleROMVER, ROMVER_MAX_LEN);
         _ps2sdk_close(fd);

@@ -13,7 +13,11 @@
 #include <usbhdfsd-common.h>
 #include <limits.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <fcntl.h>
+#include <ps2sdkapi.h>
+#include <rom0_info.h>
+#include <sbv_patches.h>
 
 #include <libgs.h>
 
@@ -21,6 +25,8 @@
 #include "SYSMAN_rpc.h"
 
 #include "main.h"
+#include "dbms.h"
+#include "menu.h"
 #include "system.h"
 #include "pad.h"
 #include "graphics.h"
@@ -69,15 +75,14 @@ extern unsigned char IOPRP_img[];
 extern unsigned int size_IOPRP_img;
 
 extern void *_gp;
-static unsigned char ConsoleRegionData[13];
 
 static int LoadEROMDRV(void)
 {
     char eromdrv[] = "rom1:EROMDRV?";
-    int result, fd;
+    int fd         = 0;
 
     // Handle region-specific DVD Player of newer consoles.
-    if (OSDGetDVDPlayerRegion(&eromdrv[12]) == 0 || (fd = _ps2sdk_open(eromdrv, O_RDONLY)) < 0)
+    if (OSDGetDVDPlayerRegion(&eromdrv[12]) == 0 || (fd = open(eromdrv, O_RDONLY)) < 0)
         eromdrv[12] = '\0'; // Replace '?' with a NULL.
 
     _ps2sdk_close(fd);
@@ -96,7 +101,7 @@ struct SystemInitParams
 
 static void SystemInitThread(struct SystemInitParams *SystemInitParams)
 {
-    int fd = 0, i;
+    int fd, i;
     GetRomName(SystemInitParams->SystemInformation->mainboard.romver);
 
     SifExecModuleBuffer(MCSERV_irx, size_MCSERV_irx, 0, NULL, NULL);
@@ -129,8 +134,9 @@ static void SystemInitThread(struct SystemInitParams *SystemInitParams)
     {
         if (SystemInitParams->SystemInformation->ROMs[i].IsExists)
         {
+            DEBUG_PRINTF("i = %d\n", i);
             sprintf(rom_extinfo, "rom%d:EXTINFO", i);
-            fd = _ps2sdk_open(rom_extinfo, O_RDONLY);
+            fd = open(rom_extinfo, O_RDONLY);
 
             if (fd >= 0)
             {
@@ -146,11 +152,11 @@ static void SystemInitThread(struct SystemInitParams *SystemInitParams)
                 _ps2sdk_close(fd);
                 SystemInitParams->SystemInformation->ROMs[i].extinfo[15] = '\0';
             }
-            DEBUG_PRINTF("ROMs[%d]. EXTINFO: %s\n", i, SystemInitParams->SystemInformation->ROMs[i].extinfo);
             if (i == 0)
-                strncpy(SystemInitParams->SystemInformation->mainboard.BOOT_ROM.extinfo, SystemInitParams->SystemInformation->ROMs[i].extinfo, 15);
+                strncpy(SystemInitParams->SystemInformation->mainboard.BOOT_ROM.extinfo, SystemInitParams->SystemInformation->ROMs[i].extinfo, 16);
             else if (i == 1)
-                strncpy(SystemInitParams->SystemInformation->mainboard.DVD_ROM.extinfo, SystemInitParams->SystemInformation->ROMs[i].extinfo, 15);
+                strncpy(SystemInitParams->SystemInformation->mainboard.DVD_ROM.extinfo, SystemInitParams->SystemInformation->ROMs[i].extinfo, 16);
+            DEBUG_PRINTF("ROMs[%d].EXTINFO: %s\n", i, SystemInitParams->SystemInformation->ROMs[i].extinfo);
         }
     }
 
@@ -180,7 +186,7 @@ static void usb_callback(void *packet, void *common)
 int main(int argc, char *argv[])
 {
     static SifCmdHandlerData_t SifCmdbuffer;
-    static struct SystemInformation SystemInformation;
+    struct SystemInformation SystemInformation;
     void *SysInitThreadStack;
     ee_sema_t ThreadSema;
     int SystemInitSema;
@@ -228,7 +234,6 @@ int main(int argc, char *argv[])
     SifInitRpc(0);
     SifInitIopHeap();
     SifLoadFileInit();
-    fioInit();
 
     sbv_patch_enable_lmb();
     sbv_patch_fileio();
@@ -270,10 +275,15 @@ int main(int argc, char *argv[])
     while (PollSema(SystemInitSema) != SystemInitSema)
     {
         RedrawLoadingScreen(FrameNum);
+        DEBUG_PRINTF("Frame: %d\n", FrameNum);
         FrameNum++;
+        if (FrameNum == 1000)
+            break;
     }
     DeleteSema(SystemInitSema);
-    free(SysInitThreadStack);
+    DEBUG_PRINTF("DeleteSema done!\n");
+    // free(SysInitThreadStack);
+    DEBUG_PRINTF("free done!\n");
 
     SifLoadFileExit();
     SifExitIopHeap();
@@ -299,7 +309,6 @@ int main(int argc, char *argv[])
     PS2IDBMS_UnloadDatabase();
 
     sceCdInit(SCECdEXIT);
-    fioExit();
     SysmanDeinit();
     SifExitRpc();
 

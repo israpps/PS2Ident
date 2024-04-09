@@ -6,6 +6,7 @@
 #include <sifcmd.h>
 #include <libcdvd.h>
 #include "libcdvd_add.h"
+#include <ps2sdkapi.h>
 
 #include "main.h"
 #include "modelname.h"
@@ -41,7 +42,7 @@ static int ReadModelName(char *name)
             strcpy(name, "SCPH-10000");
         else
         { // For ROM v1.01 (Late SCPH-10000, and all SCPH-15000 units).
-            if ((fd = _ps2sdk_open("rom0:OSDSYS", O_RDONLY)) >= 0)
+            if ((fd = open("rom0:OSDSYS", O_RDONLY)) >= 0)
             { // The model name is located at this address.
                 _ps2sdk_lseek(fd, 0x8C808, SEEK_SET);
                 _ps2sdk_read(fd, name, MODEL_NAME_MAX_LEN);

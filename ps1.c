@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <sifcmd.h>
 #include <libmc.h>
+#include <ps2sdkapi.h>
 
 #include "main.h"
 #include "ps1.h"
@@ -29,7 +30,7 @@ int PS1DRVInit(void)
 
     ps1drv.ver[0] = '\0';
 
-    fd            = _ps2sdk_open("rom0:PS1ID", O_RDONLY);
+    fd            = open("rom0:PS1ID", O_RDONLY);
 
     if (fd < 0)
         return -1;
@@ -65,8 +66,8 @@ int PS1DRVInit(void)
 
     if (result == 0)
     {
-        if (OSDGetPS1DRVRegion(&ps1ver_uni[11]) == 0 || (fd = _ps2sdk_open(ps1ver_uni, O_RDONLY)) < 0)
-            fd = _ps2sdk_open("rom0:PS1VER", O_RDONLY);
+        if (OSDGetPS1DRVRegion(&ps1ver_uni[11]) == 0 || (fd = open(ps1ver_uni, O_RDONLY)) < 0)
+            fd = open("rom0:PS1VER", O_RDONLY);
 
         if (fd >= 0)
         {

@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <sifcmd.h>
 #include <libmc.h>
+#include <ps2sdkapi.h>
 
 #include "main.h"
 #include "dvdplayer.h"
@@ -37,8 +38,8 @@ int DVDPlayerInit(void)
     ROMDVDPlayer.major  = -1;
     ROMDVDPlayer.region = -1;
 
-    if (OSDGetDVDPlayerRegion(&dvdid[10]) == 0 || (fd = _ps2sdk_open(dvdid, O_RDONLY)) < 0)
-        fd = _ps2sdk_open("rom1:DVDID", O_RDONLY);
+    if (OSDGetDVDPlayerRegion(&dvdid[10]) == 0 || (fd = open(dvdid, O_RDONLY)) < 0)
+        fd = open("rom1:DVDID", O_RDONLY);
 
     if (fd < 0)
     { // Not having a DVD player is not an error.
@@ -82,8 +83,8 @@ int DVDPlayerInit(void)
 
     if (result == 0)
     {
-        if (OSDGetDVDPlayerRegion(&dvdver[11]) == 0 || (fd = _ps2sdk_open(dvdver, O_RDONLY)) < 0)
-            fd = _ps2sdk_open("rom1:DVDVER", O_RDONLY);
+        if (OSDGetDVDPlayerRegion(&dvdver[11]) == 0 || (fd = open(dvdver, O_RDONLY)) < 0)
+            fd = open("rom1:DVDVER", O_RDONLY);
 
         if (fd >= 0)
         {

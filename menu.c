@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <libpad.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <timer.h>
 #include <limits.h>
@@ -881,7 +882,9 @@ static struct UIMenuItem DEV9MenuItems[] = {
     {MITEM_TERMINATOR}};
 
 static struct UIMenuItem ExtBusMenuItems[] = {
-    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_SYS_INFO}, {MITEM_BREAK}, {MITEM_BREAK},
+    {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_SYS_INFO},
+    {MITEM_BREAK},
+    {MITEM_BREAK},
 
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_USB},
     {MITEM_TAB},
@@ -1261,7 +1264,7 @@ static int DumpSystemROMScreen(const struct SystemInformation *SystemInformation
 #endif
     }
 
-    return 0;
+    return result;
 }
 
 static void LoadBoardInformation(const struct SystemInformation *SystemInformation)
@@ -1946,7 +1949,9 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
 #endif
     if ((logfile = fopen(filename, "wb")) != NULL)
     {
+        DEBUG_PRINTF("Writing start\n");
         WriteSystemInformation(logfile, SystemInformation);
+        DEBUG_PRINTF("Writing %s\n", filename);
         fclose(logfile);
     }
 
@@ -2010,7 +2015,7 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
 
     if (SystemInformation->mainboard.BOOT_ROM.IsExists && DumpLargeRoms)
     {
-        DEBUG_PRINTF("Dumping Boot ROM at %p, %u bytes...", SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size);
+        DEBUG_PRINTF("Dumping Boot ROM at %d, %u bytes...", SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size);
 
 #ifndef DSNET_HOST_SUPPORT
         sprintf(filename, "%s/%s.BIN", path, SystemInformation->mainboard.ModelName);
@@ -2029,7 +2034,7 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
 
     if (SystemInformation->mainboard.DVD_ROM.IsExists && DumpLargeRoms)
     {
-        DEBUG_PRINTF("Dumping DVD ROM at %p, %u bytes...", SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size);
+        DEBUG_PRINTF("Dumping DVD ROM at %d, %u bytes...", SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size);
 
 #ifndef DSNET_HOST_SUPPORT
         sprintf(filename, "%s/%s.ROM1", path, SystemInformation->mainboard.ModelName);
