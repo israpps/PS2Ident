@@ -44,9 +44,9 @@ static int ReadModelName(char *name)
         { // For ROM v1.01 (Late SCPH-10000, and all SCPH-15000 units).
             if ((fd = open("rom0:OSDSYS", O_RDONLY)) >= 0)
             { // The model name is located at this address.
-                _ps2sdk_lseek(fd, 0x8C808, SEEK_SET);
-                _ps2sdk_read(fd, name, MODEL_NAME_MAX_LEN);
-                _ps2sdk_close(fd);
+                lseek(fd, 0x8C808, SEEK_SET);
+                read(fd, name, MODEL_NAME_MAX_LEN);
+                close(fd);
             }
             else
                 strcpy(name, "Unknown");

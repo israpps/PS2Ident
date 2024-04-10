@@ -85,13 +85,13 @@ static int LoadEROMDRV(void)
     if (OSDGetDVDPlayerRegion(&eromdrv[12]) == 0 || (fd = open(eromdrv, O_RDONLY)) < 0)
         eromdrv[12] = '\0'; // Replace '?' with a NULL.
 
-    _ps2sdk_close(fd);
+    close(fd);
     DEBUG_PRINTF("EROMDRV: %s\n", eromdrv);
 
     return SifLoadModuleEncrypted(eromdrv, 0, NULL);
 }
 
-#define SYSTEM_INIT_THREAD_STACK_SIZE 0x800
+#define SYSTEM_INIT_THREAD_STACK_SIZE 0x8000
 
 struct SystemInitParams
 {
@@ -147,9 +147,9 @@ static void SystemInitThread(struct SystemInitParams *SystemInitParams)
                 // 20010704-160707,ROMconf,PS20160EC20010704.bin,kuma@rom-server/~/f10k/g/app/rom
                 // 20010704-160707 can be used as unique ID for Bios
                 SystemInitParams->SystemInformation->ROMs[i].extinfo[0] = '\0';
-                _ps2sdk_lseek(fd, 0x10, SEEK_SET);
-                _ps2sdk_read(fd, SystemInitParams->SystemInformation->ROMs[i].extinfo, sizeof(SystemInitParams->SystemInformation->ROMs[i].extinfo));
-                _ps2sdk_close(fd);
+                lseek(fd, 0x10, SEEK_SET);
+                read(fd, SystemInitParams->SystemInformation->ROMs[i].extinfo, sizeof(SystemInitParams->SystemInformation->ROMs[i].extinfo));
+                close(fd);
                 SystemInitParams->SystemInformation->ROMs[i].extinfo[15] = '\0';
             }
             if (i == 0)
@@ -190,7 +190,6 @@ int main(int argc, char *argv[])
     void *SysInitThreadStack;
     ee_sema_t ThreadSema;
     int SystemInitSema;
-    unsigned int FrameNum;
     struct SystemInitParams InitThreadParams;
 
     //	chdir("mass:/PS2Ident/");
@@ -271,18 +270,10 @@ int main(int argc, char *argv[])
 
     SysCreateThread(&SystemInitThread, SysInitThreadStack, SYSTEM_INIT_THREAD_STACK_SIZE, &InitThreadParams, 0x2);
 
-    FrameNum = 0;
-    while (PollSema(SystemInitSema) != SystemInitSema)
-    {
-        RedrawLoadingScreen(FrameNum);
-        DEBUG_PRINTF("Frame: %d\n", FrameNum);
-        FrameNum++;
-        if (FrameNum == 1000)
-            break;
-    }
+    WaitSema(SystemInitSema);
     DeleteSema(SystemInitSema);
     DEBUG_PRINTF("DeleteSema done!\n");
-    // free(SysInitThreadStack);
+    free(SysInitThreadStack);
     DEBUG_PRINTF("free done!\n");
 
     SifLoadFileExit();
