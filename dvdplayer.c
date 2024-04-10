@@ -53,8 +53,8 @@ int DVDPlayerInit(void)
         return 0;
     }
 
-    _ps2sdk_read(fd, id, sizeof(id));
-    _ps2sdk_close(fd);
+    read(fd, id, sizeof(id));
+    close(fd);
 
     ROMDVDPlayer.major = atoi(id);
 
@@ -88,8 +88,8 @@ int DVDPlayerInit(void)
 
         if (fd >= 0)
         {
-            result = _ps2sdk_read(fd, ROMDVDPlayer.ver, sizeof(ROMDVDPlayer.ver));
-            _ps2sdk_close(fd);
+            result = read(fd, ROMDVDPlayer.ver, sizeof(ROMDVDPlayer.ver));
+            close(fd);
 
             // NULL-terminate, only if non-error
             ROMDVDPlayer.ver[result >= 0 ? result : 0] = '\0';

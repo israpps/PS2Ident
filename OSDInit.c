@@ -180,8 +180,8 @@ static int GetConsoleRegion(void)
     {
         if ((fd = open("rom0:ROMVER", O_RDONLY)) >= 0)
         {
-            _ps2sdk_read(fd, romver, sizeof(romver));
-            _ps2sdk_close(fd);
+            read(fd, romver, sizeof(romver));
+            close(fd);
             ConsoleRegionParamsInitPS1DRV(romver);
 
             switch (romver[4])
@@ -244,8 +244,8 @@ static int GetOSDRegion(void)
         ConsoleOSDRegionInitStatus = 1;
         if ((fd = open("rom0:OSDVER", O_RDONLY)) >= 0)
         {
-            _ps2sdk_read(fd, OSDVer, sizeof(OSDVer));
-            _ps2sdk_close(fd);
+            read(fd, OSDVer, sizeof(OSDVer));
+            close(fd);
             CdReadOSDRegionParams(OSDVer);
             switch (OSDVer[4])
             {
@@ -592,8 +592,8 @@ int OSDInitROMVER(void)
     memset(ConsoleROMVER, 0, ROMVER_MAX_LEN);
     if ((fd = open("rom0:ROMVER", O_RDONLY)) >= 0)
     {
-        _ps2sdk_read(fd, ConsoleROMVER, ROMVER_MAX_LEN);
-        _ps2sdk_close(fd);
+        read(fd, ConsoleROMVER, ROMVER_MAX_LEN);
+        close(fd);
     }
 
     return 0;

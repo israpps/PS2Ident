@@ -35,8 +35,8 @@ int PS1DRVInit(void)
     if (fd < 0)
         return -1;
 
-    _ps2sdk_read(fd, ps1drv.ver, sizeof(ps1drv.ver));
-    _ps2sdk_close(fd);
+    read(fd, ps1drv.ver, sizeof(ps1drv.ver));
+    close(fd);
 
     pChar        = ps1drv.ver;
     ps1drv.major = atoi(pChar);
@@ -71,8 +71,8 @@ int PS1DRVInit(void)
 
         if (fd >= 0)
         {
-            result = _ps2sdk_read(fd, ps1drv.ver, sizeof(ps1drv.ver) - 1);
-            _ps2sdk_close(fd);
+            result = read(fd, ps1drv.ver, sizeof(ps1drv.ver) - 1);
+            close(fd);
 
             // NULL-terminate, only if non-error
             ps1drv.ver[result >= 0 ? result : 0] = '\0';

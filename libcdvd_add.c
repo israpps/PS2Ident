@@ -35,7 +35,7 @@ int cdInitAdd(void)
 */
 int sceCdAltReadRegionParams(u8 *data, u32 *stat)
 {
-    unsigned char RegionData[15];
+    unsigned char RegionData[16];
     int result;
 
     memset(data, 0, 13);
@@ -67,7 +67,7 @@ int sceCdAltReadRegionParams(u8 *data, u32 *stat)
 int sceCdAltMV(u8 *buffer, u32 *stat)
 {
     int result;
-    unsigned char subcommand, out_buffer[4];
+    unsigned char subcommand, out_buffer[16];
 
     subcommand = 0;
     if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer)) != 0)
@@ -84,7 +84,7 @@ int sceCdAltMV(u8 *buffer, u32 *stat)
 int sceGetDspVersion(u8 *buffer, u32 *stat)
 {
     int result;
-    unsigned char subcommand, out_buffer[2];
+    unsigned char subcommand, out_buffer[16];
 
     subcommand = 1;
     if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer)) != 0)
@@ -100,7 +100,7 @@ int sceGetDspVersion(u8 *buffer, u32 *stat)
 
 int sceCdAltRM(char *ModelName, u32 *stat)
 {
-    unsigned char rdata[9];
+    unsigned char rdata[16];
     unsigned char sdata;
     int result1, result2;
 
