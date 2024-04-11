@@ -994,6 +994,16 @@ static int GetUserSaveDeviceSelection(char *SelectedDevice, const struct Require
     int result, i, devicesInRow, deviceRow;
     GS_RGBAQ FontColour;
     static struct SupportedDevice devices[NUM_SUPPORTED_DEVICES] = {
+#ifdef DSNET_HOST_SUPPORT
+        {
+            "host",
+            NULL,
+            NULL,
+            0,
+            DEVICE_TYPE_USB_DISK,
+            0,
+        },
+#endif
         {
             "mc",
             NULL,
@@ -1018,32 +1028,22 @@ static int GetUserSaveDeviceSelection(char *SelectedDevice, const struct Require
             DEVICE_TYPE_USB_DISK,
             0,
         },
-#ifdef DSNET_HOST_SUPPORT
-        {
-            "host",
-            NULL,
-            NULL,
-            0,
-            DEVICE_TYPE_USB_DISK,
-            0,
-        },
-#endif
     };
     static const unsigned int IconFileSelMenuDevStringIDs[NUM_SUPPORTED_DEVICES] = {
-        SYS_UI_LBL_DEV_MC,
-        SYS_UI_LBL_DEV_MC,
-        SYS_UI_LBL_DEV_MASS,
 #ifdef DSNET_HOST_SUPPORT
         SYS_UI_LBL_DEV_HOST,
 #endif
+        SYS_UI_LBL_DEV_MC,
+        SYS_UI_LBL_DEV_MC,
+        SYS_UI_LBL_DEV_MASS,
     };
     static const unsigned int IconFileSelMenuDevUnitStringIDs[NUM_SUPPORTED_DEVICES] = {
-        SYS_UI_LBL_MC_SLOT_1,
-        SYS_UI_LBL_MC_SLOT_2,
-        SYS_UI_LBL_COUNT,
 #ifdef DSNET_HOST_SUPPORT
         SYS_UI_LBL_COUNT,
 #endif
+        SYS_UI_LBL_MC_SLOT_1,
+        SYS_UI_LBL_MC_SLOT_2,
+        SYS_UI_LBL_COUNT,
     };
 
     // Allow the user to browse for icon sets on mc0:, mc1: and mass:.
@@ -1199,7 +1199,7 @@ static int DumpSystemROMScreen(const struct SystemInformation *SystemInformation
 {
     char DumpPath[96];
     struct RequiredFileSpaceStat RequiredSpace[7];
-    int result;
+    int result = 0;
     unsigned int NumFiles;
 
     NumFiles                = 3;

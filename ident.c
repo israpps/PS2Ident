@@ -1589,13 +1589,13 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     {
         fprintf(stream, "    ROM%u:          ", i);
         if (SystemInformation->ROMs[i].IsExists)
-            fprintf(stream, "%u (%u bytes)\r\n", SystemInformation->ROMs[i].StartAddress, SystemInformation->ROMs[i].size);
+            fprintf(stream, "0x%X (%u bytes)\r\n", SystemInformation->ROMs[i].StartAddress, SystemInformation->ROMs[i].size);
         else
             fputs("<Not detected>\r\n", stream);
     }
     fprintf(stream, "    EROM:          ");
     if (SystemInformation->erom.IsExists)
-        fprintf(stream, "%d (%u bytes)\r\n", SystemInformation->erom.StartAddress, SystemInformation->erom.size);
+        fprintf(stream, "0x%X (%u bytes)\r\n", SystemInformation->erom.StartAddress, SystemInformation->erom.size);
     else
         fprintf(stream, "<Not detected>\r\n");
 
@@ -1605,7 +1605,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
           stream);
     if (SystemInformation->mainboard.BOOT_ROM.IsExists)
     {
-        fprintf(stream, "%d (%u Mbit)    CRC32: 0x%08x\r\n",
+        fprintf(stream, "0x%X (%u Mbit)    CRC32: 0x%08x\r\n",
                 SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size / 1024 / 128,
                 SystemInformation->mainboard.BOOT_ROM.crc32);
     }
@@ -1615,7 +1615,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     fputs("    DVD ROM:       ", stream);
     if (SystemInformation->mainboard.DVD_ROM.IsExists)
     {
-        fprintf(stream, "%d (%u Mbit)    CRC32: 0x%08x\r\n",
+        fprintf(stream, "0x%X (%u Mbit)    CRC32: 0x%08x\r\n",
                 SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size / 1024 / 128,
                 SystemInformation->mainboard.DVD_ROM.crc32);
     }
