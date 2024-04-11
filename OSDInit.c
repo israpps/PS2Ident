@@ -1,11 +1,9 @@
-#include <stdio.h>
-#include <kernel.h>
 #include <string.h>
 #include <fcntl.h>
-#include <libcdvd.h>
+#include <unistd.h>
 #include <osd_config.h>
-#include <ps2sdkapi.h>
 
+#include "libcdvd_add.h"
 #include "OSDInit.h"
 
 /*	Parsing of values from the EEPROM and setting them into the EE kernel

@@ -1,5 +1,6 @@
 // #define DEBUG	1
 #ifdef DEBUG
+#include <stdio.h>
 #define DEBUG_PRINTF(args...) printf(args)
 #else
 #define DEBUG_PRINTF(args...)

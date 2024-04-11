@@ -6,7 +6,6 @@
  */
 
 #include <thbase.h>
-#include <stdio.h>
 
 #include "main.h"
 #include "sysinfo.h"

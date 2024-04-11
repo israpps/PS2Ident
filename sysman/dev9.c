@@ -1,12 +1,8 @@
-#include <types.h>
-#include <dev9.h>
 #include <dev9regs.h>
 #include <aifregs.h>
 #include <loadcore.h>
-#include <speedregs.h>
 #include <smapregs.h>
 #include <sysclib.h>
-#include <stdio.h>
 #include <thbase.h>
 
 #include "main.h"

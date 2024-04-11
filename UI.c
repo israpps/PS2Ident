@@ -766,6 +766,8 @@ int ShowMessageBox(int Option1Label, int Option2Label, int Option3Label, int Opt
         UIDrawMenu(&MessageBoxMenu, 0, UI_OFFSET_X, UI_OFFSET_Y, -1);
         SyncFlipFB(&UIDrawGlobal);
     }
+
+    return 0;
 }
 
 void DisplayWarningMessage(unsigned int message)

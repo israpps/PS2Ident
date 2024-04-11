@@ -1,5 +1,3 @@
-#include <math.h>
-
 #include "crc.h"
 
 static unsigned short int crc16_table[256];

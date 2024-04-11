@@ -41,10 +41,15 @@ int SysmanReadMemory(const void *MemoryStart, void *buffer, unsigned int NumByte
     ((struct MemoryAccessParameters *)TransmitBuffer)->NumBytes     = NumBytes;
 
     if (mode)
+    {
         if ((RPC_res = SifCallRpc(&SYSMAN_rpc_cd, SYSMAN_ReadMemory, SIF_RPC_M_NOWAIT, TransmitBuffer, sizeof(struct MemoryAccessParameters), ReceiveBuffer, sizeof(int), NULL, NULL)) >= 0)
             RPC_res = 0;
-        else if ((RPC_res = SifCallRpc(&SYSMAN_rpc_cd, SYSMAN_ReadMemory, 0, TransmitBuffer, sizeof(struct MemoryAccessParameters), ReceiveBuffer, sizeof(int), NULL, NULL)) >= 0)
+    }
+    else
+    {
+        if ((RPC_res = SifCallRpc(&SYSMAN_rpc_cd, SYSMAN_ReadMemory, 0, TransmitBuffer, sizeof(struct MemoryAccessParameters), ReceiveBuffer, sizeof(int), NULL, NULL)) >= 0)
             RPC_res = *(int *)ReceiveBuffer;
+    }
 
     return RPC_res;
 }
@@ -68,10 +73,15 @@ int SysmanWriteMemory(void *MemoryStart, const void *buffer, unsigned int NumByt
     ((struct MemoryAccessParameters *)TransmitBuffer)->NumBytes     = NumBytes;
 
     if (mode)
+    {
         if ((RPC_res = SifCallRpc(&SYSMAN_rpc_cd, SYSMAN_WriteMemory, SIF_RPC_M_NOWAIT, TransmitBuffer, sizeof(struct MemoryAccessParameters), ReceiveBuffer, sizeof(int), NULL, NULL)) >= 0)
             RPC_res = 0;
-        else if ((RPC_res = SifCallRpc(&SYSMAN_rpc_cd, SYSMAN_WriteMemory, 0, TransmitBuffer, sizeof(struct MemoryAccessParameters), ReceiveBuffer, sizeof(int), NULL, NULL)) >= 0)
+    }
+    else
+    {
+        if ((RPC_res = SifCallRpc(&SYSMAN_rpc_cd, SYSMAN_WriteMemory, 0, TransmitBuffer, sizeof(struct MemoryAccessParameters), ReceiveBuffer, sizeof(int), NULL, NULL)) >= 0)
             RPC_res = *(int *)ReceiveBuffer;
+    }
 
     return RPC_res;
 }

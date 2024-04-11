@@ -180,7 +180,7 @@ int PS2IDBMS_SaveDatabase(const char *path)
 
     if (NumEntries > 0)
     {
-        strncpy(header.magic, "P2DB", sizeof(header.magic));
+        memcpy(header.magic, "P2DB", sizeof(header.magic));
         header.version    = PS2IDB_FORMAT_VERSION;
         header.components = PS2IDB_COMPONENT_COUNT;
 

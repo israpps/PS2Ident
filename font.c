@@ -3,11 +3,8 @@
     Last updated:	2018/12/08	*/
 
 #include <malloc.h>
-#include <string.h>
-#include <stdlib.h>
 #include <errno.h>
 #include <kernel.h>
-#include <wchar.h>
 
 #include <libgs.h>
 
@@ -297,7 +294,7 @@ void FontDeinit(void)
 
 static int AtlasInit(Font_t *font, struct FontAtlas *atlas)
 {
-    unsigned int TextureSizeEE, i;
+    unsigned int TextureSizeEE;
     short int width_aligned, height_aligned;
     int result;
 
@@ -528,8 +525,6 @@ static int DrawGlyph(struct UIDrawGlobal *gsGlobal, Font_t *font, wint_t charact
 {
     struct FontGlyphSlot *glyphSlot;
     struct FontGlyphSlotInfo glyphInfo;
-    struct FontAtlas *atlas;
-    unsigned short int i, slot;
     short int XCoordinates, YCoordinates;
     int result;
 

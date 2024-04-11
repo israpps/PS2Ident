@@ -1,17 +1,12 @@
 #include <kernel.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
-#include <wchar.h>
+#include <malloc.h>
 
 #include <libgs.h>
-
 #include <png.h>
 
 #include "main.h"
 #include "graphics.h"
-#include "pad.h"
-
 #include "font.h"
 
 extern int VBlankStartSema;
