@@ -10,7 +10,8 @@ static unsigned char MECHACON_CMD_S36_supported = 0, MECHACON_CMD_S27_supported 
 // Initialize add-on functions. Currently only retrieves the MECHACON's version to determine what sceCdAltGetRegionParams() should do.
 int cdInitAdd(void)
 {
-    int result, status, i;
+    int result, i;
+    u32 status;
     u8 MECHA_version_data[3];
     unsigned int MECHA_version;
 
@@ -74,26 +75,8 @@ int sceCdAltMV(u8 *buffer, u32 *stat)
     {
         *stat = out_buffer[0] & 0x80;
         out_buffer[0] &= 0x7F;
-        memcpy(buffer, out_buffer, sizeof(out_buffer));
+        memcpy(buffer, out_buffer, 4);
     }
-
-    return result;
-}
-
-/* Thanks to krat0s researches this seems to return DSP version  */
-int sceGetDspVersion(u8 *buffer, u32 *stat)
-{
-    int result;
-    unsigned char subcommand, out_buffer[16];
-
-    subcommand = 1;
-    if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer)) != 0)
-    {
-        *stat = out_buffer[0];
-    }
-
-    /* 2 bytes: minor and major version */
-    memcpy(buffer, out_buffer, sizeof(out_buffer));
 
     return result;
 }
@@ -131,6 +114,24 @@ int sceCdAltReadRenewalDate(void *buffer, u32 *stat)
     }
 
     memcpy(buffer, &out_buffer[1], 5);
+
+    return result;
+}
+
+/* Thanks to kr_ps2 researches this seems to return DSP version  */
+int sceGetDspVersion(u8 *buffer, u32 *stat)
+{
+    int result;
+    unsigned char subcommand, out_buffer[16];
+
+    subcommand = 1;
+    if ((result = sceCdApplySCmd(0x03, &subcommand, sizeof(subcommand), out_buffer)) != 0)
+    {
+        *stat = out_buffer[0];
+    }
+
+    /* 2 bytes: minor and major version */
+    memcpy(buffer, &out_buffer[1], 2);
 
     return result;
 }

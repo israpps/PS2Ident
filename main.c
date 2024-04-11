@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include <usbhdfsd-common.h>
 #include <limits.h>
 #include <sys/stat.h>

@@ -1,4 +1,6 @@
 /* Function prototypes */
+struct SystemInformation;
+struct DumpingStatus;
 int MainMenu(const struct SystemInformation *SystemInformation);
 
 struct ProgressBarCoords

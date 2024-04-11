@@ -276,6 +276,7 @@ static struct UIMenuItem SummaryMenuItems[] = {
 
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_CHASSIS_MODEL},
     {MITEM_TAB},
+    {MITEM_TAB},
     {MITEM_STRING, SUM_BOARD_ID_CHASSIS_NAME, MITEM_FLAG_READONLY},
     {MITEM_BREAK},
 
@@ -1333,9 +1334,9 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
 
 
         UISetType(&Board2ReportMenu, BOARD2_ID_DSP_REV, MITEM_VALUE);
-        UISetValue(&Board2ReportMenu, BOARD2_ID_DSP_REV, SystemInformation->DSPVersion[1]);
+        UISetValue(&Board2ReportMenu, BOARD2_ID_DSP_REV, SystemInformation->DSPVersion[0]);
         UISetType(&Board2ReportMenu, BOARD2_ID_DSP_NAME, MITEM_STRING);
-        UISetString(&Board2ReportMenu, BOARD2_ID_DSP_NAME, GetDSPDesc(SystemInformation->DSPVersion[1]));
+        UISetString(&Board2ReportMenu, BOARD2_ID_DSP_NAME, GetDSPDesc(SystemInformation->DSPVersion[0]));
     }
     else
     {
@@ -1773,8 +1774,8 @@ int MainMenu(const struct SystemInformation *SystemInformation)
     LoadSystemInformation(SystemInformation);
 
     CurrentMenu = &SummaryMenu;
-    option      = 0;
     done        = 0;
+    option      = 0;
     while (!done)
     {
         option = UIExecMenu(CurrentMenu, option, &CurrentMenu, &MainMenuUpdateCallback);

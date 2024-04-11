@@ -13,6 +13,7 @@
 #include <limits.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 #include <libgs.h>
 
@@ -60,7 +61,7 @@ int readDevMemEEIOP(const void *MemoryStart, void *buffer, unsigned int NumBytes
         }
 
         unsigned int i;
-        u8 *mpt = MemoryStart;
+        const u8 *mpt = MemoryStart;
         u8 *bpt = buffer;
         for (i = 0; i < NumBytes; i++, mpt++, bpt++)
         {
@@ -161,8 +162,7 @@ int CheckROM(const struct PS2IDBMainboardEntry *entry)
 int GetPeripheralInformation(struct SystemInformation *SystemInformation)
 {
     t_SysmanHardwareInfo hwinfo;
-    int result, fd, i;
-    u32 stat;
+    u32 stat, result;
     void *buffer1, *buffer2;
     char *pNewline;
 
@@ -240,6 +240,8 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
     if (sceGetDspVersion(SystemInformation->DSPVersion, &stat) == 0 || (stat & 0x80) != 0)
     {
         DEBUG_PRINTF("Failed to read DSP version. Stat: %x\n", stat);
+        SystemInformation->DSPVersion[0] = 0;
+        SystemInformation->DSPVersion[1] = 0;
     }
     sceCdAltMV(SystemInformation->mainboard.MECHACONVersion, &stat);
     DEBUG_PRINTF("MECHACON version: %u %u %u %u\n", SystemInformation->mainboard.MECHACONVersion[0], SystemInformation->mainboard.MECHACONVersion[1], SystemInformation->mainboard.MECHACONVersion[2], SystemInformation->mainboard.MECHACONVersion[3]);
@@ -555,7 +557,6 @@ const char *GetPHYVendDesc(unsigned int oui)
 
 const char *GetPHYModelDesc(unsigned int oui, unsigned char model)
 {
-    unsigned int revision;
     const char *description;
 
     if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_ETH_PHY_MODEL, oui << 8 | model)) == NULL)
@@ -1588,7 +1589,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     {
         fprintf(stream, "    ROM%u:          ", i);
         if (SystemInformation->ROMs[i].IsExists)
-            fprintf(stream, "%d (%u bytes)\r\n", SystemInformation->ROMs[i].StartAddress, SystemInformation->ROMs[i].size);
+            fprintf(stream, "%u (%u bytes)\r\n", SystemInformation->ROMs[i].StartAddress, SystemInformation->ROMs[i].size);
         else
             fputs("<Not detected>\r\n", stream);
     }
@@ -1684,12 +1685,12 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
                         "    Revision:            %u.%02u (%s)\r\n"
                         "    MagicGate region:    0x%02x (%s)\r\n"
                         "    System type:         0x%02x (%s)\r\n"
-                        "    DSP revision:        %u (%s)\r\n",
+                        "    DSP revision:        %u.%u (%s)\r\n",
                 SystemInformation->mainboard.MECHACONVersion[1], SystemInformation->mainboard.MECHACONVersion[2],
                 GetMECHACONChipDesc((unsigned int)(SystemInformation->mainboard.MECHACONVersion[1]) << 16 | (unsigned int)(SystemInformation->mainboard.MECHACONVersion[2]) << 8 | SystemInformation->mainboard.MECHACONVersion[0]),
                 SystemInformation->mainboard.MECHACONVersion[0], GetRegionDesc(SystemInformation->mainboard.MECHACONVersion[0]),
                 SystemInformation->mainboard.MECHACONVersion[3], GetSystemTypeDesc(SystemInformation->mainboard.MECHACONVersion[3]),
-                SystemInformation->DSPVersion[1], GetDSPDesc(SystemInformation->DSPVersion[1]));
+                SystemInformation->DSPVersion[0], SystemInformation->DSPVersion[1], GetDSPDesc(SystemInformation->DSPVersion[0]));
     }
     else
     {

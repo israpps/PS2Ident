@@ -18,7 +18,8 @@ extern char ConsoleROMVER[];
 
 static int ReadModelName(char *name)
 {
-    int stat, result, fd;
+    int result, fd;
+    u32 stat;
 
     /*	This function is a hybrid between the late ROM browser program and the HDD Browser.
         In v2.20, there was only a simple null-terminate before calling sceCdRM(), as below.
