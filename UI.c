@@ -20,6 +20,10 @@
 
 #include "OSDInit.h"
 
+extern unsigned char font_Default[];
+extern unsigned int size_font_Default;
+static const char DefaultFontFilename[] = "font.ttf";
+
 extern int errno __attribute__((section("data")));
 
 struct UIDrawGlobal UIDrawGlobal;
@@ -241,8 +245,6 @@ static int ParseFontListFile(char **array, FILE *file, unsigned int ExpectedNumL
 
     return result;
 }
-
-static const char DefaultFontFilename[] = "NotoSansMono-CondensedBold.ttf";
 
 static char *GetDefaultFontFilePath(void)
 {
@@ -539,28 +541,14 @@ static int InitFont(void)
 {
     int result;
     char *pFontFilePath;
+    DEBUG_PRINTF("InitFont\n");
+    pFontFilePath = GetDefaultFontFilePath();
+    result        = FontInit(&UIDrawGlobal, pFontFilePath);
+    if (result != 0)
+        result = FontInitWithBuffer(&UIDrawGlobal, font_Default, size_font_Default);
 
-    if ((pFontFilePath = GetFontFilePath(language)) != NULL)
-    {
-        DEBUG_PRINTF("GetFontFilePath(%d): %s\n", language, pFontFilePath);
-    }
-    else
-    {
-        DEBUG_PRINTF("Can't get font file path from GetFontFilePath(%d).\n", language);
-        return -1;
-    }
-
-    if ((result = FontInit(&UIDrawGlobal, pFontFilePath)) != 0)
-    {
-        DEBUG_PRINTF("InitFont(%s) result: %d. Using default font.\n", pFontFilePath, result);
-        free(pFontFilePath);
-        pFontFilePath = GetDefaultFontFilePath();
-
-        result        = FontInit(&UIDrawGlobal, pFontFilePath);
-    }
     if (result != 0)
         DEBUG_PRINTF("InitFont(%s) error: %d\n", pFontFilePath, result);
-    free(pFontFilePath);
 
     return result;
 }
