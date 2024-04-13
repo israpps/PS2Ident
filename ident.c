@@ -559,6 +559,12 @@ const char *GetSPEEDDesc(unsigned short int revision, const unsigned char MECHA_
 
     switch (revision)
     {
+        case 0x0009:
+            description = "TS ?? (Missing)";
+            break;
+        case 0x0010:
+            description = "ES1 ?? (Missing)";
+            break;
         case 0x0011:
             description = "CXD9624GG";
             break;
@@ -1224,9 +1230,47 @@ const char *GetMRPDesc(unsigned short int id)
 {
     const char *description;
 
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_MRP_BOARD, id & 0xF8)) == NULL)
+    switch (id)
     {
-        description = "Unknown";
+        case 0x00:
+            description = "Not detected";
+            break;
+        case 0x10:
+            description = "Gmain-1.0";
+            break;
+        case 0x20:
+            description = "Gmain-2.0";
+            break;
+        case 0x30:
+            description = "Gmain-3.0";
+            break;
+        case 0x40:
+            description = "B3system-1.0";
+            break;
+        case 0x50:
+            description = "Gmain-4.0";
+            break;
+        case 0x58:
+            description = "Gmain-5.0";
+            break;
+        case 0x60:
+            description = "MPU-4.0";
+            break;
+        case 0x61:
+            description = "MPU-4.0";
+            break;
+        case 0x70:
+            description = "Gmain-10.0/11.0";
+            break;
+        case 0x78:
+            description = "Gmain-12.0";
+            break;
+        case 0x7C:
+            description = "Gmain-13.0";
+            break;
+        default:
+            description = "Unknown board";
+            break;
     }
 
     return description;
@@ -1511,9 +1555,59 @@ const char *GetADD010Desc(unsigned short int id)
 {
     const char *description;
 
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_ADD010, id)) == NULL)
+    switch (id)
     {
-        description = "Unknown";
+        case 0x0000:
+            description = "DEX A";
+            break;
+        case 0x0001:
+            description = "A";
+            break;
+        case 0x0801:
+            description = "AB";
+            break;
+        case 0x080C:
+            description = "DEX B (Old)";
+            break;
+        case 0x090C:
+            description = "B/C (Old)";
+            break;
+        case 0x8808:
+            description = "DEX D";
+            break;
+        case 0x8809:
+            description = "C/D";
+            break;
+        case 0x8C08:
+            description = "DEX B";
+            break;
+        case 0x8C09:
+            description = "B";
+            break;
+        case 0xA809:
+            description = "F SONY";
+            break;
+        case 0xA829:
+            description = "F SANYO";
+            break;
+        case 0xB009:
+            description = "G SONY";
+            break;
+        case 0xB029:
+            description = "G SANYO";
+            break;
+        case 0xB41B:
+            description = "H/I/J/X SONY";
+            break;
+        case 0xB43B:
+            description = "H/I/J/X SANYO";
+            break;
+        case 0xBC2B:
+            description = "Slim";
+            break;
+        default:
+            description = "Sticker missing";
+            break;
     }
 
     return description;
