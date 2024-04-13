@@ -174,6 +174,7 @@ static void usb_callback(void *packet, void *common)
 
 int main(int argc, char *argv[])
 {
+    sio_puts("-- PS2IDENT START\n");
     static SifCmdHandlerData_t SifCmdbuffer;
     struct SystemInformation SystemInformation;
     void *SysInitThreadStack;

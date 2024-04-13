@@ -1,8 +1,9 @@
 #Enable to build support for the TOOL's host interface
-DSNET_HOST_SUPPORT = 0
-DEBUG = 0
+DSNET_HOST_SUPPORT ?= 0
+DEBUG ?= 0
+COH ?= 0
 
-DISABLE_ILINK_DUMPING = 0
+DISABLE_ILINK_DUMPING ?= 0
 
 EE_BIN = PS2Ident_np.elf
 EE_PACKED_BIN = PS2Ident.elf
@@ -28,6 +29,13 @@ endif
 ifeq ($(DEBUG),1)
 	IOP_CFLAGS += -DDEBUG
 	EE_CFLAGS += -DDEBUG
+endif
+
+ifeq ($(COH),1)
+    EE_CFLAGS += -DCOH_SUPPORT
+    IOPRP_BIN = irx/ioprp_coh.img
+else
+    IOPRP_BIN = irx/ioprp.img
 endif
 
 ifeq ($(DISABLE_ILINK_DUMPING),1)
@@ -92,8 +100,8 @@ buttons.c:
 devices.c:
 	bin2c resources/devices.png devices.c devices
 
-IOPRP_img.c:
-	bin2c irx/ioprp.img IOPRP_img.c IOPRP_img
+IOPRP_img.c: $(IOPRP_BIN)
+	bin2c $< IOPRP_img.c IOPRP_img
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.iopglobal

@@ -5,4 +5,7 @@
 #define DEBUG_PRINTF(args...)
 #endif
 
-#define PS2IDENT_VERSION "0.900"
+#ifdef COH_SUPPORT
+#define EXTRAVER "-COH"
+#endif
+#define PS2IDENT_VERSION "0.900" EXTRAVER
