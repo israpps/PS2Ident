@@ -1491,17 +1491,12 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
 
 static void LoadROMInformation(const struct SystemInformation *SystemInformation)
 {
-    int MayBeModded;
+    u8 MayBeModded = 0;
 
-    MayBeModded = CheckROM(&SystemInformation->mainboard);
-    if (MayBeModded)
-    {
-        UISetVisible(&ROMReportMenu, ROM_ID_ROM_UNCLEAN, 1);
-    }
-    else
-    {
-        UISetVisible(&ROMReportMenu, ROM_ID_ROM_UNCLEAN, 0);
-    }
+    // MayBeModded = CheckROM(&SystemInformation->mainboard); // replace with redump lookup
+
+    UISetVisible(&ROMReportMenu, ROM_ID_ROM_UNCLEAN, MayBeModded);
+
 
     // ROM region and chip information
     if (SystemInformation->ROMs[0].IsExists)

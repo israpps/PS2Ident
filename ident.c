@@ -138,27 +138,6 @@ static u32 CalculateCRCOfROM(void *buffer1, void *buffer2, void *start, unsigned
     return ReflectAndXORCRC32(crc);
 }
 
-int CheckROM(const struct PS2IDBMainboardEntry *entry)
-{
-    const struct PS2IDBMainboardEntry *other;
-
-    if ((other = PS2IDBMS_LookupMatchingROM(entry)) != NULL)
-    {
-        if ((entry->BOOT_ROM.IsExists && (other->BOOT_ROM.crc32 != entry->BOOT_ROM.crc32)) || (other->DVD_ROM.IsExists && (other->DVD_ROM.crc32 != entry->DVD_ROM.crc32)))
-        {
-            DEBUG_PRINTF("CheckROM: ROM mismatch:\n");
-            if (entry->BOOT_ROM.IsExists)
-                DEBUG_PRINTF("BOOT: 0x%04x 0x%04x\n", other->BOOT_ROM.crc32, entry->BOOT_ROM.crc32);
-            if (other->DVD_ROM.IsExists)
-                DEBUG_PRINTF("DVD: 0x%04x 0x%04x\n", other->DVD_ROM.crc32, entry->DVD_ROM.crc32);
-
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
 int GetPeripheralInformation(struct SystemInformation *SystemInformation)
 {
     t_SysmanHardwareInfo hwinfo;
@@ -284,8 +263,6 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
     SystemInformation->mainboard.EMCSID        = SystemInformation->ConsoleID[7];
     strcpy(SystemInformation->mainboard.MainboardName, GetMainboardModelDesc(&SystemInformation->mainboard));
     strcpy(SystemInformation->chassis, GetChassisDesc(&SystemInformation->mainboard));
-
-    CheckROM(&SystemInformation->mainboard);
 
     return 0;
 }
@@ -1718,11 +1695,11 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
     unsigned int i, modelID;
     unsigned short int conModelID;
     u32 Serial;
-    int MayBeModded;
+    u8 MayBeModded = 0;
     const char *dvdplVer;
     const char *OSDVer;
 
-    MayBeModded = CheckROM(&SystemInformation->mainboard);
+    // MayBeModded = CheckROM(&SystemInformation->mainboard); // TODO: replace with redump lookup
     DEBUG_PRINTF("CheckROM() = %d\n", MayBeModded);
 
     // Header
