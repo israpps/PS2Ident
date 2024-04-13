@@ -41,39 +41,22 @@
 #include "UI.h"
 
 #include "ident.h"
+#define EXTERN_BIN2C(_irx) \
+extern unsigned char _irx[]; \
+extern unsigned int size_##_irx
 
-extern unsigned char SIO2MAN_irx[];
-extern unsigned int size_SIO2MAN_irx;
+EXTERN_BIN2C(SIO2MAN_irx);
+EXTERN_BIN2C(PADMAN_irx);
+EXTERN_BIN2C(MCMAN_irx);
+EXTERN_BIN2C(MCSERV_irx);
+EXTERN_BIN2C(POWEROFF_irx);
+EXTERN_BIN2C(PS2DEV9_irx);
+EXTERN_BIN2C(USBD_irx);
+EXTERN_BIN2C(USBHDFSD_irx);
+EXTERN_BIN2C(USBHDFSDFSV_irx);
+EXTERN_BIN2C(SYSMAN_irx);
+EXTERN_BIN2C(IOPRP_img);
 
-extern unsigned char PADMAN_irx[];
-extern unsigned int size_PADMAN_irx;
-
-extern unsigned char MCMAN_irx[];
-extern unsigned int size_MCMAN_irx;
-
-extern unsigned char MCSERV_irx[];
-extern unsigned int size_MCSERV_irx;
-
-extern unsigned char POWEROFF_irx[];
-extern unsigned int size_POWEROFF_irx;
-
-extern unsigned char PS2DEV9_irx[];
-extern unsigned int size_PS2DEV9_irx;
-
-extern unsigned char USBD_irx[];
-extern unsigned int size_USBD_irx;
-
-extern unsigned char USBHDFSD_irx[];
-extern unsigned int size_USBHDFSD_irx;
-
-extern unsigned char USBHDFSDFSV_irx[];
-extern unsigned int size_USBHDFSDFSV_irx;
-
-extern unsigned char SYSMAN_irx[];
-extern unsigned int size_SYSMAN_irx;
-
-extern unsigned char IOPRP_img[];
-extern unsigned int size_IOPRP_img;
 
 extern void *_gp;
 
