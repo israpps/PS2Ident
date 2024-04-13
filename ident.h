@@ -31,7 +31,7 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation);
 const char *GetiLinkSpeedDesc(unsigned char speed);
 const char *GetiLinkComplianceLvlDesc(unsigned char level);
 const char *GetiLinkVendorDesc(unsigned int vendor);
-const char *GetSPEEDDesc(unsigned short int revision);
+const char *GetSPEEDDesc(unsigned short int revision, const unsigned char MECHA_revision[4]);
 const char *GetSPEEDCapsDesc(unsigned short int caps);
 const char *GetPHYVendDesc(unsigned int oui);
 const char *GetPHYModelDesc(unsigned int oui, unsigned char model);

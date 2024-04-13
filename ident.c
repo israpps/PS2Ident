@@ -62,7 +62,7 @@ int readDevMemEEIOP(const void *MemoryStart, void *buffer, unsigned int NumBytes
 
         unsigned int i;
         const u8 *mpt = MemoryStart;
-        u8 *bpt = buffer;
+        u8 *bpt       = buffer;
         for (i = 0; i < NumBytes; i++, mpt++, bpt++)
         {
             *bpt = *mpt;
@@ -490,18 +490,98 @@ const char *GetiLinkVendorDesc(unsigned int vendor)
             break;
         default:
             description = "Unknown";
+            break;
     }
 
     return description;
 }
 
-const char *GetSPEEDDesc(unsigned short int revision)
+const char *GetPHYVendDesc(unsigned int oui)
 {
     const char *description;
 
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_SPEED, revision)) == NULL)
+    switch (oui)
     {
-        description = "Missing";
+        case 0x070100:
+            description = "ST Microelectronics";
+            break;
+        case 0x080017:
+            description = "National Semiconductor";
+            break;
+        case 0x0050ef:
+            description = "Broadcom Corporation";
+            break;
+        case 0x3fffff:
+            description = "Gamestar???";
+            break;
+        default:
+            description = "Unknown";
+            break;
+    }
+
+    return description;
+}
+
+const char *GetPHYModelDesc(unsigned int oui, unsigned char model)
+{
+    const char *description;
+
+    switch (model)
+    {
+        case 0x01:
+            description = "STE100S"; // ST Microelectronics
+            break;
+        case 0x02:
+            description = "DP83846A"; // National Semiconductor
+            break;
+        case 0x03:
+            if (oui == 0x080017)
+                description = "DP83847A"; // National Semiconductor
+            else if (oui == 0x0050ef)
+                description = "BCM5241"; // Broadcom Corporation
+            else
+                description = "Unknown";
+            break;
+        case 0x3f:
+            description = "Gamestar???";
+            break;
+        default:
+            description = "Unknown";
+            break;
+    }
+
+    return description;
+}
+
+const char *GetSPEEDDesc(unsigned short int revision, const unsigned char MECHA_revision[4])
+{
+    const char *description;
+
+    switch (revision)
+    {
+        case 0x0011:
+            description = "CXD9624GG";
+            break;
+        case 0x0012:
+            description = "CXD9624AGG";
+            break;
+        case 0x0013:
+            if (MECHA_revision[1] == 0x06)
+            {
+                if (MECHA_revision[2] < 0x06)
+                    description = "CXD9731AGP";
+                else
+                    description = "combined with IOP"; // CXD9731AGP on 70k, or part of iop on Deckard
+            }
+            else
+                description = "CXD9731GP";
+            break;
+        case 0x0014:
+            description = "CXD9764GP"; // desr unique SPEED chip
+            break;
+        default:
+            description = "Unknown";
+            break;
     }
 
     return description;
@@ -541,30 +621,6 @@ const char *GetSPEEDCapsDesc(unsigned short int caps)
         strcpy(capsbuffer, "None");
 
     return capsbuffer;
-}
-
-const char *GetPHYVendDesc(unsigned int oui)
-{
-    const char *description;
-
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_ETH_PHY_VEND, oui)) == NULL)
-    {
-        description = "Unknown";
-    }
-
-    return description;
-}
-
-const char *GetPHYModelDesc(unsigned int oui, unsigned char model)
-{
-    const char *description;
-
-    if ((description = PS2IDBMS_LookupComponentModel(PS2IDB_COMPONENT_ETH_PHY_MODEL, oui << 8 | model)) == NULL)
-    {
-        description = "Unknown";
-    }
-
-    return description;
 }
 
 const char *GetSSBUSIFDesc(unsigned char revision, unsigned char EE_revision)
@@ -1784,7 +1840,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
                         "    SPEED revision:      0x%04x (%s)\r\n"
                         "    SPEED capabilities:  %04x.%04x (%s)\r\n",
                 SystemInformation->SMAP_MAC_address[0], SystemInformation->SMAP_MAC_address[1], SystemInformation->SMAP_MAC_address[2],
-                SystemInformation->mainboard.ssbus.SPEED.rev1, GetSPEEDDesc(SystemInformation->mainboard.ssbus.SPEED.rev1), SystemInformation->mainboard.ssbus.SPEED.rev3, SystemInformation->mainboard.ssbus.SPEED.rev8, GetSPEEDCapsDesc(SystemInformation->mainboard.ssbus.SPEED.rev3));
+                SystemInformation->mainboard.ssbus.SPEED.rev1, GetSPEEDDesc(SystemInformation->mainboard.ssbus.SPEED.rev1, SystemInformation->mainboard.MECHACONVersion), SystemInformation->mainboard.ssbus.SPEED.rev3, SystemInformation->mainboard.ssbus.SPEED.rev8, GetSPEEDCapsDesc(SystemInformation->mainboard.ssbus.SPEED.rev3));
         fprintf(stream, "    PHY OUI:             0x%06x (%s)\r\n"
                         "    PHY model:           0x%02x (%s)\r\n"
                         "    PHY revision:        0x%02x\r\n",
@@ -1846,7 +1902,7 @@ int WriteExpDeviceInformation(FILE *stream, const struct SystemInformation *Syst
                     "    SPEED revision:      0x%04x (%s)\r\n"
                     "    SPEED capabilities:  %04x.%04x (%s)\r\n",
             SystemInformation->SMAP_MAC_address[0], SystemInformation->SMAP_MAC_address[1], SystemInformation->SMAP_MAC_address[2],
-            SystemInformation->mainboard.ssbus.SPEED.rev1, GetSPEEDDesc(SystemInformation->mainboard.ssbus.SPEED.rev1), SystemInformation->mainboard.ssbus.SPEED.rev3, SystemInformation->mainboard.ssbus.SPEED.rev8, GetSPEEDCapsDesc(SystemInformation->mainboard.ssbus.SPEED.rev3));
+            SystemInformation->mainboard.ssbus.SPEED.rev1, GetSPEEDDesc(SystemInformation->mainboard.ssbus.SPEED.rev1, SystemInformation->mainboard.MECHACONVersion), SystemInformation->mainboard.ssbus.SPEED.rev3, SystemInformation->mainboard.ssbus.SPEED.rev8, GetSPEEDCapsDesc(SystemInformation->mainboard.ssbus.SPEED.rev3));
     fprintf(stream, "    PHY OUI:             0x%06x (%s)\r\n"
                     "    PHY model:           0x%02x (%s)\r\n"
                     "    PHY revision:        0x%02x\r\n",

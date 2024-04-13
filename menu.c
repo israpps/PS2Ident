@@ -1713,7 +1713,7 @@ static void LoadDEV9Information(const struct SystemInformation *SystemInformatio
     {
         DEV9MenuDisplay(1);
         UISetValue(&DEV9ReportMenu, DEV9_ID_SPEED_REV, SystemInformation->mainboard.ssbus.SPEED.rev1);
-        UISetString(&DEV9ReportMenu, DEV9_ID_SPEED_NAME, GetSPEEDDesc(SystemInformation->mainboard.ssbus.SPEED.rev1));
+        UISetString(&DEV9ReportMenu, DEV9_ID_SPEED_NAME, GetSPEEDDesc(SystemInformation->mainboard.ssbus.SPEED.rev1, SystemInformation->mainboard.MECHACONVersion));
         UISetValue(&DEV9ReportMenu, DEV9_ID_SPEED_CAPS, SystemInformation->mainboard.ssbus.SPEED.rev3);
         UISetValue(&DEV9ReportMenu, DEV9_ID_SPEED_REV8, SystemInformation->mainboard.ssbus.SPEED.rev8);
         UISetString(&DEV9ReportMenu, DEV9_ID_SPEED_CAPS_DESC, GetSPEEDCapsDesc(SystemInformation->mainboard.ssbus.SPEED.rev3));
