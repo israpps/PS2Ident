@@ -85,14 +85,18 @@ struct SystemInitParams
 
 static void SystemInitThread(struct SystemInitParams *SystemInitParams)
 {
-    int fd, i;
+    int fd, i, id, ret;
     GetRomName(SystemInitParams->SystemInformation->mainboard.romver);
 
-    SifExecModuleBuffer(MCSERV_irx, size_MCSERV_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(PADMAN_irx, size_PADMAN_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(MCSERV_irx, size_MCSERV_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("MCSERV id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(PADMAN_irx, size_PADMAN_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("PADMAN id:%d ret:%d\n", id, ret);
 
-    SifExecModuleBuffer(POWEROFF_irx, size_POWEROFF_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(PS2DEV9_irx, size_PS2DEV9_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(POWEROFF_irx, size_POWEROFF_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("POWEROFF id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(PS2DEV9_irx, size_PS2DEV9_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("DEV9 id:%d ret:%d\n", id, ret);
 
     SifLoadModule("rom0:ADDDRV", 0, NULL);
     SifLoadModule("rom0:ADDROM2", 0, NULL);
@@ -107,7 +111,8 @@ static void SystemInitThread(struct SystemInitParams *SystemInitParams)
     LoadEROMDRV();
 
     /* Must be loaded last, after all devices have been initialized. */
-    SifExecModuleBuffer(SYSMAN_irx, size_SYSMAN_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(SYSMAN_irx, size_SYSMAN_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("SYSMAN id:%d ret:%d\n", id, ret);
 
     SysmanInit();
 
@@ -175,6 +180,7 @@ int main(int argc, char *argv[])
     ee_sema_t ThreadSema;
     int SystemInitSema;
     struct SystemInitParams InitThreadParams;
+    int id, ret;
 
     //	chdir("mass:/PS2Ident/");
     if (argc < 1 || GetBootDeviceID() == BOOT_DEVICE_UNKNOWN)
@@ -221,15 +227,20 @@ int main(int argc, char *argv[])
     sbv_patch_enable_lmb();
     sbv_patch_fileio();
 
-    SifExecModuleBuffer(SIO2MAN_irx, size_SIO2MAN_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(MCMAN_irx, size_MCMAN_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(SIO2MAN_irx, size_SIO2MAN_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("SIO2MAN id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(MCMAN_irx, size_MCMAN_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("MCMAN id:%d ret:%d\n", id, ret);
 
     SifSetCmdBuffer(&SifCmdbuffer, 1);
     SifAddCmdHandler(0, &usb_callback, NULL);
 
-    SifExecModuleBuffer(USBD_irx, size_USBD_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(USBHDFSD_irx, size_USBHDFSD_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(USBHDFSDFSV_irx, size_USBHDFSDFSV_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(USBD_irx, size_USBD_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("USBD id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(USBHDFSD_irx, size_USBHDFSD_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("USBHDFSD id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(USBHDFSDFSV_irx, size_USBHDFSDFSV_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("USBHDFSDFSV id:%d ret:%d\n", id, ret);
 
     sceCdInit(SCECdINoD);
     cdInitAdd();
