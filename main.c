@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
 
     DEBUG_PRINTF("Loading database.\n");
 
-    PS2IDBMS_LoadDatabase("PS2Ident.db");
+    // PS2IDBMS_LoadDatabase("PS2Ident.db");
 
     DEBUG_PRINTF("Initializing hardware...");
 
@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
 
     DeinitializeUI();
 
-    PS2IDBMS_UnloadDatabase();
+    // PS2IDBMS_UnloadDatabase();
 
     sceCdInit(SCECdEXIT);
     SysmanDeinit();

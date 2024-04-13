@@ -1971,15 +1971,16 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
     }
 
     // If the mainboard model is not recognized, write a new database record file to the disk.
-    if (PS2IDBMS_LookupMainboardModel(&SystemInformation->mainboard) == NULL)
-    {
-#ifndef DSNET_HOST_SUPPORT
-        sprintf(filename, "%s/%s_database.bin", path, SystemInformation->mainboard.ModelName);
-#else
-        sprintf(filename, "%s%s_database.bin", path, SystemInformation->mainboard.ModelName);
-#endif
-        WriteNewMainboardDBRecord(filename, &SystemInformation->mainboard);
-    }
+    // TODO: replace with csv generation always
+    //     if (PS2IDBMS_LookupMainboardModel(&SystemInformation->mainboard) == NULL)
+    //     {
+    // #ifndef DSNET_HOST_SUPPORT
+    //         sprintf(filename, "%s/%s_database.bin", path, SystemInformation->mainboard.ModelName);
+    // #else
+    //         sprintf(filename, "%s%s_database.bin", path, SystemInformation->mainboard.ModelName);
+    // #endif
+    //         WriteNewMainboardDBRecord(filename, &SystemInformation->mainboard);
+    //     }
 
 #ifndef DSNET_HOST_SUPPORT
     sprintf(filename, "%s/%s.NVM", path, SystemInformation->mainboard.ModelName);

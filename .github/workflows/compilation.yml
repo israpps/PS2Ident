@@ -27,11 +27,8 @@ jobs:
         name: PS2Ident-${{ matrix.debug }}-${{ github.sha }}
         path: |
           PS2Ident.elf
-          PS2Ident.db
           README.md
           changelog.txt
-          LICENSE_OFL.txt
-          *.ttf
 
   release:
     needs: [build]

@@ -1624,7 +1624,7 @@ const char *GetChassisDesc(const struct PS2IDBMainboardEntry *mainboard)
         else if (!strncmp(mainboard->romver, "023", 3))
             description = "R-chassis"; // late 90k differs only in bootrom from early 90k
         else if (!strncmp(mainboard->romver + 6, "20080220", 8))
-            description = "N,P-chassis"; // TODO: only way to determine 79k from 90k is EEPROM, all 90k in fanconfig area has checksum 0x0c, all 79k differs
+            description = "N,P-chassis (work in progress)"; // TODO: only way to determine 79k from 90k is EEPROM, all 90k in fanconfig area has checksum 0x0c, all 79k differs
         else
             description = "Unknown";
     }
@@ -1660,7 +1660,7 @@ const char *GetChassisDesc(const struct PS2IDBMainboardEntry *mainboard)
         else if (!strncmp(mainboard->romver, "015", 3))
             description = "D-chassis";
         else
-            description = "B,C-chassis"; // TODO: how to differ?
+            description = "B,C-chassis (work in progress)"; // TODO:  only way to determine C from D is EEPROM, seems all C chassis has add0x10 = 8809
     }
     else if (mainboard->MECHACONVersion[1] == 0x01)
         description = "A-chassis"; // late 90k differs only in bootrom
@@ -1673,14 +1673,8 @@ const char *GetChassisDesc(const struct PS2IDBMainboardEntry *mainboard)
 const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *mainboard)
 {
     const char *description;
-    const struct PS2IDBMainboardEntry *ModelData;
 
-    if ((ModelData = PS2IDBMS_LookupMainboardModel(mainboard)) != NULL)
-        description = ModelData->MainboardName;
-    else if (!strncmp(mainboard->romver, "0170", 4) || !strncmp(mainboard->romver, "0190", 4))
-        description = "Sticker"; // SCPH-5xxxx can be retrieved from sticker
-    else
-        description = "Work in progress";
+    description = "Work in progress";
 
     return description;
 }

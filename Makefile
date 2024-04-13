@@ -11,7 +11,7 @@ EE_PACKED_BIN = PS2Ident.elf
 EE_IOP_OBJS = SIO2MAN_irx.o MCMAN_irx.o MCSERV_irx.o PADMAN_irx.o POWEROFF_irx.o PS2DEV9_irx.o USBD_irx.o USBHDFSD_irx.o USBHDFSDFSV_irx.o SYSMAN_irx.o IOPRP_img.o
 
 EE_GRAPHICS_OBJS = buttons.o devices.o background_img.o font_Default.o
-EE_OBJS = main.o system.o UI.o menu.o ident.o dbms.o SYSMAN_rpc.o graphics.o font.o pad.o DeviceSupport.o crc.o libcdvd_add.o OSDInit.o modelname.o dvdplayer.o ps1.o $(EE_IOP_OBJS) $(EE_GRAPHICS_OBJS)
+EE_OBJS = main.o system.o UI.o menu.o ident.o SYSMAN_rpc.o graphics.o font.o pad.o DeviceSupport.o crc.o libcdvd_add.o OSDInit.o modelname.o dvdplayer.o ps1.o $(EE_IOP_OBJS) $(EE_GRAPHICS_OBJS)
 
 EE_INCS := -I$(PS2SDK)/ports/include -I$(PS2SDK)/ports/include/freetype2
 EE_LDFLAGS := -L$(PS2SDK)/ports/lib
