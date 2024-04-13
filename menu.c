@@ -7,6 +7,8 @@
 #include <timer.h>
 #include <limits.h>
 #include <wchar.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #include <libgs.h>
 
@@ -1252,7 +1254,7 @@ static int DumpSystemROMScreen(const struct SystemInformation *SystemInformation
         DEBUG_PRINTF("Cleaning up %s\n", DumpPath);
         rmdir(DumpPath);
         DEBUG_PRINTF("Creating %s\n", DumpPath);
-        if (((result = mkdir(DumpPath)) >= 0) || (result == -EEXIST))
+        if (((result = mkdir(DumpPath, 0755)) >= 0) || (result == -EEXIST))
         {
             DumpSystemROM(DumpPath, SystemInformation);
         }
