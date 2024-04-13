@@ -1,3 +1,5 @@
+#include <libgs.h>
+
 #define GS_SETREG_RGBAQ(r, g, b, a, q) \
     (GS_RGBAQ)                         \
     {                                  \

@@ -1,5 +1,4 @@
 #include <kernel.h>
-#include <sifrpc.h>
 #include <string.h>
 #include <libcdvd-common.h>
 

@@ -1,9 +1,11 @@
 # This is a fork of this project: https://sites.google.com/view/ysai187/home/projects/ps2ident
 
 ## PlayStation 2 Identification tool (PS2Ident)
+
 v0.850
 
 ### Introduction
+
 PS2Ident is an identification tool that allows dumps of a PlayStation 2 console's ROM chips and MECHACON NVRAM to be made.
 It will also gather data from the console, for research purposes.
 
@@ -11,33 +13,33 @@ It has the following features:
 
 * Dumps ROM chips (BOOT and DVD ROM) as a whole, not according to their contents (rom0, rom1, rom2 and erom)
 * Displays the actual addresses for DEV1 (rom1, rom2 and erom) that are set by the ROM filesystem drivers.
-* Coloured user interface that is easy to use.
+* Colored user interface that is easy to use.
 * Supports dumping to memory cards and USB mass storage devices.
 * Supports multi-languages, which include the 8 supported languages by the PS2
 * Gathers data of all known parts of the PS2.
 * Attempts to automatically match the chip/part name with the version number of the part.
 
-*Note: on some DTL-H****** *consoles it can fail to retreive MECHACON chip version.
-Note: some values are retreived incorrectly from PS3 BC consoles.
+*Note: on some DTL-H****** *consoles it can fail to retrieve MECHACON chip version.
+Note: some values are retrieved incorrectly from_ PS3 BC consoles.
 Note: it can fail on PS3 semi-BC, PS3 non-BC and PS4 in PS2 emulation mode.*
 
 Its database, which contains the parts and mainboard data, is managed and updated with the PlayStation 2 Ident DataBase Management System (PS2IDBMS) tool. It wasn't possible to get a complete list of all PlayStation 2 models in existence. With PS2IDBMS, a spreadsheet containing all recorded models can be generated automatically.
 
 ### How to use this software:
+
 Extract the whole archive (do not delete any files or folders) onto a location on a supported device.
 The only supported devices are the Memory Card and USB mass storage device.
 
-After dumping recheck if there is some "Missing" values in *_specs.txt
-If you see Missing value after some chip name you can make a photo of each chip that is marked as Missing.
-If you see Missing (sticker) you should provide photo of your sticker.
+After dumping recheck if there are some "Missing" values in *_specs.txt
+If you see Missing value after some chip name you can take a photo of each chip that is marked as Missing.
+If you see Missing (sticker) you should provide a photo of your sticker.
 
 When the console's mainboard cannot be identified, the mainboard model will be "Missing". Open your console, and take note of the mainboard model number.
-A database record file (*_database.bin) will be generated when a dump is made. No personal information is recorded in database file.
-When making a submission, please provide the database record file, sticker photo and any valuable information about console.
+A database record file (*_database.bin) will be generated when a dump is made. No personal information is recorded in a database file.
+When submitting, please provide the database record file, sticker photo and any valuable information about the console.
+When recording the model of the MECHACON chip, please take note that the model number should include its firmware version as well (e.g. CXP103049-401GG instead of just CXP1013049).
 
-When recording down the model of the MECHACON chip, please take note that the model number should include its firmware version as well (e.g. CXP103049-401GG instead of just CXP1013049).
-
-Please specify the chassis model, the true model number (i.e. SCPH-39006a) and the colour of the console (if not the standard black version).
+Please specify the chassis model, the true model number (i.e. SCPH-39006a) and the color of the console (if not the standard black version).
 
 If possible, please help to complete the chip ID list as well, for any part that is not identified ("Missing") or is incorrectly identified. When doing so, please provide the full model of the part, especially for the MECHACON chip (e.g. CXP103049-401GG).
 
@@ -46,6 +48,7 @@ At the lower right-hand corner of the product information sticker that is either
 In this example, the letter 'H' is the chassis model, while "FOXC" stands for FOXConn (the EMCS that made the console).
 
 Notes:
+
 * Sometimes, Sony makes hardware revisions without changing the chip implementation numbers as well, hence why chip identification may be inaccurate. The chip and version IDs are, however, accurate since they are taken directly from the hardware.
 * Slimline consoles that had the SSBUS I/F Controllers integrated into the IOP will report them as version 0x31.
 * Due to some SSBUS I/F controllers reporting the same version number (0x31), those will be all generalized and reported as "CXD9611". All of them are supposed to be fully compatible anyway.
@@ -68,32 +71,30 @@ Mainboards are uniquely identified by:
 	ADD0x010                        - An ID that is used by the SONY service tools to identify major revisions (which historically existed at word offset 0x10).
 	BOOT + DVD ROM Checksum
 
-If your console is not recognized, its mainboard model will appear as "Missing". While it is true that Sony consoles might be physically similar across releases from different territories, I've decided to treat each region's release as being different because I would also want to have a complete list of existing PlayStation 2 models. With such data it is possible to determine what models Sony has released in every terrirory, and at which series did they start at.
-
-
+If your console is not recognized, its mainboard model will appear as "Missing". While it is true that Sony consoles might be physically similar across releases from different territories, I've decided to treat each region's release as being different because I would also want to have a complete list of existing PlayStation 2 models. With such data, it is possible to determine what models Sony has released in every territory, and at which series they started.
 
 Glossary/terms:
 
-* EE - The Emotion Engine, which is a MIPS R5900. The "main CPU" of the PlayStation 2.
+* EE - The Emotion Engine, which is an MIPS R5900. The "main CPU" of the PlayStation 2.
 * FPU - The VU0, which also acts as the 2nd coprocessor to the EE.
-* IOP - The I/O processor, which is a MIPS R3000A. The "sub-CPU" of the PlayStation 2. Although insignificant in power, it's actually in control of every part of the PS2, and provides access to the peripherals from the EE.
+* IOP - The I/O processor, which is an MIPS R3000A. The "sub-CPU" of the PlayStation 2. Although insignificant in power, it's actually in control of every part of the PS2 and provides access to the peripherals from the EE.
 * GS - The Graphics Synthesizer (aka the "GPU" of the PS2).
 * SPU2 - The Sound Processor.
-* SSBUS I/F - The SS-BUS InterFace (I/F) Controller, provides an interface to the SS-BUS from the DEV9 expansion device. Also known as a "SSBUS buffer" on consoles sporting an expansion-bay. Connected to the PS2 as DEV9.
+* SSBUS I/F - The SS-BUS InterFace (I/F) Controller, provides an interface to the SS-BUS from the DEV9 expansion device. Also known as an "SSBUS buffer" on consoles sporting an expansion bay. Connected to the PS2 as DEV9.
 * MECHACON - The drive MECHAnics CONtroller. Connected to the PS2 as DEV5.
 * DVP - I'm not sure about this one, but it's a very powerful and smart processor that is connected directly to the MECHACON.
-* Boot ROM - The ROM chip containing the default IOP modules, the OSDSYS program, PlayStation driver and the self-test facility (On the SCPH-18000 and up). Connected to the PS2 as DEV2.
+* Boot ROM - The ROM chip containing the default IOP modules, the OSDSYS program, the PlayStation driver and the self-test facility (On the SCPH-18000 and up). Connected to the PS2 as DEV2.
 * DVD ROM - The ROM chip containing the DVD player, and the Chinese font on Chinese PlayStation 2 consoles. Newer consoles may have a single chip instead of a separate boot and DVD ROM chips. The SCPH-10000 and SCPH-15000, and all TEST, TOOL and PSX (DVR unit) units do not have a DVD ROM chip installed. Connected to the PS2 as DEV1.
 NVRAM/EEPROM - The Non-Volatile Memory storage that the MECHACON/DVP has, for storing settings (system, RTC and CD/DVD drive).
 * SPEED - The expansion device that gets connected to the DEV9 expansion interface. May provide Ethernet support, a UART (for a dial-up modem), a DVRP, flash storage (For storing boot files), and an ATA interface.
 * SMAP - The PlayStation 2 Ethernet interface. Connected to the SPEED device.
-Ethernet PHY - The PHYceiver device that is connected to the SMAP interface. The earliest models included a National Semiconductor DP83846A that has auto-negotiation issues with Gigabit Ethernet. Later models had a ST Microelectronics, while late slim PS2s come with a Broadcom.
-* DVRP - Only found on PSX (DVR unit) consoles, the DVR Processor is a Fujitsu MB91302A that is connected to the SPEED device. It seems to be emulating the PS2's standard ATA interface and provides the DVR functionality. Contains its own firmware.
-* i.Link and USB interfaces - The Firewire/IEEE1394/i.Link interface and USB interfaces. Their controllers are built into the IOP. Consoles that don't have an i.Link port still have the i.Link controller, but just have no physical connections to the outside world.
-* AIF - On a DTL-T10000(H), the CXD9566R is connected through the AIF. The AIF also provides a RTC and IDE controller.
+Ethernet PHY - The PHYceiver device that is connected to the SMAP interface. The earliest models included a National Semiconductor DP83846A that has auto-negotiation issues with Gigabit Ethernet. Later models had an ST Microelectronics, while late slim PS2s come with a Broadcom.
+* DVRP - Only found on PSX (DVR unit) consoles, the DVR Processor is a Fujitsu MB91302A that is connected to the SPEED device. It seems to be emulating the PS2's standard ATA interface and provides the DVR functionality. Contains its firmware.
+* i.Link and USB interfaces - The Firewire/IEEE1394/i.Link interface and USB interfaces. Their controllers are built into the IOP. Consoles that don't have an i.Link port still has the i.Link controller, but just have no physical connections to the outside world.
+* AIF - On a DTL-T10000(H), the CXD9566R is connected through the AIF. The AIF also provides an RTC and IDE controller.
 MPU - See MRP.
-* MRP (BoardInf) - The MRP is the interface between the PS2 and PC sides of a DTL-T10000(H). All DTL-T10000(H) units have a MPU 4.0 board as the MRP.
-* EMCS ID - Contains the part of the IEEE1394 EUI-64 address that uniquely identifies the console, the model ID and EMCS ID.
+* MRP (BoardInf) - The MRP is the interface between the PS2 and PC sides of a DTL-T10000(H). All DTL-T10000(H) units have an MPU 4.0 board as the MRP.
+* EMCS ID - Contains the part of the IEEE1394 EUI-64 address that uniquely identifies the console, the model ID and the EMCS ID.
 * i.Link ID - Uniquely identifies the Engineering, Manufacturing and Customer Services (EMCS) system that made the console.
 * Model ID - Uniquely identifies the console's model. Even more accurately than the model name.
 * Console ID - Contains the EMCS ID, (another version of) model ID and serial number.
@@ -103,7 +104,7 @@ MPU - See MRP.
 * DVD Player Version The version number of the built-in DVD player, if applicable. Note: Slimline consoles that had the SSBUS I/F Controller integrated into the IOP will report their SSBUS I/F controllers as version 0x31 as well. Due to some controllers reporting the same version number (0x31), they will be all identified as a "CXD9611" since they are supposed to be fully compatible anyway.
 
 
-Known mechacon versions:
+Known MECHACON versions:
 
 	0x0102 | CXP101064-605R
 	0x0103 | CXP101064-602R
@@ -142,15 +143,13 @@ Known mechacon versions:
 	0x0608 | CXR716080-105GG (Not confirmed)
 	0x060a | CXR716080-106GG
 	0x060c | CXR726080-301GB
-Mechacon chips released and 2 big families: pre-dragon (mecha ver <= 3) and dragon models (mecha ver >= 5).
-Pre-dragon family chip can be recognized more detailed by looking into Mechacon region.
-Region is coded into chip first symbol after dash.
-For example, if mechacon version is 0x0306 and region is 0x03 then it will be chip CXP103049-303GG,
-if region is Japan (0x00) then chip will be CXP103049-002GG, if Russia - CXP103049-501GG, etc.
-For Dragon family, sometimes chips can be recognized only by M Renewal Date, this parametr is more accurate then chip version.
-DTL dragon models report itself as odd numbered chip, but chip itself is the same.
+Mechacon chips fall into two primary families: pre-dragon (mecha ver <= 3) and dragon models (mecha ver >= 5).
 
-Known chassis versions (this list maybe is not complete):
+In the pre-dragon family, chip details can be discerned by examining the Mechacon region, which is denoted by the first symbol after the dash in the chip name. For instance, a chip with the Mechacon version 0x0306 and region 0x03 would be labeled as CXP103049-303GG. Similarly, for different regions like Japan (0x00) or Russia, the chip names would be CXP103049-002GG and CXP103049-501GG, respectively.
+
+In the case of dragon family chips, identification sometimes relies solely on the M Renewal Date parameter, which is more accurate than the chip version number. DTL dragon models present themselves as odd-numbered chips, although the chips themselves remain identical.
+
+Known chassis versions:
 
 	A-chassis	GH-001	SCPH-10000
 	A-chassis	GH-003	SCPH-15000
@@ -212,18 +211,17 @@ List of known SSBUS I/F Controllers and their revisions:
 	CXD9686BR	3.1
 	CXD2955R	3.2
 
-There's currently no known way to differentiate between a CXD9686 and CXD9611 on the software level,
-with the exception of the CXD9611R.
+There's currently no known way to differentiate between a CXD9686 and a CXD9611 on the software level, except the CXD9611R.
 
 ### Credits:
 	This software may have been worked on mainly by me, but I had the support of other users:
-			l_Oliveira, for providing a number of test reports and giving suggestions for its design during development.
+			l_Oliveira, for providing several test reports and giving suggestions for its design during development.
 		Berion, for the icons.
 		florin and the original developers of the PS2 dumper v2 tool, since I disassembled that dumper for ideas.
 		Vigilante, for corrections on the CRC values for some ROMs.
 		...and various sources for their dumps from the rare and obscure PS2 models!
 
-Old data contributers (removed):
+Old data contributors (removed):
 
 	01	SCPH-70004	GH-032-11		Anonymous (K)	Old dump format
 	02	SCPH-70004	GH-035-11		Anonymous (K)	Old dump format

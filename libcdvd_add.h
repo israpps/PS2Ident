@@ -1,3 +1,5 @@
+#include <sifrpc.h>
+
 int cdInitAdd(void);
 int sceCdAltReadRegionParams(u8 *data, u32 *stat);
 int sceCdAltMV(u8 *buffer, u32 *stat);

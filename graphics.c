@@ -2,7 +2,6 @@
 #include <string.h>
 #include <malloc.h>
 
-#include <libgs.h>
 #include <png.h>
 
 #include "main.h"

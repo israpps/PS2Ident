@@ -1930,7 +1930,12 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
     struct DumpingStatus DumpingStatus[DUMP_REGION_COUNT];
     unsigned char done;
 
-    memset(DumpingStatus, 0, sizeof(DumpingStatus));
+    // Loop through each element of the array and initialize to zero values
+    for (int i = 0; i < DUMP_REGION_COUNT; i++)
+    {
+        DumpingStatus[i].progress = 0.0f; // Initialize progress to 0.0
+        DumpingStatus[i].status   = 0;    // Initialize status to "In progress"
+    }
 
     // Calculate the lengths of various parts of the filenames used below.
     PathLength   = strlen(path);
