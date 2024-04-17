@@ -54,162 +54,169 @@ Notes:
 * Due to some SSBUS I/F controllers reporting the same version number (0x31), those will be all generalized and reported as "CXD9611". All of them are supposed to be fully compatible anyway.
 
 Mainboards are uniquely identified by:
-
-	ROMVER string                   - ROM version string
-	Model name                      - The "name" of the console's model.
-	EE revision
-	FPU revision                    - Revision of the EE chip's FPU.
-	IOP revision
-	GS revision
-	MECHACON revision and region    - Revision and MagicGate region of the MECHACON
-	SPU2 revision                   - Revision of the sound processor.
-	SSBUS I/F Controller revision
-	Model ID                        - Uniquely identifies the console's model. Even more accurately than the model name.
-	Console model ID                - Another (2-byte) version of the model ID. Obtained from the i.Link ID data.
-	EMCS ID                         - Uniquely identifies the Engineering, Manufacturing and Customer Services (EMCS) system that made the console.
-	M Renewal Date                  - What this represents is unclear. It's something related to the MECHACON (date of firmware build or EEPROM settings update?)
-	ADD0x010                        - An ID that is used by the SONY service tools to identify major revisions (which historically existed at word offset 0x10).
-	BOOT + DVD ROM Checksum
+|  .  |  .  |
+| --- | --- |
+| ROMVER string | ROM version string |
+| Model name | The "name" of the console's model |
+| EE revision | - |
+| FPU revision | Revision of the EE chip's FPU |
+| IOP revision | - |
+| GS revision | - |
+| MECHACON revision and region | Revision and MagicGate region of the MECHACON |
+| SPU2 revision | Revision of the sound processor |
+| SSBUS I/F Controller revision | - |
+| Model ID | Uniquely identifies the console's model. Even more accurately than the model name. |
+| Console model ID | Another (2-byte) version of the model ID. Obtained from the i.Link ID data. |
+| EMCS ID | Uniquely identifies the Engineering, Manufacturing and Customer Services (EMCS) system that made the console. |
+| M Renewal Date | What this represents is unclear. It's something related to the MECHACON (date of firmware or build or EEPROM settings update?) |
+| ADD0x010 | An ID that is used by the SONY service tools to identify major revisions (which historically existed at word offset 0x10). |
+| BOOT + DVD ROM Checksum | - |
 
 If your console is not recognized, its mainboard model will appear as "Missing". While it is true that Sony consoles might be physically similar across releases from different territories, I've decided to treat each region's release as being different because I would also want to have a complete list of existing PlayStation 2 models. With such data, it is possible to determine what models Sony has released in every territory, and at which series they started.
 
 Glossary/terms:
 
-* EE - The Emotion Engine, which is an MIPS R5900. The "main CPU" of the PlayStation 2.
-* FPU - The VU0, which also acts as the 2nd coprocessor to the EE.
-* IOP - The I/O processor, which is an MIPS R3000A. The "sub-CPU" of the PlayStation 2. Although insignificant in power, it's actually in control of every part of the PS2 and provides access to the peripherals from the EE.
-* GS - The Graphics Synthesizer (aka the "GPU" of the PS2).
-* SPU2 - The Sound Processor.
-* SSBUS I/F - The SS-BUS InterFace (I/F) Controller, provides an interface to the SS-BUS from the DEV9 expansion device. Also known as an "SSBUS buffer" on consoles sporting an expansion bay. Connected to the PS2 as DEV9.
-* MECHACON - The drive MECHAnics CONtroller. Connected to the PS2 as DEV5.
-* DVP - I'm not sure about this one, but it's a very powerful and smart processor that is connected directly to the MECHACON.
-* Boot ROM - The ROM chip containing the default IOP modules, the OSDSYS program, the PlayStation driver and the self-test facility (On the SCPH-18000 and up). Connected to the PS2 as DEV2.
-* DVD ROM - The ROM chip containing the DVD player, and the Chinese font on Chinese PlayStation 2 consoles. Newer consoles may have a single chip instead of a separate boot and DVD ROM chips. The SCPH-10000 and SCPH-15000, and all TEST, TOOL and PSX (DVR unit) units do not have a DVD ROM chip installed. Connected to the PS2 as DEV1.
-NVRAM/EEPROM - The Non-Volatile Memory storage that the MECHACON/DVP has, for storing settings (system, RTC and CD/DVD drive).
-* SPEED - The expansion device that gets connected to the DEV9 expansion interface. May provide Ethernet support, a UART (for a dial-up modem), a DVRP, flash storage (For storing boot files), and an ATA interface.
-* SMAP - The PlayStation 2 Ethernet interface. Connected to the SPEED device.
+- **EE**: The Emotion Engine, which is an MIPS R5900. The "main CPU" of the PlayStation 2.
+- **FPU**: The VU0, which also acts as the 2nd coprocessor to the EE.
+- **IOP**: The I/O processor, which is an MIPS R3000A. The "sub-CPU" of the PlayStation 2. Although insignificant in power, it's actually in control of every part of the PS2 and provides access to the peripherals from the EE.
+- **GS**: The Graphics Synthesizer (aka the "GPU" of the PS2).
+- **SPU2**: The Sound Processor.
+- **SSBUS I/F**: The SS-BUS InterFace (I/F) Controller, provides an interface to the SS-BUS from the DEV9 expansion device. Also known as an "SSBUS buffer" on consoles sporting an expansion bay. Connected to the PS2 as DEV9.
+- **MECHACON**: The drive MECHAnics CONtroller. Connected to the PS2 as DEV5.
+- **DVP**: I'm not sure about this one, but it's a very powerful and smart processor that is connected directly to the MECHACON.
+- **Boot ROM**: The ROM chip containing the default IOP modules, the OSDSYS program, the PlayStation driver and the self-test facility (On the SCPH-18000 and up). Connected to the PS2 as DEV2.
+- **DVD ROM**: The ROM chip containing the DVD player, and the Chinese font on Chinese PlayStation 2 consoles. Newer consoles may have a single chip instead of a separate boot and DVD ROM chips. The SCPH-10000 and SCPH-15000, system 2x6, and all TEST, TOOL and PSX (DVR unit) units do not have a DVD ROM chip installed. Connected to the PS2 as DEV1.
+- **NVRAM/EEPROM**: The Non-Volatile Memory storage that the MECHACON/DVP has, for storing settings (system, RTC and CD/DVD drive).
+- **SPEED**: The expansion device that gets connected to the DEV9 expansion interface. May provide Ethernet support, a UART (for a dial-up modem), a DVRP, flash storage (For storing boot files), and an ATA interface.
+- **SMAP**: The PlayStation 2 Ethernet interface. Connected to the SPEED device.
 Ethernet PHY - The PHYceiver device that is connected to the SMAP interface. The earliest models included a National Semiconductor DP83846A that has auto-negotiation issues with Gigabit Ethernet. Later models had an ST Microelectronics, while late slim PS2s come with a Broadcom.
-* DVRP - Only found on PSX (DVR unit) consoles, the DVR Processor is a Fujitsu MB91302A that is connected to the SPEED device. It seems to be emulating the PS2's standard ATA interface and provides the DVR functionality. Contains its firmware.
-* i.Link and USB interfaces - The Firewire/IEEE1394/i.Link interface and USB interfaces. Their controllers are built into the IOP. Consoles that don't have an i.Link port still has the i.Link controller, but just have no physical connections to the outside world.
-* AIF - On a DTL-T10000(H), the CXD9566R is connected through the AIF. The AIF also provides an RTC and IDE controller.
-MPU - See MRP.
-* MRP (BoardInf) - The MRP is the interface between the PS2 and PC sides of a DTL-T10000(H). All DTL-T10000(H) units have an MPU 4.0 board as the MRP.
-* EMCS ID - Contains the part of the IEEE1394 EUI-64 address that uniquely identifies the console, the model ID and the EMCS ID.
-* i.Link ID - Uniquely identifies the Engineering, Manufacturing and Customer Services (EMCS) system that made the console.
-* Model ID - Uniquely identifies the console's model. Even more accurately than the model name.
-* Console ID - Contains the EMCS ID, (another version of) model ID and serial number.
-* M Renewal Date - What this represents is unclear. It's something related to the MECHACON (date of firmware build or EEPROM settings update?)
-* ADD0x010 - An ID that is used by the SONY service tools to identify major revisions. Originally at word 0x010 of the EEPROM, it was moved to word 0x01 for the Dragon models. It does not always correspond with the chassis models (i.e. C and D-chassis have the same ID). It can also identify the loadout of the console, like its CEX/DEX status and the OP block installed (i.e. SANYO or SONY).
-* PS1DRV Version - The version number of the PlayStation driver. The earliest ROMs do not have PS1VER in ROM.  For Japan, only the SCPH-10000 and SCPH-15000 lack this file. "1.01" is hardcoded. For other territories (should be only the earliest SCPH-30001), "1.10" is hardcoded. The SCPH-75000 and later have a universal PS1DRV module, while earlier versions were tailored for the region of PS2 (Japan, USA, Europe, Asia or China).
-* DVD Player Version The version number of the built-in DVD player, if applicable. Note: Slimline consoles that had the SSBUS I/F Controller integrated into the IOP will report their SSBUS I/F controllers as version 0x31 as well. Due to some controllers reporting the same version number (0x31), they will be all identified as a "CXD9611" since they are supposed to be fully compatible anyway.
+- **DVRP**: Only found on PSX (DVR unit) consoles, the DVR Processor is a Fujitsu MB91302A that is connected to the SPEED device. It seems to be emulating the PS2's standard ATA interface and provides the DVR functionality. Contains its firmware.
+- **i.Link and USB interfaces**: The Firewire/IEEE1394/i.Link interface and USB interfaces. Their controllers are built into the IOP. Consoles that don't have an i.Link port still has the i.Link controller, but just have no physical connections to the outside world.
+- **AIF**: On a DTL-T10000(H), the CXD9566R is connected through the AIF. The AIF also provides an RTC and IDE controller.
+- **MPU**: See MRP.
+- **MRP (BoardInf)**: The MRP is the interface between the PS2 and PC sides of a DTL-T10000(H). All DTL-T10000(H) units have an MPU 4.0 board as the MRP.
+- **EMCS ID**: Contains the part of the IEEE1394 EUI-64 address that uniquely identifies the console, the model ID and the EMCS ID.
+- **i.Link ID**: Uniquely identifies the Engineering, Manufacturing and Customer Services (EMCS) system that made the console.
+- **Model ID**: Uniquely identifies the console's model. Even more accurately than the model name.
+- **Console ID**: Contains the EMCS ID, (another version of) model ID and serial number.
+- **M Renewal Date**: What this represents is unclear. It's something related to the MECHACON (date of firmware build or EEPROM settings update?)
+- **ADD0x010**: An ID that is used by the SONY service tools to identify major revisions. Originally at word 0x010 of the EEPROM, it was moved to word 0x01 for the Dragon models. It does not always correspond with the chassis models (i.e. C and D-chassis have the same ID). It can also identify the loadout of the console, like its CEX/DEX status and the OP block installed (i.e. SANYO or SONY).
+- **PS1DRV Version**: The version number of the PlayStation driver. The earliest ROMs do not have PS1VER in ROM.  For Japan, only the SCPH-10000 and SCPH-15000 lack this file. "1.01" is hardcoded. For other territories (should be only the earliest SCPH-30001), "1.10" is hardcoded. The SCPH-75000 and later have a universal PS1DRV module, while earlier versions were tailored for the region of PS2 (Japan, USA, Europe, Asia or China).
+- **DVD Player Version**: The version number of the built-in DVD player, if applicable. Note: Slimline consoles that had the SSBUS I/F Controller integrated into the IOP will report their SSBUS I/F controllers as version 0x31 as well. Due to some controllers reporting the same version number (0x31), they will be all identified as a "CXD9611" since they are supposed to be fully compatible anyway.
 
 
 Known MECHACON versions:
+| version | Mechacon |
+| ------- | -------- |
+| `0x0102` | CXP101064-605R |
+| `0x0103` | CXP101064-602R |
+| `0x0106` | CXP102064-001R (Not confirmed) |
+| `0x0107` | CXP102064-003R |
+| `0x0108` | CXP102064-002R |
+| `0x0109` | CXP102064-751R |
+| `0x0200` | CXP102064-004R (Not confirmed) |
+| `0x0202` | CXP102064-005R |
+| `0x0204` | CXP102064-(1,2,3)01R |
+| `0x0205` | CXP102064-702R |
+| `0x0206` | CXP102064-(1,2,3)02R |
+| `0x0207` | CXP102064-703R |
+| `0x0208` | CXP102064-006R (Not confirmed) |
+| `0x0209` | CXP102064-704R (Not confirmed) |
+| `0x020c` | CXP102064-007R/-(1,2,3)03R |
+| `0x020d` | CXP102064-705R/-752R |
+| `0x020e` | CXP102064-008R/-(1,2,3)04R |
+| `0x0300` | CXP103049-(1,2,3)01GG |
+| `0x0302` | CXP103049-001GG/-(1,2,3)02GG |
+| `0x0304` | CXP103049-401GG |
+| `0x0306` | CXP103049-002GG/-(1,2,3)03GG/-402GG/-501GG |
+| `0x0308` | CXP103049-003GG/-403GG |
+| `0x0500` | CXR706080-101GG |
+| `0x0502` | CXR706080-102GG |
+| `0x0504` | CXR706080-103GG |
+| `0x0506` | CXR706080-104GG/-106GG(MEX) |
+| `0x0508` | CXR706080-701GG (Not confirmed) |
+| `0x050a` | CXR706080-702GG |
+| `0x050c` | CXR706080-105GG/CXR706F080-1GG |
+| `0x050e` | CXR706080-703GG |
+| `0x0600` | CXR716080-101GG |
+| `0x0602` | CXR716080-102GG |
+| `0x0604` | CXR716080-103GG |
+| `0x0606` | CXR716080-104GG |
+| `0x0608` | CXR716080-105GG (Not confirmed) |
+| `0x060a` | CXR716080-106GG |
+| `0x060c` | CXR726080-301GB |
 
-	0x0102 | CXP101064-605R
-	0x0103 | CXP101064-602R
-	0x0106 | CXP102064-001R (Not confirmed)
-	0x0107 | CXP102064-003R
-	0x0108 | CXP102064-002R
-	0x0109 | CXP102064-751R
-	0x0200 | CXP102064-004R (Not confirmed)
-	0x0202 | CXP102064-005R
-	0x0204 | CXP102064-(1,2,3)01R
-	0x0205 | CXP102064-702R
-	0x0206 | CXP102064-(1,2,3)02R
-	0x0207 | CXP102064-703R
-	0x0208 | CXP102064-006R (Not confirmed)
-	0x0209 | CXP102064-704R (Not confirmed)
-	0x020c | CXP102064-007R/-(1,2,3)03R
-	0x020d | CXP102064-705R/-752R
-	0x020e | CXP102064-008R/-(1,2,3)04R
-	0x0300 | CXP103049-(1,2,3)01GG
-	0x0302 | CXP103049-001GG/-(1,2,3)02GG
-	0x0304 | CXP103049-401GG
-	0x0306 | CXP103049-002GG/-(1,2,3)03GG/-402GG/-501GG
-	0x0308 | CXP103049-003GG/-403GG
-	0x0500 | CXR706080-101GG
-	0x0502 | CXR706080-102GG
-	0x0504 | CXR706080-103GG
-	0x0506 | CXR706080-104GG/-106GG(MEX)
-	0x0508 | CXR706080-701GG (Not confirmed)
-	0x050a | CXR706080-702GG
-	0x050c | CXR706080-105GG/CXR706F080-1GG
-	0x050e | CXR706080-703GG
-	0x0600 | CXR716080-101GG
-	0x0602 | CXR716080-102GG
-	0x0604 | CXR716080-103GG
-	0x0606 | CXR716080-104GG
-	0x0608 | CXR716080-105GG (Not confirmed)
-	0x060a | CXR716080-106GG
-	0x060c | CXR726080-301GB
 Mechacon chips fall into two primary families: pre-dragon (mecha ver <= 3) and dragon models (mecha ver >= 5).
 
-In the pre-dragon family, chip details can be discerned by examining the Mechacon region, which is denoted by the first symbol after the dash in the chip name. For instance, a chip with the Mechacon version 0x0306 and region 0x03 would be labeled as CXP103049-303GG. Similarly, for different regions like Japan (0x00) or Russia, the chip names would be CXP103049-002GG and CXP103049-501GG, respectively.
+In the pre-dragon family, chip details can be discerned by examining the Mechacon region, which is denoted by the first symbol after the dash in the chip name. For instance, a chip with the Mechacon version `0x0306` and region `0x03` would be labeled as CXP103049-303GG. Similarly, for different regions like Japan (`0x00`) or Russia, the chip names would be CXP103049-002GG and CXP103049-501GG, respectively.
 
 In the case of dragon family chips, identification sometimes relies solely on the M Renewal Date parameter, which is more accurate than the chip version number. DTL dragon models present themselves as odd-numbered chips, although the chips themselves remain identical.
 
 Known chassis versions:
-
-	A-chassis	GH-001	SCPH-10000
-	A-chassis	GH-003	SCPH-15000
-	A-chassis+	GH-003	SCPH-18000
-	AB-chassis	GH-008	SCPH-18000
-	B-chassis	GH-004	SCPH-30001
-	B'-chassis	GH-005	SCPH-30001
-	C-chassis	GH-006	SCPH-30001-4
-	C'-chassis	GH-007	SCPH-30002-4
-	D-chassis	GH-010	SCPH-30001D-SCPH-30002D
-	D'-chassis	GH-012	SCPH-30003D'-SCPH-30004D'
-	D-chassis	GH-014	SCPH-30000-30004, SCPH-35000-35004, SCPH-30001R - SCPH-30004R
-	D-chassis	GH-016	SCPH-30000-30004, SCPH-35000-35004, SCPH-30001R - SCPH-30004R
-	F-chassis	GH-015	SCPH-30000, SCPH-30001R - SCPH-30007R. New CXP103049 MECHACON
-	G-chassis	GH-017	SCPH-39000-8,SCPH-37000L,SCPH-37000B
-	G-chassis	GH-019	SCPH-39000-8,SCPH-37000L,SCPH-37000B
-	G-chassis	GH-022	SCPH-39000-8,SCPH-37000L,SCPH-37000B
-	H-chassis	GH-023	SCPH-50000-11
-	I-chassis	GH-026	SCPH-50000-11
-	J-Chassis	GH-029	SCPH-50000-11
-	K-chassis	GH-032	SCPH-70000-12
-	K-chassis	GH-035	SCPH-70000-12
-	L-chassis	GH-037	SCPH-75000-12
-	L-chassis	GH-040	SCPH-75000-12
-	L-chassis	GH-041	SCPH-75000-12
-	M-chassis	GH-051	SCPH-77000-12
-	M-chassis	GH-052	SCPH-77000-12
-	N-chassis	GH-061	SCPH-79000-12
-	N-chassis	GH-062	SCPH-79000-12
-	P-chassis	GH-070	SCPH-90000-12
-	P-chassis	GH-071	SCPH-90000-12
-	R-chassis	GH-072	SCPH-90000-12 (ROM v2.30)
-	X-chassis	XPD-001	DESR-5000,DESR-5100,DESR-7000,DESR-7100
-	X-chassis	XPD-005	DESR-5500,DESR-5700,DESR-7500,DESR-7700
+| Chassis | Board | Model number |
+| ------- | ----- | ------------ |
+| A-chassis | GH-001 | SCPH-10000 |
+| A-chassis | GH-003 | SCPH-15000 |
+| A-chassis+ | GH-003 | SCPH-18000 |
+| AB- | GH-008 | SCPH-18000 |
+| B-chassis | GH-004 | SCPH-30001 |
+| B'-chassis | GH-005 | SCPH-30001 |
+| C-chassis | GH-006 | SCPH-30001-4 |
+| C'-chassis | GH-007 | SCPH-30002-4 |
+| D-chassis	| GH-010 | SCPH-30001D-SCPH-30002D |
+| D'-chassis | GH-012 | SCPH-30003D'-SCPH-30004D' |
+| D-chassis | GH-014 | SCPH-30000-30004, SCPH-35000-35004, SCPH-30001R - SCPH-30004R |
+| D-chassis | GH-016 | SCPH-30000-30004, SCPH-35000-35004, SCPH-30001R - SCPH-30004R |
+| F-chassis | GH-015 | SCPH-30000, SCPH-30001R - SCPH-30007R. New CXP103049 MECHACON |
+| G-chassis | GH-017 | SCPH-39000-8,SCPH-37000L,SCPH-37000B |
+| G-chassis | GH-019 | SCPH-39000-8,SCPH-37000L,SCPH-37000B |
+| G-chassis | GH-022 | SCPH-39000-8,SCPH-37000L,SCPH-37000B |
+| H-chassis | GH-023 | SCPH-50000-11 |
+| I-chassis | GH-026 | SCPH-50000-11 |
+| J-Chassis | GH-029 | SCPH-50000-11 |
+| K-chassis | GH-032 | SCPH-70000-12 |
+| K-chassis | GH-035 | SCPH-70000-12 |
+| L-chassis | GH-037 | SCPH-75000-12 |
+| L-chassis | GH-040 | SCPH-75000-12 |
+| L-chassis | GH-041 | SCPH-75000-12 |
+| M-chassis | GH-051 | SCPH-77000-12 |
+| M-chassis | GH-052 | SCPH-77000-12 |
+| N-chassis | GH-061 | SCPH-79000-12 |
+| N-chassis | GH-062 | SCPH-79000-12 |
+| P-chassis | GH-070 | SCPH-90000-12 |
+| P-chassis | GH-071 | SCPH-90000-12 |
+| R-chassis | GH-072 | SCPH-90000-12 (ROM v2.30)
+| X-chassis | XPD-001 | DESR-5000,DESR-5100,DESR-7000,DESR-7100 |
+| X-chassis | XPD-005 | DESR-5500,DESR-5700,DESR-7500,DESR-7700 |
 
 Known EMCS IDs:
-
-	00	- SONY EMCS (S EMCS)
-	01	- SCPH-3900x/37000 "MADE IN CHINA" models - Assumed to all be Foxconn (FOXC)
-	02	- SCPH-3900x/37000 SuZhou MainTek (SZMT)
-	03	- SCPH-3900x/37000 SKZ SONY KISARAZU
-	10	- S EMCS
-	11	- SKD (SONY KOHDA)
-	18	- S EMCS (PSX)
-	20	- FOXC
-	21	- FOXC
-	30	- SuZhou MainTek (SZMT)
-	40	- SONY Wuxi
+| ID | Factory |
+| -- | ------- |
+| `00` | SONY EMCS (S EMCS) |
+| `01` | SCPH-3900x/37000 "MADE IN CHINA" models - Assumed to all be Foxconn (FOXC) |
+| `02` | SCPH-3900x/37000 SuZhou MainTek (SZMT) |
+| `03` | SCPH-3900x/37000 SKZ SONY KISARAZU |
+| `10` | S EMCS |
+| `11` | SKD (SONY KOHDA) |
+| `18` | S EMCS (PSX) |
+| `20` | FOXC |
+| `21` | FOXC |
+| `30` | SuZhou MainTek (SZMT) |
+| `40` | SONY Wuxi |
 
 List of known SSBUS I/F Controllers and their revisions:
 
-	CXD9546R	1.2		DTL-T10000, unrefurbished.
-	CXD9566R	2.0
-	CXD9611R	3.0
-	CXD9611AR	3.1
-	CXD9611BR	3.1
-	CXD9686R	Unknown
-	CXD9686AR	3.1
-	CXD9686BR	3.1
-	CXD2955R	3.2
+| Controller | ver | Note | 
+| ---------- | --- | ---- |
+| CXD9546R	 | 1.2 | DTL-T10000, unrefurbished. |
+| CXD9566R	 | 2.0 |      |
+| CXD9611R	 | 3.0 |      |
+| CXD9611AR	 | 3.1 |      |
+| CXD9611BR	 | 3.1 |      |
+| CXD9686R	 | Unknown |  |
+| CXD9686AR	 | 3.1 |      |
+| CXD9686BR	 | 3.1 |      |
+| CXD2955R	 | 3.2 |      |
 
 There's currently no known way to differentiate between a CXD9686 and a CXD9611 on the software level, except the CXD9611R.
 
