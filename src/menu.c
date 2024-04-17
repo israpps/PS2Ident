@@ -1042,7 +1042,6 @@ static int GetUserSaveDeviceSelection(char *SelectedDevice, const struct Require
         SYS_UI_LBL_DEV_MC,
 #endif
         SYS_UI_LBL_DEV_MC,
-        SYS_UI_LBL_DEV_MC,
     };
     static const unsigned int IconFileSelMenuDevUnitStringIDs[NUM_SUPPORTED_DEVICES] = {
 #ifdef DSNET_HOST_SUPPORT

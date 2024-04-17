@@ -12,7 +12,7 @@ EE_PACKED_BIN = PS2Ident.elf
 
 EE_OBJS_DIR = obj/
 EE_SRC_DIR = src/
-EE_INC_DIR = include
+EE_INC_DIR = include/
 
 #IOP modules
 EE_IOP_OBJS = SIO2MAN_irx.o MCMAN_irx.o MCSERV_irx.o PADMAN_irx.o POWEROFF_irx.o PS2DEV9_irx.o USBD_irx.o BDM_irx.o BDMFS_FATFS_irx.o USBMASS_BD_irx.o USBHDFSDFSV_irx.o SYSMAN_irx.o IOPRP_img.o
