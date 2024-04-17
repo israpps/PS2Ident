@@ -37,6 +37,7 @@ endif
 ifeq ($(DEBUG),1)
   IOP_CFLAGS += -DDEBUG
   EE_CFLAGS += -DDEBUG
+endif
 
 ifeq ($(EE_SIO),1)
   EE_CFLAGS += -DEE_UART
