@@ -46,7 +46,8 @@ static int IsMcUnitReady(int unit)
 
 static int IsMassUnitReady(int unit)
 {
-    return UsbReadyStatus;
+    // return UsbReadyStatus;
+    return 1;
 }
 
 int GetHasDeviceSufficientSpace(const char *device, int unit, const struct RequiredFileSpaceStat *RequiredSpaceStats, unsigned int NumFileEntries)

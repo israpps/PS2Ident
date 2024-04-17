@@ -52,11 +52,12 @@ EXTERN_BIN2C(MCSERV_irx);
 EXTERN_BIN2C(POWEROFF_irx);
 EXTERN_BIN2C(PS2DEV9_irx);
 EXTERN_BIN2C(USBD_irx);
-EXTERN_BIN2C(USBHDFSD_irx);
+EXTERN_BIN2C(BDM_irx);
+EXTERN_BIN2C(BDMFS_FATFS_irx);
+EXTERN_BIN2C(USBMASS_BD_irx);
 EXTERN_BIN2C(USBHDFSDFSV_irx);
 EXTERN_BIN2C(SYSMAN_irx);
 EXTERN_BIN2C(IOPRP_img);
-
 
 extern void *_gp;
 
@@ -238,8 +239,12 @@ int main(int argc, char *argv[])
 
     id = SifExecModuleBuffer(USBD_irx, size_USBD_irx, 0, NULL, &ret);
     DEBUG_PRINTF("USBD id:%d ret:%d\n", id, ret);
-    id = SifExecModuleBuffer(USBHDFSD_irx, size_USBHDFSD_irx, 0, NULL, &ret);
-    DEBUG_PRINTF("USBHDFSD id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(BDM_irx, size_BDM_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("BDM id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(BDMFS_FATFS_irx, size_BDMFS_FATFS_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("BDM_FATFS id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(USBMASS_BD_irx, size_USBMASS_BD_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("USBMASS_BD id:%d ret:%d\n", id, ret);
     id = SifExecModuleBuffer(USBHDFSDFSV_irx, size_USBHDFSDFSV_irx, 0, NULL, &ret);
     DEBUG_PRINTF("USBHDFSDFSV id:%d ret:%d\n", id, ret);
 
@@ -266,7 +271,13 @@ int main(int argc, char *argv[])
 
     SysCreateThread(&SystemInitThread, SysInitThreadStack, SYSTEM_INIT_THREAD_STACK_SIZE, &InitThreadParams, 0x2);
 
-    WaitSema(SystemInitSema);
+    int FrameNum = 0;
+    while (PollSema(SystemInitSema) != SystemInitSema)
+    {
+        RedrawLoadingScreen(FrameNum);
+        DEBUG_PRINTF("Frame: %d\n", FrameNum);
+        FrameNum++;
+    }
     DeleteSema(SystemInitSema);
     DEBUG_PRINTF("DeleteSema done!\n");
     free(SysInitThreadStack);
