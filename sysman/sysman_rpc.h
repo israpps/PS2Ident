@@ -1,6 +1,6 @@
 #define SYSMAN_RPC_NUM    0x00003913
 
-#define MEM_IO_BLOCK_SIZE 131072
+#define MEM_IO_BLOCK_SIZE 0x20000
 
 struct MemoryAccessParameters
 {

@@ -2017,28 +2017,9 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
 
     RedrawDumpingScreen(SystemInformation, DumpingStatus);
 
-    if (SystemInformation->mainboard.BOOT_ROM.IsExists && DumpLargeRoms)
-    {
-        DEBUG_PRINTF("Dumping Boot ROM at %d, %u bytes...", SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size);
-
-#ifndef DSNET_HOST_SUPPORT
-        sprintf(filename, "%s/%s.BIN", path, SystemInformation->mainboard.ModelName);
-#else
-        sprintf(filename, "%s%s.BIN", path, SystemInformation->mainboard.ModelName);
-#endif
-        if ((result = DumpRom(filename, SystemInformation, DumpingStatus, DUMP_REGION_BOOT_ROM)) == 0)
-        {
-            DEBUG_PRINTF("done!\n");
-        }
-        else
-        {
-            DEBUG_PRINTF("failed!\n");
-        }
-    }
-
     if (SystemInformation->mainboard.DVD_ROM.IsExists && DumpLargeRoms)
     {
-        DEBUG_PRINTF("Dumping DVD ROM at %d, %u bytes...", SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size);
+        DEBUG_PRINTF("Dumping DVD ROM at %u, %u bytes...", SystemInformation->mainboard.DVD_ROM.StartAddress, SystemInformation->mainboard.DVD_ROM.size);
 
 #ifndef DSNET_HOST_SUPPORT
         sprintf(filename, "%s/%s.ROM1", path, SystemInformation->mainboard.ModelName);
@@ -2055,7 +2036,24 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
         }
     }
 
-    free(filename);
+    if (SystemInformation->mainboard.BOOT_ROM.IsExists && DumpLargeRoms)
+    {
+        DEBUG_PRINTF("Dumping Boot ROM at %u, %u bytes...", SystemInformation->mainboard.BOOT_ROM.StartAddress, SystemInformation->mainboard.BOOT_ROM.size);
+
+#ifndef DSNET_HOST_SUPPORT
+        sprintf(filename, "%s/%s.BIN", path, SystemInformation->mainboard.ModelName);
+#else
+        sprintf(filename, "%s%s.BIN", path, SystemInformation->mainboard.ModelName);
+#endif
+        if ((result = DumpRom(filename, SystemInformation, DumpingStatus, DUMP_REGION_BOOT_ROM)) == 0)
+        {
+            DEBUG_PRINTF("done!\n");
+        }
+        else
+        {
+            DEBUG_PRINTF("failed!\n");
+        }
+    }
 
     RedrawDumpingScreen(SystemInformation, DumpingStatus);
 
@@ -2063,6 +2061,7 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
     WriteSystemInformation(stdout, SystemInformation);
 #endif
 
+    free(filename);
     done = 0;
     while (!done)
     {

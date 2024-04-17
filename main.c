@@ -63,8 +63,14 @@ extern unsigned int size_PS2DEV9_irx;
 extern unsigned char USBD_irx[];
 extern unsigned int size_USBD_irx;
 
-extern unsigned char USBHDFSD_irx[];
-extern unsigned int size_USBHDFSD_irx;
+extern unsigned char BDM_irx[];
+extern unsigned int size_BDM_irx;
+
+extern unsigned char BDMFS_FATFS_irx[];
+extern unsigned int size_BDMFS_FATFS_irx;
+
+extern unsigned char USBMASS_BD_irx[];
+extern unsigned int size_USBMASS_BD_irx;
 
 extern unsigned char USBHDFSDFSV_irx[];
 extern unsigned int size_USBHDFSDFSV_irx;
@@ -245,7 +251,9 @@ int main(int argc, char *argv[])
     SifAddCmdHandler(0, &usb_callback, NULL);
 
     SifExecModuleBuffer(USBD_irx, size_USBD_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(USBHDFSD_irx, size_USBHDFSD_irx, 0, NULL, NULL);
+    SifExecModuleBuffer(BDM_irx, size_BDM_irx, 0, NULL, NULL);
+    SifExecModuleBuffer(BDMFS_FATFS_irx, size_BDMFS_FATFS_irx, 0, NULL, NULL);
+    SifExecModuleBuffer(USBMASS_BD_irx, size_USBMASS_BD_irx, 0, NULL, NULL);
     SifExecModuleBuffer(USBHDFSDFSV_irx, size_USBHDFSDFSV_irx, 0, NULL, NULL);
 
     sceCdInit(SCECdINoD);
@@ -271,7 +279,13 @@ int main(int argc, char *argv[])
 
     SysCreateThread(&SystemInitThread, SysInitThreadStack, SYSTEM_INIT_THREAD_STACK_SIZE, &InitThreadParams, 0x2);
 
-    WaitSema(SystemInitSema);
+    int FrameNum = 0;
+    while (PollSema(SystemInitSema) != SystemInitSema)
+    {
+        RedrawLoadingScreen(FrameNum);
+        DEBUG_PRINTF("Frame: %d\n", FrameNum);
+        FrameNum++;
+    }
     DeleteSema(SystemInitSema);
     DEBUG_PRINTF("DeleteSema done!\n");
     free(SysInitThreadStack);
