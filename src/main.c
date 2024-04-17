@@ -176,6 +176,7 @@ static void usb_callback(void *packet, void *common)
 
 int main(int argc, char *argv[])
 {
+    DEBUG_INIT_PRINTF();
     sio_puts("-- PS2IDENT START\n");
     static SifCmdHandlerData_t SifCmdbuffer;
     struct SystemInformation SystemInformation;
@@ -272,7 +273,7 @@ int main(int argc, char *argv[])
 
     // PS2IDBMS_LoadDatabase("PS2Ident.db");
 
-    DEBUG_PRINTF("Initializing hardware...");
+    DEBUG_PRINTF("Initializing hardware...\n");
 
     SysCreateThread(&SystemInitThread, SysInitThreadStack, SYSTEM_INIT_THREAD_STACK_SIZE, &InitThreadParams, 0x2);
 

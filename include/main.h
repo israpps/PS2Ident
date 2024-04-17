@@ -1,4 +1,13 @@
 // #define DEBUG	1
+
+
+#ifdef EE_UART
+#include <SIOCookie.h>
+#define DEBUG_INIT_PRINTF() ee_sio_start(38400, 0, 0, 0, 0, 1)
+#else
+#define DEBUG_INIT_PRINTF()
+#endif
+
 #ifdef DEBUG
 #define DEBUG_PRINTF(args...) printf(args)
 #else

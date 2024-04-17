@@ -3,6 +3,7 @@ DSNET_HOST_SUPPORT ?= 0
 DEBUG ?= 0
 COH ?= 0
 
+EE_SIO ?= 0
 DISABLE_ILINK_DUMPING ?= 0
 
 EE_BIN = PS2Ident_np.elf
@@ -36,6 +37,10 @@ endif
 ifeq ($(DEBUG),1)
   IOP_CFLAGS += -DDEBUG
   EE_CFLAGS += -DDEBUG
+
+ifeq ($(EE_SIO),1)
+  EE_CFLAGS += -DEE_UART
+  EE_LIBS += -lsiocookie
 endif
 
 ifeq ($(COH),1)
