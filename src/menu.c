@@ -1036,6 +1036,11 @@ static int GetUserSaveDeviceSelection(char *SelectedDevice, const struct Require
         SYS_UI_LBL_DEV_HOST,
 #endif
         SYS_UI_LBL_DEV_MASS,
+#ifdef COH_SUPPORT
+        SYS_UI_LBL_DEV_DONGLE,
+#else
+        SYS_UI_LBL_DEV_MC,
+#endif
         SYS_UI_LBL_DEV_MC,
         SYS_UI_LBL_DEV_MC,
     };

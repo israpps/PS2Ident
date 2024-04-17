@@ -19,6 +19,7 @@
 #include <ps2sdkapi.h>
 #include <rom0_info.h>
 #include <sbv_patches.h>
+#include <sio.h>
 
 #include <libgs.h>
 
@@ -41,45 +42,23 @@
 #include "UI.h"
 
 #include "ident.h"
+#define EXTERN_BIN2C(_irx) \
+extern unsigned char _irx[]; \
+extern unsigned int size_##_irx
 
-extern unsigned char SIO2MAN_irx[];
-extern unsigned int size_SIO2MAN_irx;
-
-extern unsigned char PADMAN_irx[];
-extern unsigned int size_PADMAN_irx;
-
-extern unsigned char MCMAN_irx[];
-extern unsigned int size_MCMAN_irx;
-
-extern unsigned char MCSERV_irx[];
-extern unsigned int size_MCSERV_irx;
-
-extern unsigned char POWEROFF_irx[];
-extern unsigned int size_POWEROFF_irx;
-
-extern unsigned char PS2DEV9_irx[];
-extern unsigned int size_PS2DEV9_irx;
-
-extern unsigned char USBD_irx[];
-extern unsigned int size_USBD_irx;
-
-extern unsigned char BDM_irx[];
-extern unsigned int size_BDM_irx;
-
-extern unsigned char BDMFS_FATFS_irx[];
-extern unsigned int size_BDMFS_FATFS_irx;
-
-extern unsigned char USBMASS_BD_irx[];
-extern unsigned int size_USBMASS_BD_irx;
-
-extern unsigned char USBHDFSDFSV_irx[];
-extern unsigned int size_USBHDFSDFSV_irx;
-
-extern unsigned char SYSMAN_irx[];
-extern unsigned int size_SYSMAN_irx;
-
-extern unsigned char IOPRP_img[];
-extern unsigned int size_IOPRP_img;
+EXTERN_BIN2C(SIO2MAN_irx);
+EXTERN_BIN2C(PADMAN_irx);
+EXTERN_BIN2C(MCMAN_irx);
+EXTERN_BIN2C(MCSERV_irx);
+EXTERN_BIN2C(POWEROFF_irx);
+EXTERN_BIN2C(PS2DEV9_irx);
+EXTERN_BIN2C(USBD_irx);
+EXTERN_BIN2C(BDM_irx);
+EXTERN_BIN2C(BDMFS_FATFS_irx);
+EXTERN_BIN2C(USBMASS_BD_irx);
+EXTERN_BIN2C(USBHDFSDFSV_irx);
+EXTERN_BIN2C(SYSMAN_irx);
+EXTERN_BIN2C(IOPRP_img);
 
 extern void *_gp;
 
@@ -108,14 +87,18 @@ struct SystemInitParams
 
 static void SystemInitThread(struct SystemInitParams *SystemInitParams)
 {
-    int fd, i;
+    int fd, i, id, ret;
     GetRomName(SystemInitParams->SystemInformation->mainboard.romver);
 
-    SifExecModuleBuffer(MCSERV_irx, size_MCSERV_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(PADMAN_irx, size_PADMAN_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(MCSERV_irx, size_MCSERV_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("MCSERV id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(PADMAN_irx, size_PADMAN_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("PADMAN id:%d ret:%d\n", id, ret);
 
-    SifExecModuleBuffer(POWEROFF_irx, size_POWEROFF_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(PS2DEV9_irx, size_PS2DEV9_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(POWEROFF_irx, size_POWEROFF_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("POWEROFF id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(PS2DEV9_irx, size_PS2DEV9_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("DEV9 id:%d ret:%d\n", id, ret);
 
     SifLoadModule("rom0:ADDDRV", 0, NULL);
     SifLoadModule("rom0:ADDROM2", 0, NULL);
@@ -130,7 +113,8 @@ static void SystemInitThread(struct SystemInitParams *SystemInitParams)
     LoadEROMDRV();
 
     /* Must be loaded last, after all devices have been initialized. */
-    SifExecModuleBuffer(SYSMAN_irx, size_SYSMAN_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(SYSMAN_irx, size_SYSMAN_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("SYSMAN id:%d ret:%d\n", id, ret);
 
     SysmanInit();
 
@@ -192,12 +176,15 @@ static void usb_callback(void *packet, void *common)
 
 int main(int argc, char *argv[])
 {
+    DEBUG_INIT_PRINTF();
+    sio_puts("-- PS2IDENT START\n");
     static SifCmdHandlerData_t SifCmdbuffer;
     struct SystemInformation SystemInformation;
     void *SysInitThreadStack;
     ee_sema_t ThreadSema;
     int SystemInitSema;
     struct SystemInitParams InitThreadParams;
+    int id, ret;
 
     //	chdir("mass:/PS2Ident/");
     if (argc < 1 || GetBootDeviceID() == BOOT_DEVICE_UNKNOWN)
@@ -209,7 +196,6 @@ int main(int argc, char *argv[])
     while (!SifIopRebootBuffer(IOPRP_img, size_IOPRP_img))
     {
     };
-
     memset(&SystemInformation, 0, sizeof(SystemInformation));
 
     /* Go gather some information from the EE's peripherals while the IOP reset. */
@@ -237,6 +223,11 @@ int main(int argc, char *argv[])
     {
     };
 
+#ifdef COH_SUPPORT
+    id = SifLoadStartModule("rom0:CDVDFSV", 0, NULL, &ret);
+    DEBUG_PRINTF("rom0:CDVDFSV id:%d ret:%d\n", id, ret);
+#endif
+
     SifInitRpc(0);
     SifInitIopHeap();
     SifLoadFileInit();
@@ -244,17 +235,24 @@ int main(int argc, char *argv[])
     sbv_patch_enable_lmb();
     sbv_patch_fileio();
 
-    SifExecModuleBuffer(SIO2MAN_irx, size_SIO2MAN_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(MCMAN_irx, size_MCMAN_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(SIO2MAN_irx, size_SIO2MAN_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("SIO2MAN id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(MCMAN_irx, size_MCMAN_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("MCMAN id:%d ret:%d\n", id, ret);
 
     SifSetCmdBuffer(&SifCmdbuffer, 1);
     SifAddCmdHandler(0, &usb_callback, NULL);
 
-    SifExecModuleBuffer(USBD_irx, size_USBD_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(BDM_irx, size_BDM_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(BDMFS_FATFS_irx, size_BDMFS_FATFS_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(USBMASS_BD_irx, size_USBMASS_BD_irx, 0, NULL, NULL);
-    SifExecModuleBuffer(USBHDFSDFSV_irx, size_USBHDFSDFSV_irx, 0, NULL, NULL);
+    id = SifExecModuleBuffer(USBD_irx, size_USBD_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("USBD id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(BDM_irx, size_BDM_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("BDM id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(BDMFS_FATFS_irx, size_BDMFS_FATFS_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("BDM_FATFS id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(USBMASS_BD_irx, size_USBMASS_BD_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("USBMASS_BD id:%d ret:%d\n", id, ret);
+    id = SifExecModuleBuffer(USBHDFSDFSV_irx, size_USBHDFSDFSV_irx, 0, NULL, &ret);
+    DEBUG_PRINTF("USBHDFSDFSV id:%d ret:%d\n", id, ret);
 
     sceCdInit(SCECdINoD);
     cdInitAdd();
@@ -275,7 +273,7 @@ int main(int argc, char *argv[])
 
     // PS2IDBMS_LoadDatabase("PS2Ident.db");
 
-    DEBUG_PRINTF("Initializing hardware...");
+    DEBUG_PRINTF("Initializing hardware...\n");
 
     SysCreateThread(&SystemInitThread, SysInitThreadStack, SYSTEM_INIT_THREAD_STACK_SIZE, &InitThreadParams, 0x2);
 
@@ -320,3 +318,16 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+#ifdef DISABLE_LIBCGLUE_INIT
+// void _libcglue_timezone_update() {}
+// DISABLE_PATCHED_FUNCTIONS();
+// DISABLE_EXTRA_TIMERS_FUNCTIONS();
+// PS2_DISABLE_AUTOSTART_PTHREAD();
+void _libcglue_init() {
+    sio_puts("_libcglue_init overriden\n");
+}
+void _libcglue_deinit() {
+    sio_puts("_libcglue_deinit overriden\n");
+}
+#endif

@@ -27,6 +27,7 @@ static const char *DefaultLanguageLabelStringTable[SYS_UI_LBL_COUNT] = {
     "Confirmation",
     "Please wait",
     "Memory card",
+    "Arcade security dongle",
     "Slot 1",
     "Slot 2",
     "USB mass storage",
