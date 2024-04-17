@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        debug: [DEBUG=0 DSNET_HOST_SUPPORT=0, DEBUG=1 DSNET_HOST_SUPPORT=1]
+        debug: [DEBUG=0 DSNET_HOST_SUPPORT=0, DEBUG=1 DSNET_HOST_SUPPORT=1, DEBUG=1 COH=1]
     steps:
     - uses: actions/checkout@v4
 
@@ -57,6 +57,16 @@ jobs:
       run: |
         7z a PS2Ident-debug.7z PS2Ident-PS2TOOL/*
 
+    - name: Download PS2Ident for SYSTEM2x6 artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: "PS2Ident-DEBUG=1 COH=1-${{ github.sha }}"
+        path: PS2Ident-SYSTEM2x6
+
+    - name: Prepare PS2Ident for ARCADE archive
+      run: |
+        7z a PS2Ident-system2x6_arcade.7z PS2Ident-SYSTEM2x6/*
+
     - name: Create pre-release
       if: github.ref == 'refs/heads/new'
       uses: marvinpinto/action-automatic-releases@latest
@@ -68,6 +78,7 @@ jobs:
         files: |
           PS2Ident.7z
           PS2Ident-debug.7z
+          PS2Ident-system2x6_arcade.7z
 
     - name: Create Tagged Release Draft
       if: startsWith(github.ref, 'refs/tags/v')
@@ -80,4 +91,5 @@ jobs:
         files: |
           PS2Ident.7z
           PS2Ident-debug.7z
+          PS2Ident-system2x6_arcade.7z
 
