@@ -8,13 +8,20 @@ DISABLE_ILINK_DUMPING ?= 0
 EE_BIN = PS2Ident_np.elf
 EE_PACKED_BIN = PS2Ident.elf
 
+
+EE_OBJS_DIR = obj/
+EE_SRC_DIR = src/
+EE_INC_DIR = include
+
 #IOP modules
 EE_IOP_OBJS = SIO2MAN_irx.o MCMAN_irx.o MCSERV_irx.o PADMAN_irx.o POWEROFF_irx.o PS2DEV9_irx.o USBD_irx.o BDM_irx.o BDMFS_FATFS_irx.o USBMASS_BD_irx.o USBHDFSDFSV_irx.o SYSMAN_irx.o IOPRP_img.o
 
 EE_GRAPHICS_OBJS = buttons.o devices.o background_img.o font_Default.o
 EE_OBJS = main.o system.o UI.o menu.o ident.o SYSMAN_rpc.o graphics.o font.o pad.o DeviceSupport.o crc.o libcdvd_add.o OSDInit.o modelname.o dvdplayer.o ps1.o $(EE_IOP_OBJS) $(EE_GRAPHICS_OBJS)
 
-EE_INCS := -I$(PS2SDK)/ports/include -I$(PS2SDK)/ports/include/freetype2
+EE_OBJS := $(EE_OBJS:%=$(EE_OBJS_DIR)%)
+
+EE_INCS := -I$(PS2SDK)/ports/include -I$(PS2SDK)/ports/include/freetype2 -I$(EE_INC_DIR)
 EE_LDFLAGS := -L$(PS2SDK)/ports/lib
 EE_LIBS := -lgs -lpng -lz -lcdvd -lmc -lpadx -lpatches -liopreboot -lfreetype -lm
 EE_CFLAGS += $(EE_GPVAL) -Wno-missing-braces -O0 -g
@@ -108,6 +115,15 @@ devices.c:
 
 IOPRP_img.c: $(IOPRP_BIN)
 	bin2c $< IOPRP_img.c IOPRP_img
+
+
+$(EE_OBJS_DIR)%.o: $(EE_SRC_DIR)%.c
+	$(DIR_GUARD)
+	$(EE_CC) $(EE_CFLAGS) $(EE_INCS) -c $< -o $@
+
+$(EE_OBJS_DIR)%.o: $(EE_ASM_DIR)%.s
+	$(DIR_GUARD)
+	$(EE_AS) $(EE_ASFLAGS) $< -o $@
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.iopglobal

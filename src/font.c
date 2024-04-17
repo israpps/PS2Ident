@@ -13,7 +13,7 @@
 #include FT_ADVANCES_H
 
 #include "graphics.h"
-#include "font.h"
+#include "include/font.h"
 #include "main.h"
 
 /*	Draw the glyphs as close as possible to each other, to save VRAM.

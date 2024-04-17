@@ -1,4 +1,4 @@
-#include "../ps2db.h"
+#include "../include/ps2db.h"
 
 // IOP-side stuff
 typedef struct SysmanHardwareInfo

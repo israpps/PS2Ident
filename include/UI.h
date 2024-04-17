@@ -1,4 +1,5 @@
 #include "lang.h"
+#include "font.h"
 
 #define UI_OFFSET_X               8
 #define UI_OFFSET_Y               8
