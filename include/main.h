@@ -15,6 +15,7 @@
 #endif
 
 #ifdef COH_SUPPORT
-#define EXTRAVER "-COH"
+#define PS2IDENT_VERSION "0.900-COH"
+#else
+#define PS2IDENT_VERSION "0.900"
 #endif
-#define PS2IDENT_VERSION "0.900" EXTRAVER
