@@ -22,25 +22,25 @@ EE_CFLAGS += $(EE_GPVAL) -Wno-missing-braces -O0 -g
 EE_TEMP_FILES = SIO2MAN_irx.c MCMAN_irx.c MCSERV_irx.c PADMAN_irx.c POWEROFF_irx.c PS2DEV9_irx.c USBD_irx.c BDM_irx.c BDMFS_FATFS_irx.c USBMASS_BD_irx.c USBHDFSDFSV_irx.c SYSMAN_irx.c buttons.c devices.c background_img.c font_Default.c IOPRP_img.c
 
 ifeq ($(DSNET_HOST_SUPPORT),1)
-	EE_CFLAGS += -DDSNET_HOST_SUPPORT
-	DEBUG = 1
+  EE_CFLAGS += -DDSNET_HOST_SUPPORT
+  DEBUG = 1
 endif
 
 ifeq ($(DEBUG),1)
-	IOP_CFLAGS += -DDEBUG
-	EE_CFLAGS += -DDEBUG
+  IOP_CFLAGS += -DDEBUG
+  EE_CFLAGS += -DDEBUG
 endif
 
 ifeq ($(COH),1)
-    EE_CFLAGS += -DCOH_SUPPORT
-    IOPRP_BIN = irx/ioprp_coh.img
+  EE_CFLAGS += -DCOH_SUPPORT -DDISABLE_LIBCGLUE_INIT
+  IOPRP_BIN = irx/ioprp_coh.img
 else
-    IOPRP_BIN = irx/ioprp.img
+  IOPRP_BIN = irx/ioprp.img
 endif
 
 ifeq ($(DISABLE_ILINK_DUMPING),1)
-	IOP_CFLAGS += -DDISABLE_ILINK_DUMPING
-	EE_CFLAGS += -DDISABLE_ILINK_DUMPING
+  IOP_CFLAGS += -DDISABLE_ILINK_DUMPING
+  EE_CFLAGS += -DDISABLE_ILINK_DUMPING
 endif
 
 $(EE_PACKED_BIN): $(EE_BIN)
