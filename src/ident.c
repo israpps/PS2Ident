@@ -261,8 +261,12 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
     SystemInformation->mainboard.ConModelID[0] = SystemInformation->ConsoleID[0];
     SystemInformation->mainboard.ConModelID[1] = SystemInformation->ConsoleID[1];
     SystemInformation->mainboard.EMCSID        = SystemInformation->ConsoleID[7];
-    strcpy(SystemInformation->mainboard.MainboardName, GetMainboardModelDesc(&SystemInformation->mainboard));
-    strcpy(SystemInformation->chassis, GetChassisDesc(&SystemInformation->mainboard));
+    DEBUG_PRINTF("GetPeripheralInformation: SystemInformation->mainboard.ModelID, 0x%02X, 0x%02X, 0x%02X\n", SystemInformation->mainboard.ModelID[0], SystemInformation->mainboard.ModelID[1], SystemInformation->mainboard.ModelID[2]);
+    strncpy(SystemInformation->mainboard.MainboardName, GetMainboardModelDesc(&SystemInformation->mainboard), sizeof(SystemInformation->mainboard.MainboardName) - 1);
+    SystemInformation->mainboard.MainboardName[sizeof(SystemInformation->mainboard.MainboardName) - 1] = '\0'; // Ensure null termination
+    strncpy(SystemInformation->chassis, GetChassisDesc(&SystemInformation->mainboard), sizeof(SystemInformation->chassis) - 1);
+    SystemInformation->chassis[sizeof(SystemInformation->chassis) - 1] = '\0'; // Ensure null termination
+    DEBUG_PRINTF("GetPeripheralInformation: SystemInformation->mainboard.ModelID, 0x%02X, 0x%02X, 0x%02X\n", SystemInformation->mainboard.ModelID[0], SystemInformation->mainboard.ModelID[1], SystemInformation->mainboard.ModelID[2]);
 
     return 0;
 }
