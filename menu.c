@@ -1007,6 +1007,14 @@ static int GetUserSaveDeviceSelection(char *SelectedDevice, const struct Require
         },
 #endif
         {
+            "mass",
+            NULL,
+            NULL,
+            0,
+            DEVICE_TYPE_USB_DISK,
+            0,
+        },
+        {
             "mc",
             NULL,
             NULL,
@@ -1022,30 +1030,22 @@ static int GetUserSaveDeviceSelection(char *SelectedDevice, const struct Require
             DEVICE_TYPE_DISK,
             0,
         },
-        {
-            "mass",
-            NULL,
-            NULL,
-            0,
-            DEVICE_TYPE_USB_DISK,
-            0,
-        },
     };
     static const unsigned int IconFileSelMenuDevStringIDs[NUM_SUPPORTED_DEVICES] = {
 #ifdef DSNET_HOST_SUPPORT
         SYS_UI_LBL_DEV_HOST,
 #endif
-        SYS_UI_LBL_DEV_MC,
-        SYS_UI_LBL_DEV_MC,
         SYS_UI_LBL_DEV_MASS,
+        SYS_UI_LBL_DEV_MC,
+        SYS_UI_LBL_DEV_MC,
     };
     static const unsigned int IconFileSelMenuDevUnitStringIDs[NUM_SUPPORTED_DEVICES] = {
 #ifdef DSNET_HOST_SUPPORT
         SYS_UI_LBL_COUNT,
 #endif
+        SYS_UI_LBL_COUNT,
         SYS_UI_LBL_MC_SLOT_1,
         SYS_UI_LBL_MC_SLOT_2,
-        SYS_UI_LBL_COUNT,
     };
 
     // Allow the user to browse for icon sets on mc0:, mc1: and mass:.
@@ -1990,6 +1990,16 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
     //     }
 
 #ifndef DSNET_HOST_SUPPORT
+    sprintf(filename, "%s/%s.MEC", path, SystemInformation->mainboard.ModelName);
+#else
+    sprintf(filename, "%s%s.MEC", path, SystemInformation->mainboard.ModelName);
+#endif
+    if ((result = DumpMECHACON_VERSION(filename, SystemInformation)) == 0)
+        DEBUG_PRINTF("done!\n");
+    else
+        DEBUG_PRINTF("failed!\n");
+
+#ifndef DSNET_HOST_SUPPORT
     sprintf(filename, "%s/%s.NVM", path, SystemInformation->mainboard.ModelName);
 #else
     sprintf(filename, "%s%s.NVM", path, SystemInformation->mainboard.ModelName);
@@ -2004,16 +2014,6 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
 
     // *.mec
     DEBUG_PRINTF("Dumping Mechacon version 4 bytes...");
-
-#ifndef DSNET_HOST_SUPPORT
-    sprintf(filename, "%s/%s.MEC", path, SystemInformation->mainboard.ModelName);
-#else
-    sprintf(filename, "%s%s.MEC", path, SystemInformation->mainboard.ModelName);
-#endif
-    if ((result = DumpMECHACON_VERSION(filename, SystemInformation)) == 0)
-        DEBUG_PRINTF("done!\n");
-    else
-        DEBUG_PRINTF("failed!\n");
 
     RedrawDumpingScreen(SystemInformation, DumpingStatus);
 
