@@ -195,12 +195,6 @@ int main(int argc, char *argv[])
     while (!SifIopRebootBuffer(IOPRP_img, size_IOPRP_img))
     {
     };
-
-#ifdef COH_SUPPORT
-    id = SifLoadStartModule("rom0:CDVDFSV", 0, NULL, &ret);
-    DEBUG_PRINTF("rom0:CDVDFSV id:%d ret:%d\n", id, ret);
-#endif
-
     memset(&SystemInformation, 0, sizeof(SystemInformation));
 
     /* Go gather some information from the EE's peripherals while the IOP reset. */
@@ -227,6 +221,11 @@ int main(int argc, char *argv[])
     while (!SifIopSync())
     {
     };
+
+#ifdef COH_SUPPORT
+    id = SifLoadStartModule("rom0:CDVDFSV", 0, NULL, &ret);
+    DEBUG_PRINTF("rom0:CDVDFSV id:%d ret:%d\n", id, ret);
+#endif
 
     SifInitRpc(0);
     SifInitIopHeap();
