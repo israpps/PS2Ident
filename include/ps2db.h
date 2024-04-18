@@ -116,18 +116,19 @@ struct PS2IDBMainboardEntry
     u16 ROMGEN_Year;
     u16 MPUBoardID;
     u16 BoardInf;
-    u8 MECHACONVersion[4]; // RR MM DD TT, where RR = (7-bit) region, MM = major revision, mm = minor revision, TT = system type.
-    char ModelName[16];
     char romver[16];
-    char MainboardName[16];
+    u8 MECHACONVersion[4]; // RR MM DD TT, where RR = (7-bit) region, MM = major revision, mm = minor revision, TT = system type.
+    u8 MRenewalDate[5];
     u8 ModelID[3];
     u8 EMCSID;
     u8 ConModelID[2];
-    u8 MRenewalDate[5];
-    u8 status;
     // Known as "ADD0x10" in the SONY service tools, it's word 0x10 of the EEPROM from older consoles and word 0x01 of Dragon units. It's used to identify important revisions.
     u16 ADD010;
-    s8 ContributorName[16];
+    u16 DragonFanConfig;
+    char ModelName[16];
+    char MainboardName[16];
+    char ContributorName[16];
+    u8 status;
     u16 padding;
 };
 
@@ -166,7 +167,7 @@ enum PS2IDB_COMPONENT
     PS2IDB_COMPONENT_EMCS_ID,
     PS2IDB_COMPONENT_ADD010,
 
-    PS2IDB_COMPONENT_COUNT
+    PS2IDB_COMPONENT_COUNT,
 };
 
 struct PS2IDBComponentTable

@@ -248,10 +248,20 @@ int GetPeripheralInformation(struct SystemInformation *SystemInformation)
     SysmanGetMACAddress(SystemInformation->SMAP_MAC_address);
 
     SystemInformation->mainboard.ADD010 = 0xFFFF;
-    if (GetADD010(SystemInformation->mainboard.MECHACONVersion[1] >= 5 ? 0x001 : 0x010, &SystemInformation->mainboard.ADD010) != 0)
+    if (GetNVMWord(SystemInformation->mainboard.MECHACONVersion[1] >= 5 ? 0x001 : 0x010, &SystemInformation->mainboard.ADD010) != 0)
     {
         DEBUG_PRINTF("Failed to read ADD0x010.\n");
         SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_ADD010;
+    }
+
+    SystemInformation->mainboard.DragonFanConfig = 0xFFFF;
+    if (SystemInformation->mainboard.MECHACONVersion[1] >= 5)
+    {
+        if (GetNVMWord(0x060, &SystemInformation->mainboard.DragonFanConfig) != 0)
+        {
+            DEBUG_PRINTF("Failed to read DragonFanConfig.\n");
+            SystemInformation->mainboard.status |= PS2IDB_STAT_ERR_ADD010;
+        }
     }
 
     // Get the mainboard and chassis names, MODEL ID, console MODEL ID and EMCS ID.
@@ -347,7 +357,7 @@ int DumpRom(const char *filename, const struct SystemInformation *SystemInformat
     return result;
 }
 
-int GetADD010(u16 address, u16 *word)
+int GetNVMWord(u16 address, u16 *word)
 {
     unsigned char stat;
 

@@ -16,7 +16,7 @@ struct SystemInformation
     char OSDVer[16];       // TODO: move to ROM
     char PS1DRVVer[32];    // TODO: move to ROM
     u8 DSPVersion[2];
-    unsigned char SMAP_MAC_address[6]; // only for 70k is real, Deckard from eeprom, FATS from netowrk adapter
+    unsigned char SMAP_MAC_address[6]; // only for 70k is real, Deckard from eeprom, FATS from network adapter
 };
 
 struct DumpingStatus
@@ -53,7 +53,7 @@ const char *GetDSPDesc(unsigned char revision);
 const char *GetChassisDesc(const struct PS2IDBMainboardEntry *mainboard);
 const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *mainboard);
 
-int GetADD010(u16 address, u16 *word);
+int GetNVMWord(u16 address, u16 *word);
 
 unsigned int CalculateCPUCacheSize(unsigned char value);
 
