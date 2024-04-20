@@ -42,9 +42,9 @@
 #include "UI.h"
 
 #include "ident.h"
-#define EXTERN_BIN2C(_irx) \
-extern unsigned char _irx[]; \
-extern unsigned int size_##_irx
+#define EXTERN_BIN2C(_irx)       \
+    extern unsigned char _irx[]; \
+    extern unsigned int size_##_irx
 
 EXTERN_BIN2C(SIO2MAN_irx);
 EXTERN_BIN2C(PADMAN_irx);
@@ -53,9 +53,7 @@ EXTERN_BIN2C(MCSERV_irx);
 EXTERN_BIN2C(POWEROFF_irx);
 EXTERN_BIN2C(PS2DEV9_irx);
 EXTERN_BIN2C(USBD_irx);
-EXTERN_BIN2C(BDM_irx);
-EXTERN_BIN2C(BDMFS_FATFS_irx);
-EXTERN_BIN2C(USBMASS_BD_irx);
+EXTERN_BIN2C(USBHDFSD_irx);
 EXTERN_BIN2C(USBHDFSDFSV_irx);
 EXTERN_BIN2C(SYSMAN_irx);
 EXTERN_BIN2C(IOPRP_img);
@@ -245,11 +243,7 @@ int main(int argc, char *argv[])
 
     id = SifExecModuleBuffer(USBD_irx, size_USBD_irx, 0, NULL, &ret);
     DEBUG_PRINTF("USBD id:%d ret:%d\n", id, ret);
-    id = SifExecModuleBuffer(BDM_irx, size_BDM_irx, 0, NULL, &ret);
-    DEBUG_PRINTF("BDM id:%d ret:%d\n", id, ret);
-    id = SifExecModuleBuffer(BDMFS_FATFS_irx, size_BDMFS_FATFS_irx, 0, NULL, &ret);
-    DEBUG_PRINTF("BDM_FATFS id:%d ret:%d\n", id, ret);
-    id = SifExecModuleBuffer(USBMASS_BD_irx, size_USBMASS_BD_irx, 0, NULL, &ret);
+    id = SifExecModuleBuffer(USBHDFSD_irx, size_USBHDFSD_irx, 0, NULL, &ret);
     DEBUG_PRINTF("USBMASS_BD id:%d ret:%d\n", id, ret);
     id = SifExecModuleBuffer(USBHDFSDFSV_irx, size_USBHDFSDFSV_irx, 0, NULL, &ret);
     DEBUG_PRINTF("USBHDFSDFSV id:%d ret:%d\n", id, ret);
@@ -324,10 +318,12 @@ int main(int argc, char *argv[])
 // DISABLE_PATCHED_FUNCTIONS();
 // DISABLE_EXTRA_TIMERS_FUNCTIONS();
 // PS2_DISABLE_AUTOSTART_PTHREAD();
-void _libcglue_init() {
+void _libcglue_init()
+{
     sio_puts("_libcglue_init overriden\n");
 }
-void _libcglue_deinit() {
+void _libcglue_deinit()
+{
     sio_puts("_libcglue_deinit overriden\n");
 }
 #endif

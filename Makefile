@@ -15,7 +15,7 @@ EE_SRC_DIR = src/
 EE_INC_DIR = include/
 
 #IOP modules
-EE_IOP_OBJS = SIO2MAN_irx.o MCMAN_irx.o MCSERV_irx.o PADMAN_irx.o POWEROFF_irx.o PS2DEV9_irx.o USBD_irx.o BDM_irx.o BDMFS_FATFS_irx.o USBMASS_BD_irx.o USBHDFSDFSV_irx.o SYSMAN_irx.o IOPRP_img.o
+EE_IOP_OBJS = SIO2MAN_irx.o MCMAN_irx.o MCSERV_irx.o PADMAN_irx.o POWEROFF_irx.o PS2DEV9_irx.o USBD_irx.o  USBHDFSD_irx.o USBHDFSDFSV_irx.o SYSMAN_irx.o IOPRP_img.o
 
 EE_GRAPHICS_OBJS = buttons.o devices.o background_img.o font_Default.o
 EE_OBJS = main.o system.o UI.o menu.o ident.o SYSMAN_rpc.o graphics.o font.o pad.o DeviceSupport.o crc.o libcdvd_add.o OSDInit.o modelname.o dvdplayer.o ps1.o $(EE_IOP_OBJS) $(EE_GRAPHICS_OBJS)
@@ -27,7 +27,7 @@ EE_LDFLAGS := -L$(PS2SDK)/ports/lib
 EE_LIBS := -lgs -lpng -lz -lcdvd -lmc -lpadx -lpatches -liopreboot -lfreetype -lm
 EE_CFLAGS += $(EE_GPVAL) -Wno-missing-braces -O0 -g
 
-EE_TEMP_FILES = SIO2MAN_irx.c MCMAN_irx.c MCSERV_irx.c PADMAN_irx.c POWEROFF_irx.c PS2DEV9_irx.c USBD_irx.c BDM_irx.c BDMFS_FATFS_irx.c USBMASS_BD_irx.c USBHDFSDFSV_irx.c SYSMAN_irx.c buttons.c devices.c background_img.c font_Default.c IOPRP_img.c
+EE_TEMP_FILES = SIO2MAN_irx.c MCMAN_irx.c MCSERV_irx.c PADMAN_irx.c POWEROFF_irx.c PS2DEV9_irx.c USBD_irx.c  USBHDFSD_irx.c USBHDFSDFSV_irx.c SYSMAN_irx.c buttons.c devices.c background_img.c font_Default.c IOPRP_img.c
 
 EE_TEMP_FILES := $(EE_TEMP_FILES:%=$(EE_SRC_DIR)%)
 
@@ -67,7 +67,7 @@ all:
 clean:
 	make clean -C sysman
 	make clean -C usbhdfsdfsv
-	rm -f $(EE_BIN) $(EE_PACKED_BIN) $(EE_BIN_REL) $(EE_OBJS) $(EE_TEMP_FILES)
+	rm -rf $(EE_BIN) $(EE_PACKED_BIN) $(EE_BIN_REL) $(EE_OBJS_DIR) $(EE_TEMP_FILES)
 
 $(EE_SRC_DIR)SIO2MAN_irx.c: $(PS2SDK)/iop/irx/freesio2.irx
 	bin2c $< $@ SIO2MAN_irx
@@ -90,14 +90,8 @@ $(EE_SRC_DIR)PS2DEV9_irx.c: $(PS2SDK)/iop/irx/ps2dev9.irx
 $(EE_SRC_DIR)USBD_irx.c: $(PS2SDK)/iop/irx/usbd.irx
 	bin2c $< $@ USBD_irx
 
-$(EE_SRC_DIR)BDM_irx.c: $(PS2SDK)/iop/irx/bdm.irx
-	bin2c $< $@ BDM_irx
-
-$(EE_SRC_DIR)BDMFS_FATFS_irx.c: $(PS2SDK)/iop/irx/bdmfs_fatfs.irx
-	bin2c $< $@ BDMFS_FATFS_irx
-
-$(EE_SRC_DIR)USBMASS_BD_irx.c: $(PS2SDK)/iop/irx/usbmass_bd.irx
-	bin2c $< $@ USBMASS_BD_irx
+$(EE_SRC_DIR)USBHDFSD_irx.c: $(PS2SDK)/iop/irx/usbhdfsd.irx
+	bin2c $< $@ USBHDFSD_irx
 
 usbhdfsdfsv/usbhdfsdfsv.irx:
 	$(MAKE) -C usbhdfsdfsv
