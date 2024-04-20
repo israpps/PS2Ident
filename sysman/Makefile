@@ -23,4 +23,6 @@ clean:
 	rm -rf $(IOP_BIN) $(IOP_OBJS) $(IOP_OBJS_DIR)
 
 include $(PS2SDK)/samples/Makefile.pref
-include $(PS2SDK)/samples/Makefile.iopglobal
+include $(PS2SDK)/Defs.make
+# include $(PS2SDK)/samples/Makefile.iopglobal
+include Rules.make
