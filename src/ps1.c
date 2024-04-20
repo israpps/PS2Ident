@@ -6,7 +6,7 @@
 #include <fcntl.h>
 #include <sifcmd.h>
 #include <libmc.h>
-#include <ps2sdkapi.h>
+// #include <ps2sdkapi.h>
 
 #include "main.h"
 #include "ps1.h"

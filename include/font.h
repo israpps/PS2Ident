@@ -1,3 +1,5 @@
+#include <wchar.h>
+
 #define FNT_ATLAS_WIDTH  128
 #define FNT_ATLAS_HEIGHT 128
 #define FNT_MAX_ATLASES  4

@@ -16,8 +16,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
-#include <ps2sdkapi.h>
-#include <rom0_info.h>
+// #include <ps2sdkapi.h>
+// #include <rom0_info.h>
+#include <osd_config.h>
 #include <sbv_patches.h>
 #include <sio.h>
 

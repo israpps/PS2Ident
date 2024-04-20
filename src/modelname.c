@@ -6,7 +6,7 @@
 #include <sifcmd.h>
 #include <libcdvd.h>
 #include "libcdvd_add.h"
-#include <ps2sdkapi.h>
+// #include <ps2sdkapi.h>
 
 #include "main.h"
 #include "modelname.h"

@@ -1258,7 +1258,8 @@ static int DumpSystemROMScreen(const struct SystemInformation *SystemInformation
         DEBUG_PRINTF("Cleaning up %s\n", DumpPath);
         rmdir(DumpPath);
         DEBUG_PRINTF("Creating %s\n", DumpPath);
-        if (((result = mkdir(DumpPath, 0755)) >= 0) || (result == -EEXIST))
+        // if (((result = mkdir(DumpPath, 0755)) >= 0) || (result == -EEXIST))
+        if (((result = mkdir(DumpPath)) >= 0) || (result == -EEXIST))
         {
             DumpSystemROM(DumpPath, SystemInformation);
         }
@@ -1931,13 +1932,13 @@ static int DumpSystemROM(const char *path, const struct SystemInformation *Syste
 {
     char *filename;
     unsigned int PathLength, ModelNameLen;
-    int result, PadStatus;
+    int result, PadStatus, i;
     FILE *logfile;
     struct DumpingStatus DumpingStatus[DUMP_REGION_COUNT];
     unsigned char done;
 
     // Loop through each element of the array and initialize to zero values
-    for (int i = 0; i < DUMP_REGION_COUNT; i++)
+    for (i = 0; i < DUMP_REGION_COUNT; i++)
     {
         DumpingStatus[i].progress = 0.0f; // Initialize progress to 0.0
         DumpingStatus[i].status   = 0;    // Initialize status to "In progress"
