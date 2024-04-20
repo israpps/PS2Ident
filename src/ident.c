@@ -640,7 +640,7 @@ const char *GetSSBUSIFDesc(unsigned char revision, unsigned char EE_revision)
             if (EE_revision == 0x43)
                 description = "combined with EE";
             else
-                description = "CXD9611AR/CXD9611BR/CXD9686AR/CXD9686BR/CXD9686R"; // TODO: try to differ SSBUS 0x31 more
+                description = "CXD9611(AR/BR)/CXD9686(AR/BR/R)"; // TODO: try to differ SSBUS 0x31 more
             break;
         case 0x32:
             description = "combined with SPU2";
@@ -1167,6 +1167,35 @@ const char *GetMECHACONChipDesc(unsigned int revision)
     return description;
 }
 
+const char *GetDSPDesc(unsigned short int revision)
+{
+    const char *description;
+
+    switch (revision)
+    {
+        case 0x0000:
+            description = "CXD1869Q";
+            break;
+        case 0x0001:
+            description = "CXD1869AQ";
+            break;
+        case 0x0002:
+            description = "CXD1869BQ/CXD1886Q";
+            break;
+        case 0x0003:
+            description = "CXD3098Q/CXD3098AQ";
+            break;
+        case 0x0103:
+            description = "PS3 virtual DSP";
+            break;
+        default:
+            description = "Unknown";
+            break;
+    }
+
+    return description;
+}
+
 const char *GetSystemTypeDesc(unsigned char type)
 {
     const char *description;
@@ -1605,21 +1634,6 @@ const char *GetADD010Desc(unsigned short int id)
     return description;
 }
 
-const char *GetDSPDesc(unsigned char revision)
-{
-    static const char *revisions[] = {
-        "CXD1869Q",
-        "CXD1869AQ",
-        "CXD1869BQ/CXD1886Q-1/CXD1886",
-        "CXD3098Q/CXD1886Q-1/CXD3098AQ",
-        "Missing"};
-
-    if (revision > 4)
-        revision = 4;
-
-    return revisions[revision];
-}
-
 const char *GetChassisDesc(const struct PS2IDBMainboardEntry *mainboard)
 {
     const char *description;
@@ -1826,7 +1840,7 @@ int WriteSystemInformation(FILE *stream, const struct SystemInformation *SystemI
                 GetMECHACONChipDesc((unsigned int)(SystemInformation->mainboard.MECHACONVersion[1]) << 16 | (unsigned int)(SystemInformation->mainboard.MECHACONVersion[2]) << 8 | SystemInformation->mainboard.MECHACONVersion[0]),
                 SystemInformation->mainboard.MECHACONVersion[0], GetRegionDesc(SystemInformation->mainboard.MECHACONVersion[0]),
                 SystemInformation->mainboard.MECHACONVersion[3], GetSystemTypeDesc(SystemInformation->mainboard.MECHACONVersion[3]),
-                SystemInformation->DSPVersion[0], SystemInformation->DSPVersion[1], GetDSPDesc(SystemInformation->DSPVersion[0]));
+                SystemInformation->DSPVersion[0], SystemInformation->DSPVersion[1], GetDSPDesc(SystemInformation->DSPVersion[0] | (SystemInformation->DSPVersion[1] << 8)));
     }
     else
     {

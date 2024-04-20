@@ -97,7 +97,8 @@ enum BOARD2_ID
     BOARD2_ID_MECHA_REGION_NAME,
     BOARD2_ID_MECHA_TYPE,
     BOARD2_ID_MECHA_TYPE_NAME,
-    BOARD2_ID_DSP_REV,
+    BOARD2_ID_DSP_REV_MAJOR,
+    BOARD2_ID_DSP_REV_MINOR,
     BOARD2_ID_DSP_NAME,
     BOARD2_ID_ADD010,
     BOARD2_ID_ADD010_DESC,
@@ -496,7 +497,9 @@ static struct UIMenuItem Board2MenuItems[] = {
     {MITEM_LABEL, 0, 0, 0, 0, 0, 0, SYS_UI_LBL_DSP_REVISION},
     {MITEM_TAB},
     {MITEM_TAB},
-    {MITEM_VALUE, BOARD2_ID_DSP_REV, MITEM_FLAG_READONLY | MITEM_FLAG_UNIT_PREFIX, MITEM_FORMAT_HEX, 2},
+    {MITEM_VALUE, BOARD2_ID_DSP_REV_MAJOR, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC},
+    {MITEM_DOT},
+    {MITEM_VALUE, BOARD2_ID_DSP_REV_MINOR, MITEM_FLAG_READONLY, MITEM_FORMAT_UDEC, 2},
     {MITEM_TAB},
     {MITEM_TAB},
     {MITEM_STRING, BOARD2_ID_DSP_NAME, MITEM_FLAG_READONLY},
@@ -1340,10 +1343,12 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
         UISetString(&Board2ReportMenu, BOARD2_ID_MECHA_TYPE_NAME, GetSystemTypeDesc(SystemInformation->mainboard.MECHACONVersion[3]));
 
 
-        UISetType(&Board2ReportMenu, BOARD2_ID_DSP_REV, MITEM_VALUE);
-        UISetValue(&Board2ReportMenu, BOARD2_ID_DSP_REV, SystemInformation->DSPVersion[0]);
+        UISetType(&Board2ReportMenu, BOARD2_ID_DSP_REV_MAJOR, MITEM_VALUE);
+        UISetValue(&Board2ReportMenu, BOARD2_ID_DSP_REV_MAJOR, SystemInformation->DSPVersion[0]);
+        UISetType(&Board2ReportMenu, BOARD2_ID_DSP_REV_MINOR, MITEM_VALUE);
+        UISetValue(&Board2ReportMenu, BOARD2_ID_DSP_REV_MINOR, SystemInformation->DSPVersion[1]);
         UISetType(&Board2ReportMenu, BOARD2_ID_DSP_NAME, MITEM_STRING);
-        UISetString(&Board2ReportMenu, BOARD2_ID_DSP_NAME, GetDSPDesc(SystemInformation->DSPVersion[0]));
+        UISetString(&Board2ReportMenu, BOARD2_ID_DSP_NAME, GetDSPDesc(SystemInformation->DSPVersion[0] | (SystemInformation->DSPVersion[1] << 8)));
     }
     else
     {
@@ -1354,7 +1359,8 @@ static void LoadBoard2Information(const struct SystemInformation *SystemInformat
         UISetType(&Board2ReportMenu, BOARD2_ID_MECHA_REGION_NAME, MITEM_DASH);
         UISetType(&Board2ReportMenu, BOARD2_ID_MECHA_TYPE, MITEM_DASH);
         UISetType(&Board2ReportMenu, BOARD2_ID_MECHA_TYPE_NAME, MITEM_DASH);
-        UISetType(&Board2ReportMenu, BOARD2_ID_DSP_REV, MITEM_DASH);
+        UISetType(&Board2ReportMenu, BOARD2_ID_DSP_REV_MAJOR, MITEM_DASH);
+        UISetType(&Board2ReportMenu, BOARD2_ID_DSP_REV_MINOR, MITEM_DASH);
         UISetType(&Board2ReportMenu, BOARD2_ID_DSP_NAME, MITEM_DASH);
     }
 

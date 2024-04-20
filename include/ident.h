@@ -9,8 +9,8 @@ struct SystemInformation
     struct PS2IDBMainboardEntry mainboard;
     t_PS2DBROMHardwareInfo ROMs[3];
     t_PS2DBROMHardwareInfo erom;
-    unsigned char ConsoleID[8];        // EEPROM
-    unsigned char iLinkID[8];          // EEPROM
+    unsigned char ConsoleID[8]; // EEPROM
+    unsigned char iLinkID[8];   // EEPROM
     char chassis[14];
     char DVDPlayerVer[16]; // TODO: move to ROM
     char OSDVer[16];       // TODO: move to ROM
@@ -43,13 +43,13 @@ const char *GetEEChipDesc(unsigned char revision, unsigned char GS_revision);
 const char *GetBOOTROMDesc(const char *extinfo, const char *romver, const char *dvdplVer);
 const char *GetDVDROMDesc(const char *dvdplVer);
 const char *GetMECHACONChipDesc(unsigned int revision);
+const char *GetDSPDesc(unsigned short int revision);
 const char *GetSystemTypeDesc(unsigned char type);
 const char *GetRegionDesc(unsigned char region);
 const char *GetMRPDesc(unsigned short int id);
 const char *GetModelIDDesc(unsigned short int ModelId);
 const char *GetEMCSIDDesc(unsigned char id);
 const char *GetADD010Desc(unsigned short int id);
-const char *GetDSPDesc(unsigned char revision);
 const char *GetChassisDesc(const struct PS2IDBMainboardEntry *mainboard);
 const char *GetMainboardModelDesc(const struct PS2IDBMainboardEntry *mainboard);
 
