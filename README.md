@@ -15,7 +15,6 @@ It has the following features:
 * Displays the actual addresses for DEV1 (rom1, rom2 and erom) that are set by the ROM filesystem drivers.
 * Colored user interface that is easy to use.
 * Supports dumping to memory cards and USB mass storage devices.
-* Supports multi-languages, which include the 8 supported languages by the PS2
 * Gathers data of all known parts of the PS2.
 * Attempts to automatically match the chip/part name with the version number of the part.
 
@@ -206,7 +205,7 @@ Known EMCS IDs:
 
 List of known SSBUS I/F Controllers and their revisions:
 
-| Controller | ver | Note | 
+| Controller | ver | Note |
 | ---------- | --- | ---- |
 | CXD9546R	 | 1.2 | DTL-T10000, unrefurbished. |
 | CXD9566R	 | 2.0 |      |
