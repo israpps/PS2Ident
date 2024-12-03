@@ -9,7 +9,11 @@
 #endif
 
 #ifdef DEBUG
-#define DEBUG_PRINTF(args...) printf(args)
+#include <sio.h>
+#define DEBUG_PRINTF(args...) do { \
+    printf(args); \
+    sio_printf(args); \
+} while (0)
 #else
 #define DEBUG_PRINTF(args...)
 #endif

@@ -276,7 +276,6 @@ int main(int argc, char *argv[])
     while (PollSema(SystemInitSema) != SystemInitSema)
     {
         RedrawLoadingScreen(FrameNum);
-        DEBUG_PRINTF("Frame: %d\n", FrameNum);
         FrameNum++;
     }
     DeleteSema(SystemInitSema);
