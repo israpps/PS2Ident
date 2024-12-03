@@ -99,9 +99,17 @@ static void SystemInitThread(struct SystemInitParams *SystemInitParams)
     id = SifExecModuleBuffer(PS2DEV9_irx, size_PS2DEV9_irx, 0, NULL, &ret);
     DEBUG_PRINTF("DEV9 id:%d ret:%d\n", id, ret);
 
-    SifLoadModule("rom0:ADDDRV", 0, NULL);
-    SifLoadModule("rom0:ADDROM2", 0, NULL);
-
+#ifdef COH_SUPPORT
+    id = SifLoadStartModule("rom0:ACDEV", 0, NULL, &ret); // Namco system 2x6 has no dvdplayer chip. instead, `ACDEV` registers a flash memory on the arcade board as `rom1:`
+    DEBUG_PRINTF("rom0:ACDEV id:%d ret:%d\n", id, ret);
+#else
+    id = SifLoadModule("rom0:ADDDRV", 0, NULL);
+    if (id < 0)
+        DEBUG_PRINTF("Failed to load rom0:ADDDRV id:%d\n", id);
+    id = SifLoadModule("rom0:ADDROM2", 0, NULL);
+    if (id < 0)
+        DEBUG_PRINTF("Failed to load rom0:ADDROM2 id:%d\n", id);
+#endif
     // Initialize PlayStation Driver (PS1DRV)
     PS1DRVInit();
 
