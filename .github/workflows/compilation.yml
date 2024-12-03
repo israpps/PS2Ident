@@ -26,12 +26,6 @@ jobs:
         make ${{ matrix.debug }}
     # commands for compiling your project
 
-    - name: Upload artifacts2
-      uses: actions/upload-artifact@v4
-      with:
-        name: PS2Ident_np-${{ matrix.debug }}-${{ github.sha }}
-        path: PS2Ident_np.elf
-
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
