@@ -242,10 +242,23 @@ int main(int argc, char *argv[])
     sbv_patch_enable_lmb();
     sbv_patch_fileio();
 
+#ifdef COH_SUPPORT
+#ifndef USE_DAEMON
     id = SifExecModuleBuffer(SIO2MAN_irx, size_SIO2MAN_irx, 0, NULL, &ret);
     DEBUG_PRINTF("SIO2MAN id:%d ret:%d\n", id, ret);
     id = SifExecModuleBuffer(MCMAN_irx, size_MCMAN_irx, 0, NULL, &ret);
     DEBUG_PRINTF("MCMAN id:%d ret:%d\n", id, ret);
+#else
+    id = SifLoadStartModule("rom0:SIO2MAN", 0, NULL, &ret);
+    DEBUG_PRINTF("SIO2MAN id:%d ret:%d\n", id, ret);
+    id = SifLoadStartModule("rom0:MCMAN", 0, NULL, &ret);
+    DEBUG_PRINTF("DONGLEMAN id:%d ret:%d\n", id, ret);
+    id = SifLoadStartModule("rom0:DAEMON", 0, NULL, &ret);
+    DEBUG_PRINTF("DAEMON id:%d ret:%d\n", id, ret);
+    id = SifLoadStartModule("rom0:LED", 0, NULL, &ret); // not sure. include it just in case!
+    DEBUG_PRINTF("LED id:%d ret:%d\n", id, ret);
+#endif
+#endif
 
     SifSetCmdBuffer(&SifCmdbuffer, 1);
     SifAddCmdHandler(0, &usb_callback, NULL);
